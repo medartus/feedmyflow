@@ -1,4 +1,3 @@
-import React from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -11,6 +10,9 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+
+import React, { useEffect } from 'react';
+import auth from "../../provider/auth";
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -32,8 +34,22 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function Login() {
+const Login = (props) => {
   const classes = useStyles();
+
+  const onLogin = () => {
+    auth.login((err,res)=>{
+      if(err === null) props.history.push('/dashboard')
+      else console.log(err.toString())
+    })
+  }
+
+  useEffect(()=>{
+    auth.getToken((err,res)=>{
+      if(err === null) props.history.push('/dashboard')
+      else console.log(err.toString())
+    })
+  },[])
 
   return (
     <Container component="main" maxWidth="xs">
@@ -72,13 +88,7 @@ export default function Login() {
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
           />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-          >
+          <Button onClick={onLogin}>
             Sign In
           </Button>
           <Grid container>
@@ -98,3 +108,5 @@ export default function Login() {
     </Container>
   );
 }
+
+export default Login;
