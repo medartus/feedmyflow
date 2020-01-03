@@ -7,32 +7,37 @@ class Auth {
       this.cookies = new Cookies();
     }
   
-    login(cb) {
-        console.log('try to log')
+    loginWithCookies(cb) {
+        console.log('try to log with Cookies')
         let token = undefined;
         try {
             token = this.cookies.get('token');
-        } catch (error) {console.log(error)} 
-        if(token !== undefined){
-            console.log('try to use token')
-            this.firebaseInit(token,(error, result)=>{
-                if (error !== null) {
-                    this.getToken(cb)
+        } catch (error) {cb(error)} 
+        console.log('try to use token')
+        this.firebaseInit(token,(error, result)=>{
+            if (error !== null) {
+                this.getToken(cb)
+            }
+            else {
+                console.log('callback');
+                try {
+                    cb(null,true);
+                } catch (error) {
+                    console.log('callback error : ' + error)
                 }
-                else {
-                    console.log('callback');
-                    try {
-                        cb(null,true);
-                    } catch (error) {
-                        console.log('callback error : ' + error)
-                    }
-                }
-            })
-        }
-        else{ 
-            console.log('redirect')
-            window.location.href = 'https://us-central1-feedmyflow.cloudfunctions.net/redirect'
-        }
+            }
+        })
+    }
+
+      
+    login(cb) {
+        this.loginWithCookies((err,res)=>{
+            if(err !== null) {
+                console.log('redirect')
+                window.location.href = 'https://us-central1-feedmyflow.cloudfunctions.net/redirect'
+            }
+            cb(null,true);
+        })
     }
   
     logout(cb) {
