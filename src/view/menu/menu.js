@@ -5,7 +5,7 @@ import {ExpansionPanel,ExpansionPanelDetails,ExpansionPanelSummary} from '@mater
 import {MuiPickersUtilsProvider,KeyboardTimePicker,KeyboardDatePicker} from '@material-ui/pickers';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Cookies from 'universal-cookie';
-import fire from '../../provider/firebase'
+import fire from '../../provider/firebase';
 import './menu.css';
 
 
@@ -38,6 +38,7 @@ const Menu = () => {
 
     const firebaseInit = (token) => {
         fire.auth().signInWithCustomToken(token).then(() => {
+            console.log(token)
             currentUser = fire.auth().currentUser;
             userUid = currentUser.uid;
             db.collection('user').doc(userUid).collection('post').onSnapshot((documents)=>{setItems(documents.docs)});
