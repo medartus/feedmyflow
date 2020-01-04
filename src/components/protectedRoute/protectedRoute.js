@@ -8,7 +8,11 @@ const ProtectedRoute = ({component: Component,...rest}) => {
 
     useEffect(()=>{
         if(auth.isAuthenticated()) setCheckingLogin(false);
-        else auth.loginWithCookies((err,res)=>{setCheckingLogin(false)});
+        else {
+          auth.loginWithCookies()
+          .catch((err)=>console.log(err))
+          .finally(()=>{setCheckingLogin(false)})
+        };
     },[])
 
     return (

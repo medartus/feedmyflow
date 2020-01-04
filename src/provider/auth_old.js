@@ -7,38 +7,45 @@ class Auth {
       this.cookies = new Cookies();
     }
   
-    loginWithCookies = () => new Promise( (resolve, reject) => {
+    loginWithCookies(cb) {
         console.log('try to log with Cookies')
         let token = undefined;
         try {
             token = this.cookies.get('token');
-        } catch (error) {reject(error)} 
-        if (token === undefined) reject(new Error('no Token'))
+        } catch (error) {cb(error)} 
+        if (token === undefined) cb(new Error('no Token'))
         else{
-            console.log('try to use cookies token')
-            this.firebaseInit(token)
-            .then(()=>{
-                console.log('log with cookies works')
-                resolve()
-            })
-            .catch(()=>{
-                console.log('log with cookies failed')
-                this.getToken().then(()=>resolve()).catch((err)=>reject(err))
+            console.log('try to use token')
+            this.firebaseInit(token,(error, result)=>{
+                if (error !== null) {
+                    this.getToken(cb)
+                }
+                else {
+                    console.log('callback');
+                    try {
+                        cb(null,true);
+                    } catch (error) {
+                        console.log('callback error : ' + error)
+                    }
+                }
             })
         }
-    })
+    }
 
       
-    login = () => new Promise((resolve, reject) => {
-        return this.loginWithCookies()
-        .then(()=>{resolve()})
-        .catch(()=>{
-            console.log('redirect')
-            window.location.href = 'https://us-central1-feedmyflow.cloudfunctions.net/redirect'
+    login(cb) {
+        console.log('try to log')
+        this.loginWithCookies((err,res)=>{
+            if(err !== null) {
+                console.log('redirect')
+                window.location.href = 'https://us-central1-feedmyflow.cloudfunctions.net/redirect'
+                cb(err);
+            }
+            cb(null,true);
         })
-    })
+    }
   
-    logout() {
+    logout(cb) {
       this.authenticated = false;
     }
   
@@ -51,20 +58,20 @@ class Auth {
           [null, ''])[1].replace(/\+/g, '%20')) || null;
       }
     
-    firebaseInit = (token) => new Promise((resolve,reject) => {
+    firebaseInit = (token,cb) => {
         console.log('firebase init')
         fire.auth().signInWithCustomToken(token)
         .then(() => {
             console.log('loged in')
             this.authenticated = true
-            resolve()
+            cb(null,true);
         })
-        .catch((err)=>{
+        .catch(()=>{
             console.log('not loged in')
             this.cookies.remove('token')
-            reject(err)
+            cb(new Error("Token not working"));
         })
-    })
+      }
 
     get = async (url) => {
         try {
@@ -77,7 +84,7 @@ class Auth {
         }    
     }
     
-    getToken = () => new Promise(async (resolve, reject) => {
+    getToken = async (cb) => {
         console.log('try to get Token')
         var code = this.getURLParameter('code');
         var state = this.getURLParameter('state');
@@ -90,12 +97,12 @@ class Auth {
             let res = await this.get(url);
             if (res.token) {
                 this.cookies.set('token', res.token.toString());
-                this.firebaseInit(res.token).then(()=>resolve()).catch((err)=>reject(err))
+                this.firebaseInit(res.token,cb)
             } else {
-                reject(new Error('Error in the geToken call: ' + res.error))
+                cb(new Error('Error in the token Function: ' + res.error))
             }
         }
-    })
+    }
 }
   
   export default new Auth();

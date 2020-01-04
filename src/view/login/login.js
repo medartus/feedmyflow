@@ -28,17 +28,23 @@ const Login = (props) => {
   const classes = useStyles();
 
   const onLogin = () => {
-    auth.login((err,res)=>{
-      if(err === null) props.history.push('/dashboard')
-      else console.log(err.toString())
-    })
+    // auth.login((err,res)=>{
+    //   if(err === null) props.history.push('/dashboard')
+    //   else console.log(err.toString())
+    // })
+    auth.login()
+    .then(()=>props.history.push('/dashboard'))
+    .catch((err)=>console.log(err))
   }
 
   useEffect(()=>{
-    auth.getToken((err,res)=>{
-      if(err === null) props.history.push('/dashboard')
-      else console.log(err.toString())
-    })
+    // auth.getToken((err,res)=>{
+    //   if(err === null) props.history.push('/dashboard')
+    //   else console.log(err.toString())
+    // })
+    auth.getToken()
+    .then(()=>props.history.push('/dashboard'))
+    .catch((err)=>console.log(err))
   },[])
 
   return (
