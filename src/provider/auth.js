@@ -13,28 +13,33 @@ class Auth {
         try {
             token = this.cookies.get('token');
         } catch (error) {cb(error)} 
-        console.log('try to use token')
-        this.firebaseInit(token,(error, result)=>{
-            if (error !== null) {
-                this.getToken(cb)
-            }
-            else {
-                console.log('callback');
-                try {
-                    cb(null,true);
-                } catch (error) {
-                    console.log('callback error : ' + error)
+        if (token === undefined) cb(new Error('no Token'))
+        else{
+            console.log('try to use token')
+            this.firebaseInit(token,(error, result)=>{
+                if (error !== null) {
+                    this.getToken(cb)
                 }
-            }
-        })
+                else {
+                    console.log('callback');
+                    try {
+                        cb(null,true);
+                    } catch (error) {
+                        console.log('callback error : ' + error)
+                    }
+                }
+            })
+        }
     }
 
       
     login(cb) {
+        console.log('try to log')
         this.loginWithCookies((err,res)=>{
             if(err !== null) {
                 console.log('redirect')
                 window.location.href = 'https://us-central1-feedmyflow.cloudfunctions.net/redirect'
+                cb(err);
             }
             cb(null,true);
         })
@@ -101,4 +106,3 @@ class Auth {
 }
   
   export default new Auth();
-  
