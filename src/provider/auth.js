@@ -21,9 +21,9 @@ class Auth {
                 console.log('log with cookies works')
                 resolve()
             })
-            .catch(()=>{
+            .catch((err)=>{
                 console.log('log with cookies failed')
-                this.getToken().then(()=>resolve()).catch((err)=>reject(err))
+                reject(err)
             })
         }
     })
@@ -32,7 +32,8 @@ class Auth {
     login = () => new Promise((resolve, reject) => {
         return this.loginWithCookies()
         .then(()=>{resolve()})
-        .catch(()=>{
+        .catch((err)=>{
+            console.log(err)
             console.log('redirect')
             window.location.href = 'https://us-central1-feedmyflow.cloudfunctions.net/redirect'
         })

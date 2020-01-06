@@ -22,6 +22,7 @@ const CreationModal = forwardRef((props,ref) => {
   if(isEvent) isMedia = props.event.media != undefined;
   
   const db = fire.firestore();
+  const userUid = fire.auth().currentUser.uid
 
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
@@ -61,7 +62,6 @@ const CreationModal = forwardRef((props,ref) => {
   },[publicationTime,shareCommentary,shareMediaCategory,visibility,mediaTitle,mediaDescription,mediaUrl])
 
   const onSendData = () => {
-    let userUid = fire.auth().currentUser.uid
     let linekdinPost = {
         "author":"urn:li:person:"+userUid.split(':')[1],
         "userUID":userUid,
@@ -93,7 +93,6 @@ const CreationModal = forwardRef((props,ref) => {
   }
 
   const onUpdateData = () => {
-    let userUid = fire.auth().currentUser.uid
     let postId = props.event.id
     let linekdinPost = {
         "author":"urn:li:person:"+userUid.split(':')[1],
@@ -115,6 +114,11 @@ const CreationModal = forwardRef((props,ref) => {
     db.collection('user').doc(userUid).collection('post').doc(postId).update(linekdinPost)
     handleClose()
     setHaveModification(false);
+  }
+
+  const onDeleteData = () => {
+    let postId = props.event.id
+    db.collection('user').doc(userUid).collection('post').doc(postId).delete()
   }
 
   const mediaRender = () => {
@@ -197,6 +201,8 @@ const CreationModal = forwardRef((props,ref) => {
                       id="time-picker"
                       label="Time picker"
                       value={publicationTime}
+                      ampm={false}
+                      minutesStep={15}
                       onChange={e=>setPublicationTime(e)}
                       KeyboardButtonProps={{
                           'aria-label': 'change time',
@@ -240,7 +246,10 @@ const CreationModal = forwardRef((props,ref) => {
             </Grid>
             {mediaRender()}
             {isEvent ?
-              <Button variant="contained" color="primary" onClick={onUpdateData} disabled={!haveModification}>Update</Button>
+              <>
+                <Button variant="contained" color="primary" onClick={onDeleteData}>Delete</Button>
+                <Button variant="contained" color="primary" onClick={onUpdateData} disabled={!haveModification}>Update</Button>
+              </>
             :
               <Button variant="contained" color="primary" onClick={onSendData} disabled={!canSave}>Create</Button>
             }
