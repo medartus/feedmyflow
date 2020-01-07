@@ -10,7 +10,7 @@ const ProtectedRoute = ({component: Component,...rest}) => {
       {...rest}
       render={props => {
         if(!authStatus.triedLogin){
-          return <AuthChecker />;
+          return <AuthChecker {...props}/>;
         }
         else{
           if (authStatus.status === "connected") {

@@ -1,7 +1,8 @@
 import { makeStyles } from '@material-ui/core/styles';
-import {Container,Button} from '@material-ui/core';
+import {Button} from '@material-ui/core';
 import React, { useEffect, useContext } from 'react';
 import { AuthContext } from '../../context/authContext';
+import Header from '../../components/header/header';
 import auth from "../../provider/auth";
 
 const useStyles = makeStyles(theme => ({
@@ -30,21 +31,22 @@ const Home = (props) => {
   const classes = useStyles();
 
   const onLogin = () => {
-    auth.login()
-    .then(()=>{
-        setAuthStatus({status:"connected",triedLogin:true})
-        props.history.push('/dashboard')
-    })
-    .catch((err)=>{
-        console.log(err)
-        setAuthStatus({status:"disconnected",triedLogin:true})
-    })
+    auth.login(props,setAuthStatus)
+    // .then(()=>{
+    //     setAuthStatus({status:"connected",triedLogin:true})
+    //     props.history.push('/dashboard')
+    // })
+    // .catch((err)=>{
+    //     console.log(err)
+    //     setAuthStatus({status:"disconnected",triedLogin:true})
+    // })
   }
 
   return (
-    <Container>
+    <>
+      <Header {...props}/>
       <Button onClick={onLogin}>Sign In</Button>
-    </Container>
+    </>
   );
 }
 
