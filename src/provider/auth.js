@@ -13,7 +13,7 @@ class Auth {
         try {
             token = this.cookies.get('token');
         } catch (error) {reject(error)} 
-        if (token === undefined) reject(new Error('no Token'))
+        if (token === undefined) reject('no Token')
         else{
             console.log('try to use cookies token')
             this.firebaseInit(token)
@@ -88,13 +88,20 @@ class Auth {
             let url = tokenFunctionURL +
             '?code=' + encodeURIComponent(code) +
             '&state=' + encodeURIComponent(state);
-            let res = await this.get(url);
-            if (res.token) {
-                this.cookies.set('token', res.token.toString());
-                this.firebaseInit(res.token).then(()=>resolve()).catch((err)=>reject(err))
-            } else {
-                reject(new Error('Error in the geToken call: ' + res.error))
-            }
+            try {
+                let res = await this.get(url);
+                if (res.token) {
+                    console.log('info in url')
+                    this.cookies.set('token', res.token.toString());
+                    this.firebaseInit(res.token).then(()=>resolve()).catch((err)=>reject(err))
+                }
+            } catch (error) {reject(error)}
+        }
+        else{
+            console.log('no info in url')
+            this.login()
+            .then(()=>{resolve()})
+            .catch((err)=>{reject(err)})
         }
     })
 }
