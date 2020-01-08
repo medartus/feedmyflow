@@ -1,7 +1,7 @@
 import React, {useContext,useState} from "react";
 import { AuthContext } from "../../context/authContext";
 import {Toolbar,AppBar,Typography, Menu, MenuItem, IconButton} from '@material-ui/core';
-import {AccountCircle} from '@material-ui/icons';
+import {AccountCircle,MailOutline} from '@material-ui/icons';
 
 import "./header.css";
 import auth from "../../provider/auth";
@@ -28,9 +28,12 @@ const Header = (props) => {
     const handleMenuClose = () => {
         setAnchorEl(null);
     };
+
+    const handleSendMail = () =>  {
+        window.location.href = "mailto:feedmyflow@gmail.com"
+    }
   
     const menuId = 'account-menu';
-
     const renderMenu = (
         <Menu
           anchorEl={anchorEl}
@@ -54,6 +57,16 @@ const Header = (props) => {
         <AppBar position="static" color="default">
             <Toolbar>
                 <Typography className="title" variant="h6">FeedMyFlow</Typography>
+                <IconButton
+                edge="end"
+                aria-label="send mail to dev"
+                aria-controls={menuId}
+                aria-haspopup="true"
+                onClick={handleSendMail}
+                color="inherit"
+                >
+                    <MailOutline/>
+                </IconButton>
                 <IconButton
                 edge="end"
                 aria-label="account of current user"
