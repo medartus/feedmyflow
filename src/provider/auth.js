@@ -3,8 +3,9 @@ import fire from './firebase';
 
 class Auth {
     constructor() {
-      this.authenticated = false;
       this.cookies = new Cookies();
+      this.setAuthStatus = null;
+      this.props = null;
     }
   
     loginWithCookies = () => new Promise( (resolve, reject) => {
@@ -13,7 +14,7 @@ class Auth {
         try {
             token = this.cookies.get('token');
         } catch (error) {reject(error)} 
-        if (token === undefined) reject(new Error('no Token'))
+        if (token === undefined) reject('no Token')
         else{
             console.log('try to use cookies token')
             this.firebaseInit(token)
@@ -28,24 +29,21 @@ class Auth {
         }
     })
 
-      
-    login = () => new Promise((resolve, reject) => {
+    login = (props,setAuthStatus) => new Promise((resolve, reject) => {
+        if(props !== undefined) this.props = props;
+        if(setAuthStatus !== undefined) this.setAuthStatus = setAuthStatus;
         return this.loginWithCookies()
-        .then(()=>{resolve()})
+        .then(()=>{
+            this.setAuthStatus({status:"connected",triedLogin:true})
+            if(this.props != undefined) this.props.history.push('/dashboard')
+            resolve()
+        })
         .catch((err)=>{
             console.log(err)
             console.log('redirect')
             window.location.href = 'https://us-central1-feedmyflow.cloudfunctions.net/redirect'
         })
     })
-  
-    logout() {
-      this.authenticated = false;
-    }
-  
-    isAuthenticated() {
-      return this.authenticated;
-    }
 
     getURLParameter = (name) => {
         return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(window.location.href) ||
@@ -57,7 +55,6 @@ class Auth {
         fire.auth().signInWithCustomToken(token)
         .then(() => {
             console.log('loged in')
-            this.authenticated = true
             resolve()
         })
         .catch((err)=>{
@@ -88,14 +85,47 @@ class Auth {
             let url = tokenFunctionURL +
             '?code=' + encodeURIComponent(code) +
             '&state=' + encodeURIComponent(state);
-            let res = await this.get(url);
-            if (res.token) {
-                this.cookies.set('token', res.token.toString());
-                this.firebaseInit(res.token).then(()=>resolve()).catch((err)=>reject(err))
-            } else {
-                reject(new Error('Error in the geToken call: ' + res.error))
-            }
+            try {
+                let res = await this.get(url);
+                if (res.token) {
+                    console.log('info in url')
+                    this.cookies.set('token', res.token.toString());
+                    this.firebaseInit(res.token).then(()=>resolve()).catch((err)=>reject(err))
+                }
+            } catch (error) {reject(error)}
         }
+        else{
+            console.log('no info in url')
+            this.login()
+            .then(()=>{resolve()})
+            .catch((err)=>{reject(err)})
+        }
+    })
+
+    loginWithCode = (setAuthStatus) => new Promise((resolve, reject) => {
+        this.setAuthStatus = setAuthStatus;
+        return this.getToken()
+        .then(()=>{
+            setAuthStatus({status:"connected",triedLogin:true})
+        })
+        .catch((err)=>{
+            console.log(err)
+            setAuthStatus({status:"disconnected",triedLogin:true})
+        })
+    })
+
+    logout = (props,setAuthStatus) => new Promise((resolve,reject)=>{
+        // this.cookies.remove('token')
+        props.history.push('/')
+        setAuthStatus({status:"disconnected",triedLogin:false});
+        resolve()
+        // fire.auth().signOut()
+        // .then(()=> {
+        //     resolve()
+        // }).catch((error) =>{
+        //     console.log(error)
+        //     reject(error)
+        // });
     })
 }
   

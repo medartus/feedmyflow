@@ -2,16 +2,17 @@ import React, { useState, useEffect, useRef } from "react";
 import {Calendar,momentLocalizer} from 'react-big-calendar';
 import {Grid,Container,Toolbar,AppBar,Typography,Paper,Button} from '@material-ui/core';
 import CreationModal from '../../components/creationModal/creationModal';
+import Header from "../../components/header/header";
 import fire from '../../provider/firebase';
 import moment from "moment";
 import 'moment/locale/fr';
 
-import "./calendar.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
+import "./calendar.css";
 
 const localizer = momentLocalizer(moment)
   
-const Mycalendar = () => {
+const Mycalendar = (props) => {
 
   const [eventsList,setEventsList] = useState([]);
   const creationModalRef = useRef();
@@ -46,7 +47,7 @@ const Mycalendar = () => {
     // firebaseInit(token)
     currentUser = fire.auth().currentUser;
     userUid = currentUser.uid;
-    db.collection('user').doc(userUid).collection('post').onSnapshot((documents) => {
+    var unsubscribeSnapshot = db.collection('user').doc(userUid).collection('post').onSnapshot((documents) => {
       let newEventsList = []
       documents.docs.map((query,i) => {
         let data = query.data()
@@ -59,6 +60,9 @@ const Mycalendar = () => {
       })
       newEventsList.sort((a,b)=>{return a.start - b.start})
       setEventsList(newEventsList)
+    return () =>{
+      unsubscribeSnapshot();
+    }
     });
   },[])
 
@@ -85,11 +89,7 @@ const Mycalendar = () => {
 
   return (
     <div className="App">
-      <AppBar position="static" color="default">
-        <Toolbar>
-          <Typography className="title" variant="h6">FeedMyFlow</Typography>
-        </Toolbar>
-      </AppBar>
+      <Header {...props}/>
       <Container className="menu">
         <Grid container spacing={2}>
           <Grid item md={12} lg={8}>

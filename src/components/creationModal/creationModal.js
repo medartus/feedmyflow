@@ -118,7 +118,9 @@ const CreationModal = forwardRef((props,ref) => {
 
   const onDeleteData = () => {
     let postId = props.event.id
-    db.collection('user').doc(userUid).collection('post').doc(postId).delete()
+    if (window.confirm("Etes vous sur de vouloir supprimer ce post ?")) {
+      db.collection('user').doc(userUid).collection('post').doc(postId).delete()
+    } 
   }
 
   const mediaRender = () => {
