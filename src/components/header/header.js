@@ -2,27 +2,19 @@ import React, {useContext,useState} from "react";
 import { AuthContext } from "../../context/authContext";
 import {Toolbar,AppBar,Typography, Menu, MenuItem, IconButton} from '@material-ui/core';
 import {AccountCircle,MailOutline} from '@material-ui/icons';
+import { useAuth } from "../../provider/auth";
 
 import "./header.css";
-import auth from "../../provider/auth";
 
   
 const Header = (props) => {
+    const auth = useAuth();
+
     const [anchorEl, setAnchorEl] = useState(null);
-    const {authStatus,setAuthStatus} = useContext(AuthContext);
-  
     const isMenuOpen = Boolean(anchorEl);
   
     const handleProfileMenuOpen = event => {
         setAnchorEl(event.currentTarget);
-    };
-  
-    const handleDisconnect = () => {
-        auth.logout(props,setAuthStatus);
-    };
-
-    const handleConnect = () => {
-        auth.login(props,setAuthStatus);
     };
 
     const handleMenuClose = () => {
@@ -44,10 +36,10 @@ const Header = (props) => {
           open={isMenuOpen}
           onClose={handleMenuClose}
         >
-            {authStatus.status==="disconnected" ?
-                <MenuItem onClick={handleConnect}>Connect</MenuItem>
+            {auth.authStatus.isConnected ?
+                <MenuItem onClick={() => auth.signOut(props)}>Disconnect</MenuItem>
             :
-                <MenuItem onClick={handleDisconnect}>Disconnect</MenuItem>
+                <MenuItem onClick={() => auth.signIn(true,props)}>Connect</MenuItem>
             }
         </Menu>
       );

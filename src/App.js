@@ -5,24 +5,22 @@ import Home from './view/home/home';
 import Login from './view/login/login';
 import MyCalendar from './view/calendar/calendar';
 import ProtectedRoute from "./components/protectedRoute/protectedRoute";
-import { AuthContext } from './context/authContext';
+import { ProvideAuth } from "./provider/auth.js";
 
 import './App.css';
 
 export const App = () => {
-const [authStatus,setAuthStatus] = useState({status:"disconnected",triedLogin:false});
-const authProvider = useMemo(() => ({authStatus,setAuthStatus}), [authStatus,setAuthStatus])
 
   return (
     <BrowserRouter>
-      <AuthContext.Provider value={authProvider}>
+      <ProvideAuth>
         <Switch>
           <Route exact path="/" component={Home} />
           <Route exact path="/login" component={Login} />
           <ProtectedRoute exact path="/dashboard" component={MyCalendar} />
           <Route path="*" component={()=>{return(<Redirect to='/'/>)}} />
         </Switch>
-      </AuthContext.Provider>
+      </ProvideAuth>
     </BrowserRouter>
   );
 }
