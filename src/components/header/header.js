@@ -1,5 +1,4 @@
 import React, {useContext,useState} from "react";
-import { AuthContext } from "../../context/authContext";
 import {Toolbar,AppBar,Typography, Menu, MenuItem, IconButton} from '@material-ui/core';
 import {AccountCircle,MailOutline} from '@material-ui/icons';
 import { useAuth } from "../../provider/auth";

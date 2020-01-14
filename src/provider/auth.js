@@ -112,17 +112,7 @@ const useProvideAuth = () => {
       window.location.href = 'https://us-central1-feedmyflow.cloudfunctions.net/redirect'
     })
   });
-
-  // const signUp = (email, password) => {
-  //   return fire
-  //     .auth()
-  //     .createUserWithEmailAndPassword(email, password)
-  //     .then(response => {
-  //       setAuthStatus({...authStatus,isConnected:true,user:response.user,haveTriedLogin:true});
-  //       return response.user;
-  //     });
-  // };
-
+  
   const signOut = (props) => {
     return fire
       .auth()
@@ -133,23 +123,6 @@ const useProvideAuth = () => {
       });
   };
 
-  // const sendPasswordResetEmail = email => {
-  //   return fire
-  //     .auth()
-  //     .sendPasswordResetEmail(email)
-  //     .then(() => {
-  //       return true;
-  //     });
-  // };
-
-  // const confirmPasswordReset = (code, password) => {
-  //   return fire
-  //     .auth()
-  //     .confirmPasswordReset(code, password)
-  //     .then(() => {
-  //       return true;
-  //     });
-  // };
 
   // Subscribe to user on mount
   // Because this sets state in the callback it will cause any ...
