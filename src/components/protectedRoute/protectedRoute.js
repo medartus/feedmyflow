@@ -1,19 +1,20 @@
-import React,{useContext} from "react";
+import React from "react";
 import { Route, Redirect } from "react-router-dom";
-import { AuthContext } from "../../context/authContext";
 import AuthChecker from "../authChecker/authChecker";
+import { useAuth } from "../../provider/auth";
 
 const ProtectedRoute = ({component: Component,...rest}) => {
-  const {authStatus} = useContext(AuthContext);
+  const auth = useAuth();
+
   return (
       <Route
       {...rest}
       render={props => {
-        if(!authStatus.triedLogin){
+        if(!auth.authStatus.haveTriedLogin){
           return <AuthChecker {...props}/>;
         }
         else{
-          if (authStatus.status === "connected") {
+          if (auth.authStatus.isConnected) {
             return <Component {...props} />;
           } else {
             return (

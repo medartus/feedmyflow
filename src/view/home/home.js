@@ -3,7 +3,7 @@ import {Button} from '@material-ui/core';
 import React, { useEffect, useContext } from 'react';
 import { AuthContext } from '../../context/authContext';
 import Header from '../../components/header/header';
-import auth from "../../provider/auth";
+import { useAuth } from "../../provider/auth";
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -26,26 +26,13 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Home = (props) => {
-  
-  const {authStatus,setAuthStatus} = useContext(AuthContext);
-  const classes = useStyles();
 
-  const onLogin = () => {
-    auth.login(props,setAuthStatus)
-    // .then(()=>{
-    //     setAuthStatus({status:"connected",triedLogin:true})
-    //     props.history.push('/dashboard')
-    // })
-    // .catch((err)=>{
-    //     console.log(err)
-    //     setAuthStatus({status:"disconnected",triedLogin:true})
-    // })
-  }
+  const auth = useAuth();
 
   return (
     <>
       <Header {...props}/>
-      <Button onClick={onLogin}>Sign In</Button>
+      <Button onClick={() => auth.signIn(true,props)}>Sign In</Button>
     </>
   );
 }

@@ -1,22 +1,23 @@
 import React,{useState,useEffect, useContext} from "react";
-import { Route, Redirect } from "react-router-dom";
-import { AuthContext } from "../../context/authContext";
 import AuthChecker from "../../components/authChecker/authChecker";
+import { Route, Redirect } from "react-router-dom";
+import { useAuth } from "../../provider/auth";
 
 const Login = ({component: Component,...rest}) => {
-  const {authStatus} = useContext(AuthContext);
+  const auth = useAuth();
+  
   return (
       <Route
       {...rest}
       render={props => {
-        if(!authStatus.triedLogin){
-          return <AuthChecker />;
+        if(!auth.authStatus.haveTriedLogin){
+          return <AuthChecker/>;
         }
         else{
         return (
             <Redirect
             to={{
-                pathname: authStatus.status === "connected" ? "/dashboard" : "/",
+                pathname: auth.authStatus.isConnected ? "/dashboard" : "/",
                 state: {
                 from: props.location
                 }
