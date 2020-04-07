@@ -1,6 +1,5 @@
 import React, { useState, useMemo } from 'react';
 import { BrowserRouter, Route, Switch,Redirect } from "react-router-dom";
-import Menu from './view/menu/menu';
 import Home from './view/home/home';
 import Login from './view/login/login';
 import MyCalendar from './view/calendar/calendar';
@@ -17,7 +16,7 @@ export const App = () => {
         <Switch>
           <Route exact path="/" component={Home} />
           <Route exact path="/login" component={Login} />
-          <ProtectedRoute exact path="/dashboard" component={MyCalendar} />
+          <ProtectedRoute exact path="/dashboard" comp={MyCalendar} />
           <Route path="*" component={()=>{return(<Redirect to='/'/>)}} />
         </Switch>
       </ProvideAuth>

@@ -1,7 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles';
 import {Button} from '@material-ui/core';
 import React, { useEffect, useContext } from 'react';
-import { AuthContext } from '../../context/authContext';
 import Header from '../../components/header/header';
 import { useAuth } from "../../provider/auth";
 

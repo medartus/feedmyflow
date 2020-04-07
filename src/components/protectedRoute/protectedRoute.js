@@ -3,7 +3,7 @@ import { Route, Redirect } from "react-router-dom";
 import AuthChecker from "../authChecker/authChecker";
 import { useAuth } from "../../provider/auth";
 
-const ProtectedRoute = ({component: Component,...rest}) => {
+const ProtectedRoute = ({comp: Component,...rest}) => {
   const auth = useAuth();
 
   return (

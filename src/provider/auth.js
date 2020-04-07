@@ -3,7 +3,7 @@ import Cookies from 'universal-cookie';
 import fire from './firebase';
 
 const authContext = createContext();
-
+export default authContext;
 // Provider component that wraps your app and makes auth object ...
 // ... available to any child component that calls useAuth().
 export function ProvideAuth({ children }) {
@@ -19,7 +19,7 @@ export const useAuth = () => {
 
 // Provider hook that creates auth object and handles state
 const useProvideAuth = () => {
-  const [authStatus, setAuthStatus] = useState({haveTriedLogin:false,isConnected:false,user:undefined});
+  const [authStatus, setAuthStatus] = useState({haveTriedLogin:false,isConnected:false,user:undefined,firebaseTestLogin:false});
   const cookies = new Cookies();
   
   const getURLParameter = (name) => {
@@ -79,7 +79,7 @@ const useProvideAuth = () => {
     var state = getURLParameter('state');
     if(code!==null){
       // This is the URL to the HTTP triggered 'token' Firebase Function.
-      var tokenFunctionURL = 'https://us-central1-feedmyflow.cloudfunctions.net/token';
+      var tokenFunctionURL = process.env.REACT_APP_API_URL+'token';
       let url = tokenFunctionURL + '?code=' + encodeURIComponent(code) + '&state=' + encodeURIComponent(state);
       try {
         let res = await get(url);
@@ -101,17 +101,35 @@ const useProvideAuth = () => {
   // Wrap any Firebase methods we want to use making sure ...
   // ... to save the user to state.
   const signIn = (redirectToDashboard,props) => new Promise((resolve,reject) => {
-    getInfoFromUrl()
-    .then(()=>{
-      if(redirectToDashboard) props.history.push("/dashboard")
+    if(authStatus.isConnected){
       resolve()
+    }
+    else{
+      getInfoFromUrl()
+      .then(()=>{
+        if(redirectToDashboard) props.history.push("/dashboard")
+        resolve()
+        })
+      .catch((err)=>{
+        console.log(err)
+        console.log('redirect')
+        redirectCheck(0,resolve)
       })
-    .catch((err)=>{
-      console.log(err)
-      console.log('redirect')
-      window.location.href = 'https://us-central1-feedmyflow.cloudfunctions.net/redirect'
-    })
+    }
   });
+
+  const redirectCheck = (index,resolve) => {
+    console.log(authStatus)
+    if(authStatus.firebaseTestLogin || index >= 10){
+      if(authStatus.isConnected) resolve()
+      else window.location.href = process.env.REACT_APP_API_URL+'redirect'
+    }
+    else{
+      setTimeout(()=>{
+        redirectCheck(index+1,resolve)
+      },500)
+    }
+  }
   
   const signOut = (props) => {
     return fire
@@ -132,10 +150,14 @@ const useProvideAuth = () => {
     const unsubscribe = fire.auth().onAuthStateChanged(user => {
       if (user) {
         console.log("status change connected")
-        setAuthStatus({...authStatus,isConnected:true,user,haveTriedLogin:true});
+        try {
+          setAuthStatus({...authStatus,isConnected:true,user,haveTriedLogin:true,firebaseTestLogin:true});
+        } catch (error) {
+          console.log(error)
+        }
       } else {
         console.log("status change disconnected")
-        setAuthStatus({...authStatus,isConnected:false,user:undefined,haveTriedLogin:false});
+        setAuthStatus({...authStatus,isConnected:false,user:undefined,haveTriedLogin:false,firebaseTestLogin:true});
       }
     });
 

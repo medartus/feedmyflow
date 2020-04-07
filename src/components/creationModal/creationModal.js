@@ -5,6 +5,7 @@ import {MuiPickersUtilsProvider,KeyboardTimePicker,KeyboardDatePicker} from '@ma
 import { makeStyles } from '@material-ui/core/styles';
 import DateFnsUtils from '@date-io/date-fns';
 import fire from '../../provider/firebase';
+import moment from 'moment';
 
   
 const useStyles = makeStyles(theme => ({
@@ -29,7 +30,11 @@ const CreationModal = forwardRef((props,ref) => {
   const [haveModification, setHaveModification] = useState(false);
   const [canSave, setCanSave] = useState(false);
 
-  const [publicationTime,setPublicationTime] = useState(isEvent ? new Date(props.event.publicationTime.toDate()) : new Date());
+  let date = new Date()
+  date.setMinutes(60)
+
+  const [publicationDate,setPublicationDate] = useState(isEvent ? new Date(props.event.publicationTime.toDate()) : date);
+  const [publicationTime,setPublicationTime] = useState(isEvent ? new Date(props.event.publicationTime.toDate()) : date);
   const [shareCommentary,setShareCommentary] = useState(isEvent ? props.event.shareCommentary : '');
   const [shareMediaCategory,setShareMediaCategory] = useState(isEvent ? props.event.shareMediaCategory : 'NONE');
   const [visibility,setVisibility] = useState(isEvent ? props.event.visibility : 'PUBLIC');
@@ -59,9 +64,13 @@ const CreationModal = forwardRef((props,ref) => {
     return () => {
       setHaveModification(true)
     }
-  },[publicationTime,shareCommentary,shareMediaCategory,visibility,mediaTitle,mediaDescription,mediaUrl])
+  },[publicationDate,publicationTime,shareCommentary,shareMediaCategory,visibility,mediaTitle,mediaDescription,mediaUrl])
 
-  const onSendData = () => {
+  const formatData = () => {
+    let rawDate = publicationDate.getDate()+"/"+publicationDate.getMonth()+1+"/"+publicationDate.getFullYear()
+    let rawTime = publicationTime.getHours()+":"+publicationTime.getMinutes()
+    let time = moment(rawDate+' '+rawTime+":00")
+    console.log(time)
     let linekdinPost = {
         "author":"urn:li:person:"+userUid.split(':')[1],
         "userUID":userUid,
@@ -69,8 +78,8 @@ const CreationModal = forwardRef((props,ref) => {
         "shareCommentary": shareCommentary,
         "visibility": visibility,
         "shareMediaCategory": shareMediaCategory,
-        "rawDate" : publicationTime.getDate()+"/"+publicationTime.getMonth()+1+"/"+publicationTime.getFullYear(),
-        "rawTime" : publicationTime.getHours()+":"+publicationTime.getMinutes()
+        "rawDate" : rawDate,
+        "rawTime" : rawTime
     }
     if(shareMediaCategory !== "NONE" && mediaTitle!=="" && mediaDescription!=="" && mediaUrl!==""){
         linekdinPost["media"] = {
@@ -79,41 +88,49 @@ const CreationModal = forwardRef((props,ref) => {
             "originalUrl":mediaUrl,
         }
     }
-    db.collection('user').doc(userUid).collection('post').add(linekdinPost)
-    handleClose()
-    if(!isEvent){
-      setPublicationTime(new Date());
-      setShareCommentary('');
-      setShareMediaCategory('NONE');
-      setVisibility('PUBLIC');
-      setMediaTitle('');
-      setMediaDescription('');
-      setMediaUrl('');
+    return linekdinPost;
+  }
+
+  const validDate = () => {
+    if(publicationDate !== "Invalid Date" && publicationTime  !== "Invalid Date"){
+      alert("Merci de mettre une date valide")
+      return false
+    }
+    let dateTocheck = new Date(publicationDate.getTime())
+    dateTocheck.setHours(publicationTime.getHours(),publicationTime.getMinutes())
+    if (dateTocheck < new Date()){
+      alert("La date ne doit pas être antérieur à maintenant")
+      return false
+    }
+    return true
+  }
+
+  const onSendData = () => {
+    if(validDate()){
+      const linekdinPost = formatData();
+      db.collection('user').doc(userUid).collection('post').add(linekdinPost)
+      handleClose()
+      if(!isEvent){
+        setPublicationDate(new Date());
+        setPublicationTime(new Date());
+        setShareCommentary('');
+        setShareMediaCategory('NONE');
+        setVisibility('PUBLIC');
+        setMediaTitle('');
+        setMediaDescription('');
+        setMediaUrl('');
+      }
     }
   }
 
   const onUpdateData = () => {
-    let postId = props.event.id
-    let linekdinPost = {
-        "author":"urn:li:person:"+userUid.split(':')[1],
-        "userUID":userUid,
-        "publicationTime":publicationTime,
-        "shareCommentary": shareCommentary,
-        "visibility": visibility,
-        "shareMediaCategory": shareMediaCategory,
-        "rawDate" : publicationTime.getDate()+"/"+publicationTime.getMonth()+1+"/"+publicationTime.getFullYear(),
-        "rawTime" : publicationTime.getHours()+":"+publicationTime.getMinutes()
+    if(validDate()){
+      const linekdinPost = formatData();
+      let postId = props.event.id
+      db.collection('user').doc(userUid).collection('post').doc(postId).update(linekdinPost)
+      handleClose()
+      setHaveModification(false);
     }
-    if(shareMediaCategory !== "NONE" && mediaTitle!=="" && mediaDescription!=="" && mediaUrl!==""){
-        linekdinPost["media"] = {
-            "title":mediaTitle,
-            "description":mediaDescription,
-            "originalUrl":mediaUrl,
-        }
-    }
-    db.collection('user').doc(userUid).collection('post').doc(postId).update(linekdinPost)
-    handleClose()
-    setHaveModification(false);
   }
 
   const onDeleteData = () => {
@@ -121,6 +138,18 @@ const CreationModal = forwardRef((props,ref) => {
     if (window.confirm("Etes vous sur de vouloir supprimer ce post ?")) {
       db.collection('user').doc(userUid).collection('post').doc(postId).delete()
     } 
+  }
+
+  const configurePublicationTime = (dateTime) => {
+    if(dateTime != null){
+      let quarter = Math.floor(dateTime.getMinutes()/15)
+      if(!isNaN(dateTime.getMinutes())){
+        if(dateTime.getMinutes()%15!==0) alert("Les messages sont postés toutes les 15 minutes.")
+        if(dateTime.getMinutes()%15>7) quarter += 1
+      }
+      dateTime.setMinutes(quarter*15)
+    }
+    setPublicationTime(dateTime)
   }
 
   const mediaRender = () => {
@@ -190,8 +219,8 @@ const CreationModal = forwardRef((props,ref) => {
                       id="date-picker-dialog"
                       label="Date picker dialog"
                       format="dd/MM/yyyy"
-                      value={publicationTime}
-                      onChange={e=>setPublicationTime(e)}
+                      value={publicationDate}
+                      onChange={e=>setPublicationDate(e)}
                       KeyboardButtonProps={{
                           'aria-label': 'change date',
                       }}
@@ -205,7 +234,7 @@ const CreationModal = forwardRef((props,ref) => {
                       value={publicationTime}
                       ampm={false}
                       minutesStep={15}
-                      onChange={e=>setPublicationTime(e)}
+                      onChange={e=>configurePublicationTime(e)}
                       KeyboardButtonProps={{
                           'aria-label': 'change time',
                       }}
