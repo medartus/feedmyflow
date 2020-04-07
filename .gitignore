@@ -24,3 +24,6 @@ yarn-error.log*
 
 # configuration
 /src/firebaseConfig.js
+
+# firebase API keys
+/src/provider/firebase.js
