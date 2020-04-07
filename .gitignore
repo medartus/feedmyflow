@@ -27,3 +27,8 @@ yarn-error.log*
 
 # firebase API keys
 /src/provider/firebase.js
+
+# .env files
+.env
+.env.development
+.env.production
