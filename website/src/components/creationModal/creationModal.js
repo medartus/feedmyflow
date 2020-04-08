@@ -92,7 +92,7 @@ const CreationModal = forwardRef((props,ref) => {
   }
 
   const validDate = () => {
-    if(publicationDate !== "Invalid Date" && publicationTime  !== "Invalid Date"){
+    if(publicationDate.toString() === "Invalid Date" || publicationTime.toString()  === "Invalid Date"){
       alert("Merci de mettre une date valide")
       return false
     }
