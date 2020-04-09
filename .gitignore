@@ -141,3 +141,6 @@ yarn-error.log*
 
 # firebase directory
 .firebase
+
+# function config
+.runtimeconfig.json

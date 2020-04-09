@@ -13,8 +13,7 @@
   "author": "Marc-Etienne Dartus",
   "license": "ISC",
   "dependencies": {
-    "cookie-parser": "^1.4.4",
-    "firebase-admin": "^8.8.0"
+    "cookie-parser": "^1.4.4"
   },
   "devDependencies": {
     "firebase-functions-test": "^0.1.7",

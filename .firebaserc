@@ -1,6 +1,6 @@
 {
   "projects": {
-    "default": "feedmyflow",
-    "staging": "feedmyflow"
+    "default": "dev-feedmyflow",
+    "staging": "dev-feedmyflow"
   }
 }
