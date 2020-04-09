@@ -34,11 +34,19 @@ function linkedInClient() {
       // `https://${process.env.GCLOUD_PROJECT}.web.app/login`);
 }
 
+exports.mailTest = functions.https.onRequest((req,res) =>{
+  const mailprovider = new MailProvider()
+  mailprovider.sendWelcomeEmail("nico.caill@live.fr")
+  .then(() => res.send("ok"))
+  .catch((er) => console.log(er))
+})
+
 /**
  * Redirects the User to the LinkedIn authentication consent screen. ALso the 'state' cookie is set for later state
  * verification.
  */
-exports.redirect = functions.https.onRequest((req, res) => {
+exports.redirect = functions.https.onRequest( (req, res) => {
+
   const Linkedin = linkedInClient();
 
   cookieParser()(req, res, () => {

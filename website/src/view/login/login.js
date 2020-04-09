@@ -5,12 +5,13 @@ import { useAuth } from "../../provider/auth";
 
 const Login = ({component: Component,...rest}) => {
   const auth = useAuth();
+  const userCanceled = rest.location.search.includes("error=user_cancelled_login");
   
   return (
       <Route
       {...rest}
       render={props => {
-        if(!auth.authStatus.haveTriedLogin){
+        if(!auth.authStatus.haveTriedLogin && !userCanceled){
           return <AuthChecker/>;
         }
         else{

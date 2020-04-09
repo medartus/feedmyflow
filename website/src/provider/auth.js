@@ -122,7 +122,7 @@ const useProvideAuth = () => {
     console.log(authStatus)
     if(authStatus.firebaseTestLogin || index >= 10){
       if(authStatus.isConnected) resolve()
-      else window.location.href = process.env.REACT_APP_API_URL+'redirect'
+      else window.location.href = "http://localhost:5001/dev-feedmyflow/us-central1/mailTest"
     }
     else{
       setTimeout(()=>{
