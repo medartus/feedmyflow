@@ -1,17 +1,24 @@
 import React, {useContext,useState} from "react";
 import {Toolbar,AppBar,Typography, Menu, MenuItem, IconButton} from '@material-ui/core';
 import {AccountCircle,MailOutline} from '@material-ui/icons';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from "../../provider/auth";
+import Cookies from 'universal-cookie';
 
 import "./header.css";
 
   
 const Header = (props) => {
     const auth = useAuth();
+    const { t, i18n } = useTranslation();
 
     const [anchorEl, setAnchorEl] = useState(null);
     const isMenuOpen = Boolean(anchorEl);
   
+    const cookies = new Cookies();
+
+    // cookies.set('i18next','en');
+
     const handleProfileMenuOpen = event => {
         setAnchorEl(event.currentTarget);
     };
@@ -22,6 +29,10 @@ const Header = (props) => {
 
     const handleSendMail = () =>  {
         window.location.href = "mailto:feedmyflow@gmail.com"
+    }
+
+    const changeLanguage = (lng) => {
+        i18n.changeLanguage(lng);
     }
   
     const menuId = 'account-menu';
@@ -36,10 +47,12 @@ const Header = (props) => {
           onClose={handleMenuClose}
         >
             {auth.authStatus.isConnected ?
-                <MenuItem onClick={() => auth.signOut(props)}>Disconnect</MenuItem>
+                <MenuItem onClick={() => auth.signOut(props)}>{t('header.disconnect')}</MenuItem>
             :
-                <MenuItem onClick={() => auth.signIn(true,props)}>Connect</MenuItem>
+                <MenuItem onClick={() => auth.signIn(true,props)}>{t('header.connect')}</MenuItem>
             }
+            <MenuItem onClick={() => changeLanguage('fr')}>FR</MenuItem>
+            <MenuItem onClick={() => changeLanguage('en')}>EN</MenuItem>
         </Menu>
       );
 
