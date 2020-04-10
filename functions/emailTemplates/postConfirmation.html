@@ -1,6 +1,33 @@
 <!DOCTYPE html>
 <html>
-    <p style="font-size: 16px;">Pickle Riiiiiiiiiiiiiiiick!!</p>
-    <br />
-    <img src="https://images.prod.meredith.com/product/fc8754735c8a9b4aebb786278e7265a5/1538025388228/l/rick-and-morty-pickle-rick-sticker" />
+    <head>
+        <style>
+            body{width: 100%;}
+            #logo{width: 40%;padding: 2% 30%;align-self: center;}
+            #header  {background-color:rgba(240, 240, 240, 0.705);display: block;}
+            #content {background-color:rgb(249, 254, 255);}
+
+            #title{color:#393E46; font-size: 1.8em; padding: 3% 0%;text-align: center;margin:0;}
+            #description{font-size: 1.5em; padding: 2% 0%;margin: 0% 0% 0% 10%;}
+            #signature{font-size: 1em; padding: 2% 0%;margin: 0% 0% 0% 10%;}
+
+            #post{background-color: white;width: 80%;margin: 0% 10%; border: solid 1px #d8d8d8}
+            #post-comment{font-size: 1.5em; padding: 2% 0%;margin: 0% 0% 0% 10%;}
+
+
+        </style>
+    </head>
+    <body>
+        <div id="header">
+            <img id="logo" src="cid:fmfLogo"/>
+        </div>
+        <div id="content">
+            <p id="title"> Hello {{displayName}} !</p>
+            <p id="description">Your post has been successfully posted on LinkedIn:</p>
+            <div id="post">
+                <p id="post-comment">"{{shareCommentary}}"</p>
+            </div>
+            <p id="signature">FeedMyFlow team</p>
+        </div>
+    </body>
 <html>

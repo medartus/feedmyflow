@@ -2,24 +2,26 @@
 <html>
     <head>
         <style>
-            body{width: 85%;}
+            body{width: 100%;}
 
-            #header  {background-color:#003040;}
-            #content {background-color:#E3EFF3;}
+                #header  {background-color:rgba(240, 240, 240, 0.705);display: block;}
+                    #logo{width: 40%;padding: 2% 30%;align-self: center;}
 
-            #title,#description{margin: 0% 0% 0% 10%;}
-            #title{color:white; font-size: 2em; padding: 5% 0%;}
-            #description{font-size: 1.5em; padding: 2% 0%;}
+                #content {background-color:rgb(249, 254, 255);}
+                    #title{color:#393E46; font-size: 1.8em; padding: 3% 0%;text-align: center;margin:0;}
+                    #description{font-size: 1.5em; padding: 2% 0%;margin: 0% 0% 0% 10%;}
+                    #signature{font-size: 1em; padding: 2% 0%;margin: 0% 0% 0% 10%;}
         </style>
     </head>
     <body>
         <div id="header">
-            <p id="title"> Welcome {{name}} !</p>
+            <img id="logo" src="cid:fmfLogo"/>
         </div>
         <div id="content">
-            <p id="description">We are very pleased to welcome you on FeedMyFlow !</p>
-            <p id="description">The free Linkedin post scheduling</p>
-            <p id="description">Looking forward to hep you !</p>
+            <p id="title"> Welcome {{displayName}} !</p>
+            <p id="description">Your account has been successfully created.<br>
+                                We are very pleased to welcome you on FeedMyFlow, and hope you will enjoy it !</p>
+            <p id="signature">FeedMyFlow team</p>
         </div>
     </body>
 <html>

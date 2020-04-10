@@ -36,7 +36,8 @@ function linkedInClient() {
 
 exports.mailTest = functions.https.onRequest((req,res) =>{
   const mailprovider = new MailProvider()
-  mailprovider.sendWelcomeEmail("nico.caill@live.fr")
+  mailprovider.sendWelcomeEmail("nico.caill@live.fr","Nicolas Caillieux")
+  // mailprovider.sendPostConfirmation({userUID:"linkedin:hV1NxWo7fQ",shareCommentary:"How I became EL Connector."})
   .then(() => res.send("ok"))
   .catch((er) => console.log(er))
 })
@@ -193,7 +194,7 @@ exports.LinkedinPost = functions.https.onRequest( async (req, res) => {
             //TODO uncomment delete post
             db.collection('user').doc(userUid).collection('post').doc(doc.id).delete()
             const mailProvider = new MailProvider()
-            mailProvider.sendPostConfirmation(userUid)
+            mailProvider.sendPostConfirmation(doc.data())
               .then(()=> {return res.send('Sended')})
               .catch((error)=> {return res.send(error.toString())});
           }
@@ -209,7 +210,7 @@ exports.LinkedinPost = functions.https.onRequest( async (req, res) => {
 
 exports.sendWelcomeEmail = functions.auth.user().onCreate((user) => {
   const mailProvider = new MailProvider()
-  return mailProvider.sendWelcomeEmail(user.email)
+  return mailProvider.sendWelcomeEmail(user.email,user.displayName)
     .then(()=> console.log('Welcome email sended to '+ user.uid))
     .catch((error)=> {console.log(error.toString())});
 });

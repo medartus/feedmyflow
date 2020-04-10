@@ -1,6 +1,7 @@
 const functions = require('firebase-functions');
 const nodemailer = require('nodemailer');
 const admin = require('firebase-admin');
+const juice = require('juice')
 
 const fs = require("fs")
 
@@ -31,23 +32,28 @@ class MailProvider {
             html = html.replace(`{{${key}}}`,context[key]);
         });  
 
-        return html
+        return juice(html)
     }
 
-    sendPostConfirmation(userUid){
+    sendPostConfirmation(data){
+        const {userUID,shareCommentary} = data;
         return new Promise(async (resolve,reject) => {
-            const email = await admin.auth().getUser(userUid)
-                .then((userRecord) => {return userRecord.email})
+            const {email,displayName} = await admin.auth().getUser(userUID)
+                .then((userRecord) => {return userRecord})
                 .catch((err)=>reject(err));
             if (email !== undefined){
 
-                const html = this.get("postConfirmation",{})
+                const html = this.getEmailTemplate("postConfirmation",{displayName,shareCommentary})
                 const mailOptions = {
                     from: 'feedmyflow@gmail.com', // Something like: Jane Doe <janedoe@gmail.com>
-                    to: email,
-                    subject: 'I\'M A PICKLE!!!', // email subject
-                    html
-                    };
+                    to: "nico.caill@live.fr",
+                    subject: `FeedMyFlow post confirmation ${email}`, // email subject
+                    html,
+                    attachments: [{
+                        path: './emailTemplates/fmf.PNG',
+                        cid: 'fmfLogo' //same cid value as in the html img src
+                    }]
+                };
                 this.sendEmail(mailOptions)
                     .then((res)=>resolve(res))
                     .catch((err)=>reject(err))
@@ -55,16 +61,20 @@ class MailProvider {
         });
     }
 
-    sendWelcomeEmail(email){
+    sendWelcomeEmail(email,displayName){
         return new Promise(async (resolve,reject) => {
 
-            const html = this.getEmailTemplate("welcome",{name:"Dear pickle"})
+            const html = this.getEmailTemplate("welcome",{displayName})
             const mailOptions = {
                 from: 'feedmyflow@gmail.com', // Something like: Jane Doe <janedoe@gmail.com>
                 to: email,
                 subject: 'Weclome on FeedMyFlow !', // email subject
-                html
-                };
+                html,
+                attachments: [{
+                    path: './emailTemplates/fmf.PNG',
+                    cid: 'fmfLogo' //same cid value as in the html img src
+                }]
+            };
             this.sendEmail(mailOptions)
                 .then((res)=>resolve(res))
                 .catch((err)=>reject(err))
