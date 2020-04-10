@@ -9,6 +9,15 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+div {
+  transition: all ease-in-out .2s;
+}
+
+p, button, span, a {
+  font-family: "Poppins"!important;
+  color: #133540;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
