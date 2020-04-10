@@ -1,4 +1,4 @@
-const { admin } = require('./provider/firebase');
+const { admin } = require('../provider/firebase');
 const db = admin.firestore();
 const LinkedinApi = require('./linkedinApi');
 

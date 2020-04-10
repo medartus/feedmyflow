@@ -1,7 +1,7 @@
 const format = require('./format');
 const MailProvider = require('./mailProvider');
 const LinkedinApi = require('./linkedinApi');
-const { admin } = require('./provider/firebase');
+const { admin } = require('../provider/firebase');
 
 const db = admin.firestore();
 

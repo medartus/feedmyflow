@@ -2,8 +2,8 @@ const functions = require('firebase-functions');
 const cookieParser = require('cookie-parser');
 const crypto = require('crypto');
 
-const { postOnLinkedin } = require('./post');
-const { createFirebaseAccount } = require('./user');
+const { postOnLinkedin } = require('./src/post');
+const { createFirebaseAccount } = require('./src/user');
 const { admin } = require('./provider/firebase');
 
 const db = admin.firestore();
