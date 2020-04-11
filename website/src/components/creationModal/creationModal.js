@@ -24,6 +24,7 @@ import {
 import { makeStyles, ThemeProvider, createMuiTheme, styled, withStyles } from "@material-ui/core/styles";
 import DateFnsUtils from "@date-io/date-fns";
 import fire from "../../provider/firebase";
+import { useTranslation } from 'react-i18next';
 import moment from "moment";
 import "./creationModal.css"
 import { Colors } from "../../Constants";
@@ -93,6 +94,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CreationModal = forwardRef((props, ref) => {
+  const { t, i18n } = useTranslation();
+
   let isEvent = props.event != undefined;
   let isMedia = false;
   if (isEvent) isMedia = props.event.media != undefined;
@@ -212,7 +215,7 @@ const CreationModal = forwardRef((props, ref) => {
       publicationDate.toString() === "Invalid Date" ||
       publicationTime.toString() === "Invalid Date"
     ) {
-      alert("Merci de mettre une date valide");
+      alert(t("creationModal.validDate.valid"));
       return false;
     }
     let dateTocheck = new Date(publicationDate.getTime());
@@ -221,7 +224,7 @@ const CreationModal = forwardRef((props, ref) => {
       publicationTime.getMinutes()
     );
     if (dateTocheck < new Date()) {
-      alert("La date ne doit pas être antérieur à maintenant");
+      alert(t("creationModal.validDate.valid"));
       return false;
     }
     return true;
@@ -261,7 +264,7 @@ const CreationModal = forwardRef((props, ref) => {
 
   const onDeleteData = () => {
     let postId = props.event.id;
-    if (window.confirm("Etes vous sur de vouloir supprimer ce post ?")) {
+    if (window.confirm(t("creationModal.deleteDate.confirm"))) {
       db.collection("user")
         .doc(userUid)
         .collection("post")
@@ -275,7 +278,7 @@ const CreationModal = forwardRef((props, ref) => {
       let quarter = Math.floor(dateTime.getMinutes() / 15);
       if (!isNaN(dateTime.getMinutes())) {
         if (dateTime.getMinutes() % 15 !== 0)
-          alert("Les messages sont postés toutes les 15 minutes.");
+          alert(t("creationModal.publicationTime.quarter"));
         if (dateTime.getMinutes() % 15 > 7) quarter += 1;
       }
       dateTime.setMinutes(quarter * 15);
@@ -339,7 +342,7 @@ const CreationModal = forwardRef((props, ref) => {
 
           <div className="column card">
             <p className="important-text" style={{ fontSize: "22px", marginTop: "20px" }}>
-              {isEvent ? `Post scheduled for the ${props.event.rawDate} at ${props.event.rawTime}` : "Create post"}
+              {isEvent ? t("creationModal.text.schedule",{rawDate:props.event.rawDate,rawTime:props.event.rawTime}) : t("creationModal.text.create")}
             </p>
             <div className="row">
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -348,7 +351,7 @@ const CreationModal = forwardRef((props, ref) => {
                   required
                   style={{ marginRight: "20px" }}
                   id="date-picker-dialog"
-                  label="Date picker dialog"
+                  label={t("creationModal.input.date")}
                   format="dd/MM/yyyy"
                   value={publicationDate}
                   onChange={(e) => setPublicationDate(e)}
@@ -360,7 +363,7 @@ const CreationModal = forwardRef((props, ref) => {
                   margin="normal"
                   required
                   id="time-picker"
-                  label="Time picker"
+                  label={t("creationModal.input.time")}
                   value={publicationTime}
                   ampm={false}
                   minutesStep={15}
@@ -374,7 +377,7 @@ const CreationModal = forwardRef((props, ref) => {
             <div className="row">
               <TextField
                 fullWidth
-                label="Content"
+                label={t("creationModal.input.shareCommentary")}
                 id="shareCommentary"
                 rowsMax={5}
                 value={shareCommentary}
@@ -387,7 +390,7 @@ const CreationModal = forwardRef((props, ref) => {
               <TextField
                 fullWidth
                 id="mediaUrl"
-                label="Link"
+                label={t("creationModal.input.mediaUrl")}
                 value={mediaUrl}
                 onChange={(e) => setMediaUrl(e.target.value)}
               />
@@ -396,7 +399,7 @@ const CreationModal = forwardRef((props, ref) => {
               <TextField
                 fullWidth
                 id="mediaTitle"
-                label="Title"
+                label={t("creationModal.input.mediaTitle")}
                 value={mediaTitle}
                 onChange={(e) => setMediaTitle(e.target.value)}
               />
@@ -405,7 +408,7 @@ const CreationModal = forwardRef((props, ref) => {
               <TextField
                 fullWidth
                 id="mediaDescription"
-                label="Description"
+                label={t("creationModal.input.mediaDescription")}
                 value={mediaDescription}
                 onChange={(e) => setMediaDescription(e.target.value)}
                 multiline
@@ -416,13 +419,13 @@ const CreationModal = forwardRef((props, ref) => {
                 <DeleteButton
                   onClick={onDeleteData}
                 >
-                  Delete
+                  {t("creationModal.button.delete")}
                 </DeleteButton>
                 <ConfirmButton
                   onClick={onUpdateData}
                   disabled={!haveModification}
                 >
-                  Update
+                  {t("creationModal.button.update")}
                 </ConfirmButton>
               </div>
             ) : (
@@ -430,7 +433,7 @@ const CreationModal = forwardRef((props, ref) => {
                   onClick={onSendData}
                   disabled={!canSave}
                 >
-                  Create post
+                  {t("creationModal.button.create")}
                 </ConfirmButton>
               )}
           </div>

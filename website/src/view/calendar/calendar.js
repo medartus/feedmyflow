@@ -4,6 +4,7 @@ import { Colors } from "../../Constants"
 
 import CreationModal from "../../components/creationModal/creationModal";
 import Header from "../../components/header/header";
+import { useTranslation } from 'react-i18next';
 import fire from "../../provider/firebase";
 import moment from "moment";
 import "moment/locale/fr";
@@ -18,6 +19,7 @@ const Mycalendar = (props) => {
   const [eventsList, setEventsList] = useState([]);
   const creationModalRef = useRef();
   const eventsRef = useRef([]);
+  const { t, i18n } = useTranslation();
 
   let currentUser = undefined;
   let userUid = undefined;
@@ -62,10 +64,10 @@ const Mycalendar = (props) => {
           eventsRef.current[event.itemId].handleOpen();
         }}>
           <p className="next-post-item">
-            <span className="span-item">Date: </span>{event.rawDate + " " + event.rawTime}
+            <span className="span-item">{t("calendar.date")}</span>{event.rawDate + " " + event.rawTime}
           </p>
           <p className="next-post-item clipped">
-            <span className="span-item">Content: </span>{event.title}
+            <span className="span-item">{t("calendar.content")}</span>{event.title}
           </p>
           <CreationModal
             ref={(r) => (eventsRef.current[event.itemId] = r)}
@@ -77,20 +79,38 @@ const Mycalendar = (props) => {
     </div>
   );
 
+  const messageCalender = () =>{
+    return {
+      allDay:  t('calendar.messageCalendar.allDay'),
+      previous:  t('calendar.messageCalendar.previous'),
+      next:  t('calendar.messageCalendar.next'),
+      today:  t('calendar.messageCalendar.today'),
+      month:  t('calendar.messageCalendar.month'),
+      week:  t('calendar.messageCalendar.week'),
+      day:  t('calendar.messageCalendar.day'),
+      agenda:  t('calendar.messageCalendar.agenda'),
+      date:  t('calendar.messageCalendar.date'),
+      time:  t('calendar.messageCalendar.time'),
+      event:  t('calendar.messageCalendar.event'), // Or anything you want
+      showMore: total => t('calendar.messageCalendar.showMore',{total})
+    }
+  }
+
   const LeftPart = () => (
     <div className="column" style={{ alignItems: "flex-start" }}>
       <div className="column" style={{ alignItems: "flex-start" }}>
-        <p className="important-text">Schedule your next post</p>
-        <p className='second-text'>Automating your feed is just one click away</p>
+        <p className="important-text">{t("calendar.schedule")}</p>
+        <p className='second-text'>{t("calendar.automate")}</p>
       </div>
       <Calendar
+        messages={messageCalender()}
         className="calendar"
         popup
         step={60}
         localizer={localizer}
         defaultDate={new Date()}
         defaultView="month"
-        culture="fr"
+        culture={i18n.language}
         events={eventsList}
         drilldownView="week"
         style={{ height: "60vh", width: "100%" }}
@@ -105,16 +125,16 @@ const Mycalendar = (props) => {
   const RightPart = () => (
     <div className='column' style={{ justifyContent: 'flex-start' }}>
       <div className="upcoming-container" style={{ backgroundColor: Colors.primary }}>
-        <p className="upcoming-text">UPCOMING POSTS</p>
+        <p className="upcoming-text">{t("calendar.upcoming")}</p>
       </div>
-      {nextPost()}
       <div
         className="cta-container"
         style={{ backgroundColor: Colors.shade1, margin: '20px' }}
         onClick={() => { creationModalRef.current.handleOpen() }}
       >
-        <p style={{ fontSize: "16px" }} className="cta-text">CREATE POST</p>
+        <p style={{ fontSize: "16px" }} className="cta-text">{t("calendar.create")}</p>
       </div>
+      {nextPost()}
       <CreationModal ref={creationModalRef} />
     </div>
   )

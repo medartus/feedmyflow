@@ -3,6 +3,7 @@ import React from 'react';
 import Header from '../../components/header/header';
 import FeedLogo from '../../components/feedlogo/feedlogo';
 import { useAuth } from "../../provider/auth";
+import { useTranslation } from 'react-i18next';
 
 import linkedin from "../../assets/linkedin.jpg"
 import post from "../../assets/post.svg"
@@ -17,7 +18,7 @@ const RightPart = () => (
   </div>
 );
 
-const UpperText = ({ iconSize }) => (
+const UpperText = ({ t, iconSize }) => (
   <div className="column" style={{ alignItems: "flex-start" }}>
     <div className="main-text">
       <FeedLogo isMonotone={false} size={iconSize} />
@@ -25,26 +26,31 @@ const UpperText = ({ iconSize }) => (
         <p className="important-text">eed my flow</p>
       </div>
     </div>
-    <p className='second-text'>
-      Free Linkedin post scheduling
-    </p>
+    <p className='second-text'>{t('home.slogan')}</p>
+
   </div>
 );
 
 const Home = (props) => {
   const auth = useAuth();
+  const { t, i18n } = useTranslation();
 
-  const GoButton = () => (
-    <div style={{ backgroundColor: Colors.shade1 }} className='cta-container' onClick={() => auth.signIn(true, props)}>
-      <p className='cta-text'>LET'S GO</p>
-    </div>
-  )
+  const GoButton = () => {
+    const { isConnected } = auth.authStatus;
+    const onClickFunction = isConnected ? ()=>props.history.push("/dashboard") : ()=>auth.signIn(true, props);
+    return(
+      <div style={{ backgroundColor: Colors.shade1 }} className='cta-container' onClick={onClickFunction}>
+        <p className='cta-text'>{t('home.go')}</p>
+      </div>
+    )
+  }
+
 
   const LeftPart = () => (
     <div className="column">
-      <UpperText iconSize={80} />
+      <UpperText t={t} iconSize={80} />
       <img alt="home-illustration" src={post} className="post-image" />
-      <GoButton />
+      <GoButton/>
     </div >
   )
 

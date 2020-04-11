@@ -1,18 +1,14 @@
-import React, {useContext,useState, memo, useCallback } from "react";
-import {Toolbar,AppBar,Typography, Menu, MenuItem, IconButton} from '@material-ui/core';
-import {AccountCircle,MailOutline} from '@material-ui/icons';
+import React, { memo, useCallback } from "react";
+import FeedLogo from "../feedlogo/feedlogo";
 import { useTranslation } from 'react-i18next';
 import { useAuth } from "../../provider/auth";
-import Cookies from 'universal-cookie';
+import { Colors } from "../../Constants"
 
 import "./header.css";
-import FeedLogo from "../feedlogo/feedlogo";
-import { Colors } from "../../Constants"
 
 const handleSendMail = () => {
   window.location.href = "mailto:feedmyflow@gmail.com";
 };
-    const { t, i18n } = useTranslation();
 
 const HeaderItem = memo(({ text, onClick }) => (
   <div onClick={onClick} className='header-item'>
@@ -22,21 +18,26 @@ const HeaderItem = memo(({ text, onClick }) => (
 
 const Header = memo((props) => {
   const auth = useAuth();
+  
+  const { t, i18n } = useTranslation();
+
+  const changeLanguage = (lng) => {
+      i18n.changeLanguage(lng);
+  }
 
   const handleAbout = useCallback(() => props.history.push('/about'), [props])
-    const changeLanguage = (lng) => {
-        i18n.changeLanguage(lng);
-    }
 
   const HeaderItems = () => (
     <div className="options-container">
       {auth.authStatus.isConnected ? (
-        <HeaderItem text="Log Out" onClick={() => auth.signOut(props)} />
+        <HeaderItem text={t("header.disconnect")} onClick={() => auth.signOut(props)} />
       ) : (
-          <HeaderItem text="Sign In" onClick={() => auth.signIn(true, props)} />
+          <HeaderItem text={t("header.connect")} onClick={() => auth.signIn(true, props)} />
         )}
-      <HeaderItem text="Contact" onClick={handleSendMail} />
-      <HeaderItem text="About" onClick={handleAbout} />
+        <HeaderItem text={t("header.about")} onClick={handleAbout} />   
+        <HeaderItem text="Contact" onClick={handleSendMail} />
+        <HeaderItem text="FR" onClick={() => changeLanguage('fr')}/>
+        <HeaderItem text="EN" onClick={() => changeLanguage('en')}/>
     </div>
   )
 

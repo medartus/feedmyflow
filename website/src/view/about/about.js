@@ -6,12 +6,15 @@ import setup from "../../assets/setup.svg"
 import example from "../../assets/exemple.png"
 
 import "./about.css"
-import { AboutData } from "../../Constants";
+
+import { useTranslation } from 'react-i18next';
+
 const md = require("markdown-it")()
   .use(require("markdown-it-mark"));
 
-const getContent = key => {
-  const contentArr = AboutData[key];
+const getContent = (t, key) => {
+  const contentArr = t("about."+key,{ returnObjects: true });
+  console.log(contentArr)
   return contentArr.map(c => <p className="about-text" dangerouslySetInnerHTML={{ __html: md.render(c) }} />)
 }
 
@@ -28,9 +31,10 @@ const Section = ({ title, image, content }) => (
 )
 
 const About = memo((props) => {
-  const usageContent = useMemo(() => getContent('usage'), []);
-  const guideContent = useMemo(() => getContent('guide'), []);
-  const teamContent = useMemo(() => getContent('team'), []);
+  const { t, i18n } = useTranslation();
+  const usageContent = useMemo(() => getContent(t,'usage'), [t]);
+  const guideContent = useMemo(() => getContent(t,'guide'), [t]);
+  const teamContent = useMemo(() => getContent(t,'team'), [t]);
   return (
     <div className="home-container">
       <Header {...props} />

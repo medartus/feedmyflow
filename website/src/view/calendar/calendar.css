@@ -14,7 +14,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 20px 20px 60px 20px;
+  margin: 20px 20px 5px 20px;
 }
 
 .upcoming-text {
@@ -29,6 +29,7 @@
   width: 40vw;
   padding: 10px;
   max-height: 20vh;
+  margin-bottom: 5px;
   cursor: pointer;
 }
 
