@@ -6,29 +6,36 @@
         "contact":"Contact"
     },
     "about":{
-        "usage": [
-            "1 - plop 📑",
-            "2 - ==Schedule your post== by clicking on the new post button, or by clicking on any day you would like your post to be scheduled 📅",
-            "3 - Configure your post according to the ==guide below==, and you’re done! 👍"
-          ],
-        "guide": [
-            "1 - The 2 ==required fields== to schedule a post are content and date ⌚",
-            "2 - You can also add a ==title, a link and a description==, the post will look like the picture on the right 👉",
-            "3 - Note that you can ==update/delete== your post anytime by clicking on it on the calendar 💪"
-          ],
-        "team": [
-            "We are a team of passionate CS students from France 🥐",
-            "We wanted to solve a simple problem which is automating Linkedin posting for free, and this is where [it all started](https://github.com/medartus/feedmyflow) ! 🚀",
-            "We love challenging our skills so checkout our other projects [Swizzl](www.swizzl.fr), [BikeStations](https://bikestations.netlify.com/) and [Loa](https://loabot.netlify.com/) 🤖"
-        ]
+        "text":{
+            "usage": [
+                "1 - Connexion / Inscription avec ==Linkedin== sur la page d'accueil 📑",
+                "2 - ==Planifiez votre publication== en cliquant sur le boutton de création, ou en cliquant sur n'importe quel jour sur lequel vous voulez planifier votre publication 📅",
+                "3 - Configurez votre publication en fonction du ==guide ci-dessous==, et c'est fini ! 👍"
+              ],
+            "guide": [
+                "1 - Les 2 ==champs requis== pour programmer une publication sont le contenu et la date ⌚",
+                "2 - Vous pouvez aussi ajouter ==un titre, un lien et une description==, la publication ressemblera à l'image sur la droite 👉",
+                "3 - Notez que vous pouvez ==Mettre à jour / supprimer== votre publication n'importe quand en cliquant dessus dans le callendrier 💪"
+              ],
+            "team": [
+                "Nous sommes une équipe française de développeurs passionés 🥐",
+                "Nous voulons résoudre un problème simple qu'est l'automatisation de publication sur LinkedIn gratuitement, et [c'est comme cela que tout a commencé...](https://github.com/medartus/feedmyflow) ! 🚀",
+                "Nous aimons tester nos compétences, donc venez voir nos autres projets [Swizzl](www.swizzl.fr), [BikeStations](https://bikestations.netlify.com/) et [Loa](https://loabot.netlify.com/) 🤖"
+            ]
+        },
+        "title":{
+            "usage":"Comment l'utiliser ?",
+            "guide":"Guide",
+            "team":"À Propos de l'équipe"
+        }
     },
     "calendar":{
         "date":"Date: ",
-        "content":"Content: ",
-        "schedule":"Schedule your next post",
-        "automate":"Automating your feed is just one click away",
-        "upcoming":"UPCOMING POSTS",
-        "create":"CREATE POST",
+        "content":"Contenu: ",
+        "schedule":"Planifier vos publication",
+        "automate":"Automatisez votre flux en juste un clic",
+        "upcoming":"PROCHAINS POSTS",
+        "create":"NOUVEAU POST",
         "messageCalendar":{
             "allDay": "Journée",
             "previous": "Précédent",
@@ -45,7 +52,7 @@
     },
     "home":{
         "go":"C'EST PARTI",
-        "slogan":"Free plop post scheduling"
+        "slogan":"Planifieur gratuit de publication Linkedin"
     },
     "creationModal":{
         "validDate":{
@@ -59,8 +66,8 @@
             "quarter":"Les messages sont postés toutes les 15 minutes."
         },
         "input":{
-            "date":"Publication date",
-            "time":"Publication time",
+            "date":"Date de publication",
+            "time":"Heure de publication",
             "shareCommentary":"Contenu",
             "mediaUrl":"Lien",
             "mediaTitle":"Titre",
@@ -73,7 +80,7 @@
         },
         "text":{
             "create":"Création de la publication",
-            "schedule":"Post scheduled for the {{rawDate}} at {{rawTime}}"
+            "schedule":"Publication prévue pour le {{rawDate}} à {{rawTime}}"
         }
     }
 }

@@ -13,7 +13,7 @@ const md = require("markdown-it")()
   .use(require("markdown-it-mark"));
 
 const getContent = (t, key) => {
-  const contentArr = t("about."+key,{ returnObjects: true });
+  const contentArr = t("about.text."+key,{ returnObjects: true });
   console.log(contentArr)
   return contentArr.map(c => <p className="about-text" dangerouslySetInnerHTML={{ __html: md.render(c) }} />)
 }
@@ -39,9 +39,9 @@ const About = memo((props) => {
     <div className="home-container">
       <Header {...props} />
       <div className="home-wrapper" style={{ flexDirection: "column" }}>
-        <Section title="How to use it?" image={setup} content={usageContent} />
-        <Section title="Guide" image={example} content={guideContent} />
-        <Section title="About the team" image={team} content={teamContent} />
+        <Section title={t("about.title.usage")} image={setup} content={usageContent} />
+        <Section title={t("about.title.guide")} image={example} content={guideContent} />
+        <Section title={t("about.title.team")} image={team} content={teamContent} />
       </div>
     </div>
   );
