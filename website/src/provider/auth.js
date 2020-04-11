@@ -136,8 +136,8 @@ const useProvideAuth = () => {
       .auth()
       .signOut()
       .then(() => {
-        props.history.push('/')
         setAuthStatus({ ...authStatus, isConnected: false, user: undefined, haveTriedLogin: false });
+        props.history.push('/')
       });
   };
 

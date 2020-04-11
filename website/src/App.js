@@ -4,8 +4,8 @@ import Home from "./view/home/home";
 import Login from "./view/login/login";
 import MyCalendar from "./view/calendar/calendar";
 import About from "./view/about/about";
-import ProtectedRoute from "./components/protectedRoute/protectedRoute";
-import RedirectRoute from "./components/redirectRoute/redirectRoute";
+import RedirectedRoute from "./components/redirectedRoute/redirectedRoute";
+import LoadingScreen from "./components/loadingScreen/loadingScreen";
 import { ProvideAuth } from "./provider/auth.js";
 
 import "./App.css";
@@ -13,13 +13,15 @@ import "./App.css";
 export const App = () => (
   <BrowserRouter>
     <ProvideAuth>
-      <Switch>
-        <ProtectedRoute exact path="/dashboard" comp={MyCalendar} />
-        <Route exact path="/" component={Home} />
-        <Route exact path="/login" component={Login} />
-        <Route exact path="/about" component={About} />
-        <Route path="*" component={() => <Redirect to="/" />} />
-      </Switch>
+      <LoadingScreen>
+        <Switch>
+            <RedirectedRoute exact path="/dashboard" comp={MyCalendar} connected redirect="/dashboard" needToBeConnected={true}/>
+            <RedirectedRoute exact path="/" comp={Home} redirect="/dashboard" needToBeConnected={false}/>
+            <Route exact path="/login" component={Login} />
+            <Route exact path="/about" component={About} />
+            <Route path="*" component={() => <Redirect to="/" />} />
+        </Switch>
+      </LoadingScreen>
     </ProvideAuth>
   </BrowserRouter>
 );

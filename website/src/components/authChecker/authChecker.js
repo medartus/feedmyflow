@@ -8,8 +8,7 @@ const AuthChecker = () => {
     const auth = useAuth();
 
     useEffect(()=>{
-        
-        if(auth.authStatus.firebaseTestLogin && !auth.authStatus.haveTriedLogin) auth.signIn(false,null)
+        if(!auth.authStatus.haveTriedLogin) auth.signIn(false,null)
     },[])
 
     return (
