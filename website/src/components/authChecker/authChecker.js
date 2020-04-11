@@ -1,8 +1,10 @@
-import React,{useEffect} from "react";
-import CircularProgress from '@material-ui/core/CircularProgress';
-import {useAuth} from "../../provider/auth";
+import React, { useEffect } from "react";
+import { useAuth } from "../../provider/auth";
 
-const AuthChecker = (props) => {
+import FeedLogo from "../feedlogo/feedlogo";
+import "./authChecker.css"
+
+const AuthChecker = () => {
     const auth = useAuth();
 
     useEffect(()=>{
@@ -11,7 +13,9 @@ const AuthChecker = (props) => {
     },[])
 
     return (
-        <CircularProgress />
+        <div className="center">
+            <FeedLogo size={100} animated={true} isMonotone={false} />
+        </div>
     );
 };
 

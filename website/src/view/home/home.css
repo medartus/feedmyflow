@@ -1,0 +1,88 @@
+.home-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.home-wrapper {
+    width: 100%;
+    height: calc(100% - 10vh);
+    padding-top: 4vh;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.column {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.post-image {
+    height: 40vh;
+    width: auto;
+    margin: 6vh;
+}
+
+.linkedin-image {
+    width: auto;
+    height: 80vh;
+    box-shadow: rgba(0, 0, 0, 0.3) 0 0 40px;
+}
+
+.main-text {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-start;
+    position: relative;
+}
+
+.absolute-text {
+    position: absolute;
+    bottom: -16px;
+    width: 30vw;
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: start;
+}
+
+.important-text {
+    margin: 0;
+    font-weight: bold;
+    font-size: 40px;
+    text-align: end;
+}
+
+.second-text {
+    font-family: "Trocchi" !important;
+    color: rgba(0, 0, 0, 0.5);
+    font-size: 20px;
+    margin-top: 10px;
+}
+
+.cta-container {
+    width: 180px;
+    height: 40px;
+    border-radius: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.cta-container:hover {
+    opacity: 0.9;
+}
+
+.cta-text {
+    font-size: 20px;
+    color: white;
+    font-weight: bold;
+}
+

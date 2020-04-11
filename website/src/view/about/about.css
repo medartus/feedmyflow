@@ -1,0 +1,35 @@
+mark {
+    background-color: #008EBE;
+    color: white;
+    padding: 2px;
+}
+
+a {
+    color: #008EBE;
+}
+
+.section-container {
+    width: calc(100% - 3vw);
+    height: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 3vw;
+    margin-bottom: 10vh;
+}
+
+.section-title {
+    font-weight: bold;
+    font-size: 40px;
+}
+
+.right-image {
+    height: 50vh; 
+    width: auto;
+    border-radius: 20px;
+}
+
+.about-text {
+    font-family: "Trocchi"!important;
+    font-size: 20px;
+}

@@ -1,4 +1,4 @@
-import React, {useContext,useState} from "react";
+import React, {useContext,useState, memo, useCallback } from "react";
 import {Toolbar,AppBar,Typography, Menu, MenuItem, IconButton} from '@material-ui/core';
 import {AccountCircle,MailOutline} from '@material-ui/icons';
 import { useTranslation } from 'react-i18next';
@@ -6,86 +6,46 @@ import { useAuth } from "../../provider/auth";
 import Cookies from 'universal-cookie';
 
 import "./header.css";
+import FeedLogo from "../feedlogo/feedlogo";
+import { Colors } from "../../Constants"
 
-  
-const Header = (props) => {
-    const auth = useAuth();
+const handleSendMail = () => {
+  window.location.href = "mailto:feedmyflow@gmail.com";
+};
     const { t, i18n } = useTranslation();
 
-    const [anchorEl, setAnchorEl] = useState(null);
-    const isMenuOpen = Boolean(anchorEl);
-  
-    const cookies = new Cookies();
+const HeaderItem = memo(({ text, onClick }) => (
+  <div onClick={onClick} className='header-item'>
+    <p className='header-text'>{text}</p>
+  </div>
+));
 
-    // cookies.set('i18next','en');
+const Header = memo((props) => {
+  const auth = useAuth();
 
-    const handleProfileMenuOpen = event => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleMenuClose = () => {
-        setAnchorEl(null);
-    };
-
-    const handleSendMail = () =>  {
-        window.location.href = "mailto:feedmyflow@gmail.com"
-    }
-
+  const handleAbout = useCallback(() => props.history.push('/about'), [props])
     const changeLanguage = (lng) => {
         i18n.changeLanguage(lng);
     }
-  
-    const menuId = 'account-menu';
-    const renderMenu = (
-        <Menu
-          anchorEl={anchorEl}
-          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-          id={menuId}
-          keepMounted
-          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-          open={isMenuOpen}
-          onClose={handleMenuClose}
-        >
-            {auth.authStatus.isConnected ?
-                <MenuItem onClick={() => auth.signOut(props)}>{t('header.disconnect')}</MenuItem>
-            :
-                <MenuItem onClick={() => auth.signIn(true,props)}>{t('header.connect')}</MenuItem>
-            }
-            <MenuItem onClick={() => changeLanguage('fr')}>FR</MenuItem>
-            <MenuItem onClick={() => changeLanguage('en')}>EN</MenuItem>
-        </Menu>
-      );
+
+  const HeaderItems = () => (
+    <div className="options-container">
+      {auth.authStatus.isConnected ? (
+        <HeaderItem text="Log Out" onClick={() => auth.signOut(props)} />
+      ) : (
+          <HeaderItem text="Sign In" onClick={() => auth.signIn(true, props)} />
+        )}
+      <HeaderItem text="Contact" onClick={handleSendMail} />
+      <HeaderItem text="About" onClick={handleAbout} />
+    </div>
+  )
 
   return (
-    <>
-        <AppBar position="static" color="default">
-            <Toolbar>
-                <Typography className="title" variant="h6">FeedMyFlow</Typography>
-                <IconButton
-                edge="end"
-                aria-label="send mail to dev"
-                aria-controls={menuId}
-                aria-haspopup="true"
-                onClick={handleSendMail}
-                color="inherit"
-                >
-                    <MailOutline/>
-                </IconButton>
-                <IconButton
-                edge="end"
-                aria-label="account of current user"
-                aria-controls={menuId}
-                aria-haspopup="true"
-                onClick={handleProfileMenuOpen}
-                color="inherit"
-                >
-                    <AccountCircle />
-                </IconButton>
-            </Toolbar>
-        </AppBar>
-        {renderMenu}
-    </>
+    <div className="header-container" style={{ backgroundColor: Colors.shade1 }}>
+      <FeedLogo action={() => props.history.push('/')} />
+      <HeaderItems />
+    </div>
   );
-}
+});
 
 export default Header;

@@ -1,0 +1,40 @@
+.column-logo {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-direction: column;
+}
+
+.logo-bar {
+    height: 25%;
+    border-radius: 100px;
+}
+
+.bar-1 { width: 100%; } 
+.bar-2 { width: 65%; } 
+.bar-3 { width: 35%; } 
+
+.animated-logo-1 {
+    animation: logo1 infinite ease-in-out 0.6s;
+}   
+.animated-logo-2 {
+    animation: logo2 infinite ease-in-out 0.6s 0.1s;
+}   
+.animated-logo-3 {
+    animation: logo3 infinite ease-in-out 0.6s 0.2s;
+}   
+
+@keyframes logo1 {
+    30% { transform: translateX(20px); }
+    70% { transform: translateX(0); }
+}
+
+@keyframes logo2 {
+    30% { transform: translateX(12px); }
+    70% { transform: translateX(0); }
+}
+
+@keyframes logo3 {
+    30% { transform: translateX(8px); }
+    70% { transform: translateX(0); }
+}
