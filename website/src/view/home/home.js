@@ -31,7 +31,14 @@ const Home = (props) => {
   return (
     <>
       <Header {...props}/>
-      <Button onClick={() => auth.signIn(true,props)}>Sign In</Button>
+      {console.log(auth.authStatus)}
+      {
+        auth.authStatus.isConnected ?
+        <Button onClick={() => props.history.push('/dashboard')}>Go to callendar</Button>
+        :
+        <Button onClick={() => auth.signIn(true,props)}>Sign In</Button>
+      }
+      
     </>
   );
 }
