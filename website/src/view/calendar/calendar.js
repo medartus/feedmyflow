@@ -3,6 +3,7 @@ import { Calendar, momentLocalizer } from "react-big-calendar";
 import { Colors } from "../../Constants"
 
 import CreationModal from "../../components/creationModal/creationModal";
+import { Scrollbars } from 'react-custom-scrollbars';
 import Header from "../../components/header/header";
 import { useTranslation } from 'react-i18next';
 import fire from "../../provider/firebase";
@@ -59,22 +60,24 @@ const Mycalendar = (props) => {
 
   const nextPost = () => (
     <div className="column">
-      {eventsList.map((event) => (
-        <div className="next-post" key={event.id} onClick={() => {
-          eventsRef.current[event.itemId].handleOpen();
-        }}>
-          <p className="next-post-item">
-            <span className="span-item">{t("calendar.date")}</span>{event.rawDate + " " + event.rawTime}
-          </p>
-          <p className="next-post-item clipped">
-            <span className="span-item">{t("calendar.content")}</span>{event.title}
-          </p>
-          <CreationModal
-            ref={(r) => (eventsRef.current[event.itemId] = r)}
-            event={event}
-          />
-        </div>
-      ))}
+      <Scrollbars style={{ width: "42vw", height: "24vw" }}>
+        {eventsList.map((event) => (
+          <div className="next-post" key={event.id} onClick={() => {
+            eventsRef.current[event.itemId].handleOpen();
+          }}>
+            <p className="next-post-item">
+              <span className="span-item">{t("calendar.date")}</span>{event.rawDate + " " + event.rawTime}
+            </p>
+            <p className="next-post-item clipped">
+              <span className="span-item">{t("calendar.content")}</span>{event.title}
+            </p>
+            <CreationModal
+              ref={(r) => (eventsRef.current[event.itemId] = r)}
+              event={event}
+            />
+          </div>
+        ))}
+      </Scrollbars>
       {eventsList.length === 0 && <img src={empty} alt="empty" className="empty-img" />}
     </div>
   );
@@ -113,7 +116,7 @@ const Mycalendar = (props) => {
         culture={i18n.language}
         events={eventsList}
         drilldownView="week"
-        style={{ height: "60vh", width: "100%" }}
+        style={{ height: "65vh", width: "100%" }}
         views={{ month: true, week: true }}
         selectable
         onSelectSlot={({ start }) => { creationModalRef.current.handleOpen(new Date(start)) }}
