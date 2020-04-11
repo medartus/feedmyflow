@@ -10,6 +10,7 @@ import "moment/locale/fr";
 
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "./calendar.css";
+import empty from "../../assets/empty.svg"
 
 const localizer = momentLocalizer(moment);
 
@@ -63,7 +64,7 @@ const Mycalendar = (props) => {
           <p className="next-post-item">
             <span className="span-item">Date: </span>{event.rawDate + " " + event.rawTime}
           </p>
-          <p className="next-post-item">
+          <p className="next-post-item clipped">
             <span className="span-item">Content: </span>{event.title}
           </p>
           <CreationModal
@@ -72,6 +73,7 @@ const Mycalendar = (props) => {
           />
         </div>
       ))}
+      {eventsList.length === 0 && <img src={empty} alt="empty" className="empty-img" />}
     </div>
   );
 
@@ -82,6 +84,7 @@ const Mycalendar = (props) => {
         <p className='second-text'>Automating your feed is just one click away</p>
       </div>
       <Calendar
+        className="calendar"
         popup
         step={60}
         localizer={localizer}
@@ -92,9 +95,9 @@ const Mycalendar = (props) => {
         drilldownView="week"
         style={{ height: "60vh", width: "100%" }}
         views={{ month: true, week: true }}
-        onSelectEvent={(event, e) => {
-          eventsRef.current[event.itemId].handleOpen();
-        }}
+        selectable
+        onSelectSlot={({ start }) => { creationModalRef.current.handleOpen(new Date(start)) }}
+        onSelectEvent={(event, e) => { eventsRef.current[event.itemId].handleOpen() }}
       />
     </div >
   );
@@ -108,9 +111,7 @@ const Mycalendar = (props) => {
       <div
         className="cta-container"
         style={{ backgroundColor: Colors.shade1, margin: '20px' }}
-        onClick={() => {
-          creationModalRef.current.handleOpen();
-        }}
+        onClick={() => { creationModalRef.current.handleOpen() }}
       >
         <p style={{ fontSize: "16px" }} className="cta-text">CREATE POST</p>
       </div>

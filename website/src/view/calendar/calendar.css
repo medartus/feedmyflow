@@ -1,5 +1,5 @@
 .wrapper {
-  width: 100%;
+  width: calc(100% - 3vw);
   height: calc(100% - 10vh);
   padding-top: 4vh;
   padding-left: 3vw;
@@ -14,7 +14,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 20px;
+  margin: 20px 20px 60px 20px;
 }
 
 .upcoming-text {
@@ -28,7 +28,8 @@
   border-radius: 10px;
   width: 40vw;
   padding: 10px;
-  overflow: hidden;
+  max-height: 20vh;
+  cursor: pointer;
 }
 
 .next-post-item {
@@ -37,6 +38,36 @@
   word-break: break-all;
 }
 
+.clipped {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
 .span-item {
   font-weight: bold;
+}
+
+.empty-img {
+  height: 50vh;
+  width: auto;
+}
+
+/* calendar classes */
+.calendar {
+  background-color: white;
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: rgba(0, 0, 0, 0.3) 0 0 20px;
+}
+.rbc-event {
+  max-width: 8vw;
+}
+.rbc-current-time-indicator {
+  background-color: #3da7ca;
+}
+.rbc-day-slot, .rbc-day-bg {
+  cursor: pointer;
 }

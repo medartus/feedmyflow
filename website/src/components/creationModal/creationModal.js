@@ -21,17 +21,75 @@ import {
   KeyboardTimePicker,
   KeyboardDatePicker,
 } from "@material-ui/pickers";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, ThemeProvider, createMuiTheme, styled, withStyles } from "@material-ui/core/styles";
 import DateFnsUtils from "@date-io/date-fns";
 import fire from "../../provider/firebase";
 import moment from "moment";
+import "./creationModal.css"
+import { Colors } from "../../Constants";
+
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: Colors.primary
+    }
+  },
+  overrides: {
+    MuiFormLabel: {
+      asterisk: {
+        color: Colors.error,
+        '&$error': {
+          color: Colors.error
+        },
+      }
+    }
+  }
+})
+
+const ConfirmButton = withStyles({
+  root: {
+    backgroundColor: Colors.shade1,
+    marginTop: "20px",
+    borderRadius: "100px",
+    width: "15vw",
+    "&:hover": {
+      backgroundColor: Colors.primary
+    },
+    "&:disabled": {
+      backgroundColor: "rgba(0, 0, 0, 0.2)"
+    }
+  },
+  label: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: "18px"
+  }
+})(Button);
+
+const DeleteButton = withStyles({
+  root: {
+    backgroundColor: Colors.error,
+    marginTop: "20px",
+    borderRadius: "100px",
+    width: "15vw",
+    "&:hover": {
+      backgroundColor: Colors.error
+    },
+  },
+  label: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: "18px"
+  }
+})(Button);
+
 
 const useStyles = makeStyles((theme) => ({
   modal: {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-  },
+  }
 }));
 
 const CreationModal = forwardRef((props, ref) => {
@@ -76,7 +134,11 @@ const CreationModal = forwardRef((props, ref) => {
   );
 
   useImperativeHandle(ref, () => ({
-    handleOpen() {
+    handleOpen(optDate = null) {
+      if (optDate) {
+        setPublicationDate(optDate);
+        setPublicationTime(optDate);
+      }
       setOpen(true);
     },
   }));
@@ -221,42 +283,42 @@ const CreationModal = forwardRef((props, ref) => {
     setPublicationTime(dateTime);
   };
 
-  const mediaRender = () => {
-    if (shareMediaCategory !== "NONE") {
-      return (
-        <Grid container spacing={3}>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              id="mediaTitle"
-              label="Titre"
-              value={mediaTitle}
-              onChange={(e) => setMediaTitle(e.target.value)}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              id="mediaDescription"
-              label="Description"
-              value={mediaDescription}
-              onChange={(e) => setMediaDescription(e.target.value)}
-              multiline
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              id="mediaUrl"
-              label="Url"
-              value={mediaUrl}
-              onChange={(e) => setMediaUrl(e.target.value)}
-            />
-          </Grid>
-        </Grid>
-      );
-    }
-  };
+  // const mediaRender = () => {
+  //   if (shareMediaCategory !== "NONE") {
+  //     return (
+  //       <Grid container spacing={3}>
+  //         <Grid item xs={12}>
+  //           <TextField
+  //             fullWidth
+  //             id="mediaTitle"
+  //             label="Titre"
+  //             value={mediaTitle}
+  //             onChange={(e) => setMediaTitle(e.target.value)}
+  //           />
+  //         </Grid>
+  //         <Grid item xs={12}>
+  //           <TextField
+  //             fullWidth
+  //             id="mediaDescription"
+  //             label="Description"
+  //             value={mediaDescription}
+  //             onChange={(e) => setMediaDescription(e.target.value)}
+  //             multiline
+  //           />
+  //         </Grid>
+  //         <Grid item xs={12}>
+  //           <TextField
+  //             fullWidth
+  //             id="mediaUrl"
+  //             label="Url"
+  //             value={mediaUrl}
+  //             onChange={(e) => setMediaUrl(e.target.value)}
+  //           />
+  //         </Grid>
+  //       </Grid>
+  //     );
+  //   }
+  // };
 
   return (
     <Modal
@@ -269,20 +331,152 @@ const CreationModal = forwardRef((props, ref) => {
       BackdropComponent={Backdrop}
       BackdropProps={{
         timeout: 500,
+        className: "backdrop"
       }}
     >
       <Fade in={open}>
-        <Card>
-          <CardContent>
+        <ThemeProvider theme={theme}>
+
+          <div className="column card">
+            <p className="important-text" style={{ fontSize: "22px", marginTop: "20px" }}>
+              {isEvent ? `Post scheduled for the ${props.event.rawDate} at ${props.event.rawTime}` : "Create post"}
+            </p>
+            <div className="row">
+              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <KeyboardDatePicker
+                  margin="normal"
+                  required
+                  style={{ marginRight: "20px" }}
+                  id="date-picker-dialog"
+                  label="Date picker dialog"
+                  format="dd/MM/yyyy"
+                  value={publicationDate}
+                  onChange={(e) => setPublicationDate(e)}
+                  KeyboardButtonProps={{
+                    "aria-label": "change date"
+                  }}
+                />
+                <KeyboardTimePicker
+                  margin="normal"
+                  required
+                  id="time-picker"
+                  label="Time picker"
+                  value={publicationTime}
+                  ampm={false}
+                  minutesStep={15}
+                  onChange={(e) => configurePublicationTime(e)}
+                  KeyboardButtonProps={{
+                    "aria-label": "change time",
+                  }}
+                />
+              </MuiPickersUtilsProvider>
+            </div>
+            <div className="row">
+              <TextField
+                fullWidth
+                label="Content"
+                id="shareCommentary"
+                rowsMax={5}
+                value={shareCommentary}
+                onChange={(e) => setShareCommentary(e.target.value)}
+                multiline
+                required
+              />
+            </div>
+            <div className="row">
+              <TextField
+                fullWidth
+                id="mediaUrl"
+                label="Link"
+                value={mediaUrl}
+                onChange={(e) => setMediaUrl(e.target.value)}
+              />
+            </div>
+            <div className="row">
+              <TextField
+                fullWidth
+                id="mediaTitle"
+                label="Title"
+                value={mediaTitle}
+                onChange={(e) => setMediaTitle(e.target.value)}
+              />
+            </div>
+            <div className="row">
+              <TextField
+                fullWidth
+                id="mediaDescription"
+                label="Description"
+                value={mediaDescription}
+                onChange={(e) => setMediaDescription(e.target.value)}
+                multiline
+              />
+            </div>
+            {isEvent ? (
+              <div className="row">
+                <DeleteButton
+                  onClick={onDeleteData}
+                >
+                  Delete
+                </DeleteButton>
+                <ConfirmButton
+                  onClick={onUpdateData}
+                  disabled={!haveModification}
+                >
+                  Update
+                </ConfirmButton>
+              </div>
+            ) : (
+                <ConfirmButton
+                  onClick={onSendData}
+                  disabled={!canSave}
+                >
+                  Create post
+                </ConfirmButton>
+              )}
+          </div>
+          <div className="column card">
+            <div className="row" style={{ marginTop: "20px" }}>
+              <img src={fire.auth().currentUser.photoURL} alt="user-img" className="user-img" />
+              <div className="column" style={{ alignItems: "flex-start", marginLeft: "20px" }}>
+                <p style={{ margin: 0 }}>{fire.auth().currentUser.displayName}</p>
+                <div className="skeleton" style={{ width: "30vw" }} />
+                <div className="skeleton" style={{ width: "10vw" }} />
+              </div>
+            </div>
+            <div className="row">
+              <p className="next-post-item" style={{ margin: 0 }}>
+                {shareCommentary}
+              </p>
+            </div>
+            {mediaUrl.length > 0 &&
+              <>
+                <div className="row">
+                  <img />
+                </div>
+                <div className="row" style={{ backgroundColor: "#F3F6F8", width: "100%" }}>
+                  <div className="column">
+                    <p>{mediaTitle}</p>
+                    <p>{mediaUrl}</p>
+                    <p>{mediaDescription}</p>
+                  </div>
+                </div>
+              </>
+            }
+
+          </div>
+
+        </ThemeProvider>
+
+        {/* <CardContent>
             {isEvent ? (
               <Typography variant="h5" component="h2">
                 Post prévu pour le {props.event.rawDate} à {props.event.rawTime}
               </Typography>
             ) : (
-              <Typography variant="h5" component="h2">
-                Create
-              </Typography>
-            )}
+                <Typography variant="h5" component="h2">
+                  Create
+                </Typography>
+              )}
             <Divider />
             <Grid container spacing={3}>
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -370,19 +564,18 @@ const CreationModal = forwardRef((props, ref) => {
                 </Button>
               </>
             ) : (
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={onSendData}
-                disabled={!canSave}
-              >
-                Create
-              </Button>
-            )}
-          </CardContent>
-        </Card>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={onSendData}
+                  disabled={!canSave}
+                >
+                  Create
+                </Button>
+              )}
+          </CardContent> */}
       </Fade>
-    </Modal>
+    </Modal >
   );
 });
 export default CreationModal;

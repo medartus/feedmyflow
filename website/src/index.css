@@ -13,8 +13,8 @@ div {
   transition: all ease-in-out .2s;
 }
 
-p, button, span, a {
-  font-family: "Poppins"!important;
+p, button, span, a, textarea, label {
+  font-family: "Poppins";
   color: #133540;
 }
 

@@ -4,6 +4,7 @@ const Colors = {
   dark: "#00698C",
   shade1: "#133540",
   shade2: "#003040",
+  error: "#F54C4C"
 };
 
 const AboutData = {
