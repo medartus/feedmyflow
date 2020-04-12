@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import { Colors } from "../../Constants"
 

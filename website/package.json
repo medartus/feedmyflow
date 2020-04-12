@@ -14,6 +14,7 @@
     "moment": "^2.24.0",
     "react": "^16.12.0",
     "react-big-calendar": "^0.23.0",
+    "react-bootstrap-sweetalert": "^5.1.9",
     "react-dom": "^16.12.0",
     "react-lottie": "^1.2.3",
     "react-router-dom": "^5.1.2",

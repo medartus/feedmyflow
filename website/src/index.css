@@ -13,9 +13,13 @@ div {
   transition: all ease-in-out .2s;
 }
 
-p, button, span, a, textarea, label {
+p, button, span, a, textarea, label, option, select {
   font-family: "Poppins";
   color: #133540;
+}
+
+svg {
+  fill: white!important;
 }
 
 code {

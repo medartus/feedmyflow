@@ -1,0 +1,20 @@
+.alert-btn {
+    width: 140px;
+    height: 40px;
+    border-radius: 40px;
+    background-color: #133540;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Poppins";
+    font-weight: bold;
+    font-size: 18px;
+    text-transform: uppercase;
+    color: white;
+    text-decoration: none;
+}
+
+
+.danger-btn {
+    background-color: #F54C4C;
+}

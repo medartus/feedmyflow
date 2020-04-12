@@ -5,7 +5,6 @@ import Login from "./view/login/login";
 import MyCalendar from "./view/calendar/calendar";
 import About from "./view/about/about";
 import ProtectedRoute from "./components/protectedRoute/protectedRoute";
-import RedirectRoute from "./components/redirectRoute/redirectRoute";
 import { ProvideAuth } from "./provider/auth.js";
 
 import "./App.css";
