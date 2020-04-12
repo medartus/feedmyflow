@@ -80,10 +80,10 @@ const Mycalendar = (props) => {
 
   const NextPosts = () => (
     <div className="column">
-      <Scrollbars style={{ width: "42vw", height: "24vw" }}>
-      {eventsList.map((event) => (
-        <PostSummary event={event} />
-      ))}
+      <Scrollbars style={{ width: "44vw", height: "30vw" }}>
+        {eventsList.map((event) => (
+          <PostSummary event={event} />
+        ))}
       </Scrollbars>
       {eventsList.length === 0 && (
         <img src={empty} alt="empty" className="empty-img" />

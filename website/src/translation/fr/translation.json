@@ -61,7 +61,7 @@
         },
         "deleteDate":{
             "confirm":"Etes vous sur de vouloir supprimer ce post ?",
-            "delete":"Supprimer le post",
+            "delete":"Supprimer",
             "cancel":"Annuler"
         },
         "publicationTime":{

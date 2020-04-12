@@ -7,7 +7,6 @@ import { withStyles } from "@material-ui/core/styles";
 import InputBase from "@material-ui/core/InputBase";
 
 import { useAuth } from "../../provider/auth";
-import { Colors } from "../../Constants"
 
 import "./header.css";
 import FeedLogo from "../feedlogo/feedlogo";

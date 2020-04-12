@@ -200,7 +200,8 @@ const useProvideAuth = () => {
 
     // Cleanup subscription on unmount
     return () => unsubscribe();
-  }, [authStatus]);
+  }, []);
+
 
   // Return the user object and auth methods
   return {

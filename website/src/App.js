@@ -15,7 +15,7 @@ export const App = () => (
     <ProvideAuth>
       <LoadingScreen>
         <Switch>
-            <RedirectedRoute exact path="/dashboard" comp={MyCalendar} connected redirect="/dashboard" needToBeConnected={true}/>
+            <RedirectedRoute exact path="/dashboard" comp={(MyCalendar)} connected redirect="/" needToBeConnected={true}/>
             <RedirectedRoute exact path="/" comp={Home} redirect="/dashboard" needToBeConnected={false}/>
             <Route exact path="/login" component={Login} />
             <Route exact path="/about" component={About} />
