@@ -60,7 +60,9 @@
             "past":"La date ne doit pas être antérieur à maintenant"
         },
         "deleteDate":{
-            "confirm":"Etes vous sur de vouloir supprimer ce post ?"
+            "confirm":"Etes vous sur de vouloir supprimer ce post ?",
+            "delete":"Supprimer le post",
+            "cancel":"Annuler"
         },
         "publicationTime":{
             "quarter":"Les messages sont postés toutes les 15 minutes."
@@ -71,7 +73,12 @@
             "shareCommentary":"Contenu",
             "mediaUrl":"Lien",
             "mediaTitle":"Titre",
-            "mediaDescription":"Description"
+            "mediaDescription":"Description",
+            "visibility":"Visibilité",
+            "visibilityValue":{
+                "public":"Publique",
+                "connexions":"Relations"
+            }
         },
         "button":{
             "delete":"Suppresion",

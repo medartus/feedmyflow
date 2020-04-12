@@ -56,14 +56,16 @@
     },
     "creationModal":{
         "validDate":{
-            "valid":"Please choose a valid date",
-            "past":"The date cannot be in the past"
+            "valid":"Please input a valid date.",
+            "before":"The date musn't be before now"
         },
         "deleteDate":{
-            "confirm":"Are you sure to delete this post ?"
+            "confirm":"Are you sure you want to delete that post ?",
+            "delete":"Delete post",
+            "cancel":"Cancel"
         },
         "publicationTime":{
-            "quarter":"Messages are posted every 15 minutes."
+            "quarter":"Posts are scheduled every 15 minutes."
         },
         "input":{
             "date":"Publication date",
@@ -71,7 +73,12 @@
             "shareCommentary":"Content",
             "mediaUrl":"Link",
             "mediaTitle":"Title",
-            "mediaDescription":"Description"
+            "mediaDescription":"Description",
+            "visibility":"Visibility",
+            "visibilityValue":{
+                "public":"Public",
+                "connexions":"Connexions"
+            }
         },
         "button":{
             "delete":"Delete",

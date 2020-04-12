@@ -1,44 +1,36 @@
 .modal {
-    display: 'flex';
-    align-items: 'center';
-    justify-content: 'center';
+  display: "flex";
+  align-items: "center";
+  justify-content: "center";
 }
 
 .backdrop {
-    background-color: #020A1A;
-    opacity: 0.5;
+  background-color: #020a1a;
+  opacity: 0.5;
 }
 
-
 .card {
-    margin-left: 2vw;
-    margin-right: 2vw;
-    height: 80vh;
-    width: 80vh;
-    border-radius: 20px;
-    background-color: white;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
+  margin-left: 2vw;
+  margin-right: 2vw;
+  height: 80vh;
+  width: 80vh;
+  border-radius: 20px;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.overflowable {
+  overflow-y: scroll;
+  padding-bottom: 20px;
+  height: calc(80vh - 20px);
 }
 
 .row {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    width: 80%;
-    margin-bottom: 20px;
-}
-
-.user-img {
-    border-radius: 50%;
-    width: 10vh;
-    height: 10vh;
-}
-
-.skeleton {
-    height: 16px;
-    margin-top: 6px;
-    border-radius: 4px;
-    background-color: #d6f3fd;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 80%;
+  margin-bottom: 20px;
 }

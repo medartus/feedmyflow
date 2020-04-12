@@ -1,28 +1,33 @@
 .header-container {
-    width: calc(100% - 3vw);
-    height: 10vh;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-left: 3vw;
+  width: calc(100% - 3vw);
+  height: 10vh;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 3vw;
 }
 
 .options-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
 }
 
 .header-item {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
 
 .header-text {
-    color: #fff;
-    font-size: 18px;
-    margin: 20px;
+  color: #fff;
+  font-size: 18px;
+  margin: 20px;
+}
+
+/* fill for chevron */
+.MuiSelect-iconOutlined {
+  fill: white !important;
 }
