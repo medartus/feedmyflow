@@ -11,7 +11,7 @@ class MailProvider {
             service: 'gmail',
             auth: {
                 user: 'feedmyflow@gmail.com',
-                pass: "whpelydbgggprubb",
+                pass: functions.config().email.password,
             }
         });
     }

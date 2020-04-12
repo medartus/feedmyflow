@@ -16,10 +16,10 @@ const OAUTH_SCOPES = ['r_liteprofile', 'r_emailaddress', 'w_member_social'];
 const linkedInClient = () => {
   // LinkedIn OAuth 2 setup
   return require('node-linkedin')(
-      functions.config().linkedin.client_id,
-      functions.config().linkedin.client_secret,
-      `http://localhost:3000/login`);
-      // `https://${process.env.GCLOUD_PROJECT}.web.app/login`);
+    functions.config().linkedin.client_id,
+    functions.config().linkedin.client_secret,
+    `http://localhost:3000/login`);
+    // `https://${process.env.GCLOUD_PROJECT}.web.app/login`);
 }
 
 // exports.mailTest = functions.https.onRequest((req,res) =>{
