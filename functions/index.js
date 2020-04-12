@@ -22,12 +22,20 @@ const linkedInClient = () => {
       // `https://${process.env.GCLOUD_PROJECT}.web.app/login`);
 }
 
+// exports.mailTest = functions.https.onRequest((req,res) =>{
+//   const mailprovider = new MailProvider()
+//   mailprovider.sendWelcomeEmail("nico.caill@live.fr","Nicolas Caillieux")
+//   // mailprovider.sendPostConfirmation({userUID:"linkedin:hV1NxWo7fQ",shareCommentary:"How I became EL Connector. By blabla ldzadzefojezifjozhfzohfouzehclkpo zeifjzeoi  czeoijfçzrjgeto"})
+//   .then(() => res.send("ok"))
+//   .catch((er) => console.log(er))
+// })
 
 /**
  * Redirects the User to the LinkedIn authentication consent screen. ALso the 'state' cookie is set for later state
  * verification.
  */
-exports.redirect = functions.https.onRequest((req, res) => {
+exports.redirect = functions.https.onRequest( (req, res) => {
+
   const Linkedin = linkedInClient();
   cookieParser()(req, res, () => {
     const state = req.cookies.state || crypto.randomBytes(20).toString('hex');
@@ -104,7 +112,7 @@ exports.LinkedinPost = functions.https.onRequest( async (req, res) => {
 
 exports.sendWelcomeEmail = functions.auth.user().onCreate((user) => {
   const mailProvider = new MailProvider()
-  return mailProvider.sendWelcomeEmail(user.email)
+  return mailProvider.sendWelcomeEmail(user.email,user.displayName)
     .then(()=> console.log('Welcome email sended to '+ user.uid))
     .catch((error)=> {console.log(error.toString())});
 });
