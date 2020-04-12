@@ -71,7 +71,7 @@ const getSuccessProps = (title, onConfirm) => ({
   onConfirm,
 });
 
-const URL_REGEX = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/;
+const URL_REGEX = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!$&'()*+,;=.]+$/;
 
 const extractDomain = (url) => (url ? new URL(url).hostname : "");
 

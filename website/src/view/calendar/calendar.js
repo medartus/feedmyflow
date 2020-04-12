@@ -1,16 +1,19 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
-import { Colors } from "../../Constants"
+import moment from "moment";
+import "moment/locale/fr";
+import "react-big-calendar/lib/css/react-big-calendar.css";
 
 import CreationModal from "../../components/creationModal/creationModal";
 import Header from "../../components/header/header";
 import fire from "../../provider/firebase";
-import moment from "moment";
-import "moment/locale/fr";
 
-import "react-big-calendar/lib/css/react-big-calendar.css";
+import { Colors } from "../../Constants";
+import empty from "../../assets/empty.svg";
 import "./calendar.css";
-import empty from "../../assets/empty.svg"
+
+const CALENDAR_STYLE = { height: "60vh", width: "100%" };
+const CALENDAR_VIEWS = { month: true, week: true };
 
 const localizer = momentLocalizer(moment);
 
@@ -19,31 +22,25 @@ const Mycalendar = (props) => {
   const creationModalRef = useRef();
   const eventsRef = useRef([]);
 
-  let currentUser = undefined;
-  let userUid = undefined;
-  let db = fire.firestore();
-
   useEffect(() => {
-    currentUser = fire.auth().currentUser;
-    userUid = currentUser.uid;
+    const currentUser = fire.auth().currentUser;
+    const userUid = currentUser.uid;
+    const db = fire.firestore();
     var unsubscribeSnapshot = db
       .collection("user")
       .doc(userUid)
       .collection("post")
       .onSnapshot((documents) => {
-        let newEventsList = [];
-        documents.docs.map((query, i) => {
+        let newEventsList = documents.docs.map((query, i) => {
           let data = query.data();
           data["itemId"] = i;
           data["id"] = query.id;
           data["title"] = data.shareCommentary;
           data["start"] = new Date(data.publicationTime.toDate());
           data["end"] = moment(data.start).add(15, "m").toDate();
-          newEventsList.push(data);
+          return data;
         });
-        newEventsList.sort((a, b) => {
-          return a.start - b.start;
-        });
+        newEventsList.sort((a, b) => a.start - b.start);
         setEventsList(newEventsList);
         return () => {
           unsubscribeSnapshot();
@@ -51,38 +48,54 @@ const Mycalendar = (props) => {
       });
   }, []);
 
-  useEffect(() => {
-    eventsRef.current = eventsRef.current.slice(0, eventsList.length);
-  }, [eventsList]);
+  // useEffect(() => {
+  //   eventsRef.current = eventsRef.current.slice(0, eventsList.length);
+  // }, [eventsList]);
 
-  const nextPost = () => (
+  const PostSummary = ({ event }) => (
+    <div
+      className="next-post"
+      key={event.id}
+      onClick={() => {
+        eventsRef.current[event.itemId].handleOpen();
+      }}
+    >
+      <p className="next-post-item">
+        <span className="span-item">Date: </span>
+        {`${event.rawDate} ${event.rawTime}`}
+      </p>
+      <p className="next-post-item clipped">
+        <span className="span-item">Content: </span>
+        {event.title}
+      </p>
+      <CreationModal
+        ref={(r) => (eventsRef.current[event.itemId] = r)}
+        event={event}
+      />
+    </div>
+  );
+
+  const NextPosts = () => (
     <div className="column">
       {eventsList.map((event) => (
-        <div className="next-post" key={event.id} onClick={() => {
-          eventsRef.current[event.itemId].handleOpen();
-        }}>
-          <p className="next-post-item">
-            <span className="span-item">Date: </span>{event.rawDate + " " + event.rawTime}
-          </p>
-          <p className="next-post-item clipped">
-            <span className="span-item">Content: </span>{event.title}
-          </p>
-          <CreationModal
-            ref={(r) => (eventsRef.current[event.itemId] = r)}
-            event={event}
-          />
-        </div>
+        <PostSummary event={event} />
       ))}
-      {eventsList.length === 0 && <img src={empty} alt="empty" className="empty-img" />}
+      {eventsList.length === 0 && (
+        <img src={empty} alt="empty" className="empty-img" />
+      )}
+    </div>
+  );
+
+  const HeaderText = () => (
+    <div className="column" style={{ alignItems: "flex-start" }}>
+      <p className="important-text">Schedule your next post</p>
+      <p className="second-text">Automating your feed is just one click away</p>
     </div>
   );
 
   const LeftPart = () => (
     <div className="column" style={{ alignItems: "flex-start" }}>
-      <div className="column" style={{ alignItems: "flex-start" }}>
-        <p className="important-text">Schedule your next post</p>
-        <p className='second-text'>Automating your feed is just one click away</p>
-      </div>
+      <HeaderText />
       <Calendar
         className="calendar"
         popup
@@ -93,31 +106,50 @@ const Mycalendar = (props) => {
         culture="fr"
         events={eventsList}
         drilldownView="week"
-        style={{ height: "60vh", width: "100%" }}
-        views={{ month: true, week: true }}
+        style={CALENDAR_STYLE}
+        views={CALENDAR_VIEWS}
         selectable
-        onSelectSlot={({ start }) => { creationModalRef.current.handleOpen(new Date(start)) }}
-        onSelectEvent={(event, e) => { eventsRef.current[event.itemId].handleOpen() }}
+        onSelectSlot={({ start }) => {
+          creationModalRef.current.handleOpen(new Date(start));
+        }}
+        onSelectEvent={(event, e) => {
+          eventsRef.current[event.itemId].handleOpen();
+        }}
       />
-    </div >
+    </div>
+  );
+
+  const CreatePost = () => (
+    <div
+      className="cta-container"
+      style={{ backgroundColor: Colors.shade1, margin: "20px" }}
+      onClick={() => {
+        creationModalRef.current.handleOpen();
+      }}
+    >
+      <p style={{ fontSize: "16px" }} className="cta-text">
+        CREATE POST
+      </p>
+    </div>
+  );
+
+  const UpcomingPosts = () => (
+    <div
+      className="upcoming-container"
+      style={{ backgroundColor: Colors.primary }}
+    >
+      <p className="upcoming-text">UPCOMING POSTS</p>
+    </div>
   );
 
   const RightPart = () => (
-    <div className='column' style={{ justifyContent: 'flex-start' }}>
-      <div className="upcoming-container" style={{ backgroundColor: Colors.primary }}>
-        <p className="upcoming-text">UPCOMING POSTS</p>
-      </div>
-      {nextPost()}
-      <div
-        className="cta-container"
-        style={{ backgroundColor: Colors.shade1, margin: '20px' }}
-        onClick={() => { creationModalRef.current.handleOpen() }}
-      >
-        <p style={{ fontSize: "16px" }} className="cta-text">CREATE POST</p>
-      </div>
+    <div className="column" style={{ justifyContent: "flex-start" }}>
+      <UpcomingPosts />
+      <NextPosts />
+      <CreatePost />
       <CreationModal ref={creationModalRef} />
     </div>
-  )
+  );
 
   return (
     <>

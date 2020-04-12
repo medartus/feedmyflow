@@ -1,13 +1,8 @@
-import React from 'react';
-import SweetAlert from 'react-bootstrap-sweetalert';
+import React from "react";
+import SweetAlert from "react-bootstrap-sweetalert";
 
-import "./InfoAlert.css"
+import "./InfoAlert.css";
 
-
-export default ({ content, ...props }) => {
-    return (
-        <SweetAlert {...props}>
-        </SweetAlert>    
-    )
-}
-
+export default (props) => {
+  return <SweetAlert {...props}></SweetAlert>;
+};

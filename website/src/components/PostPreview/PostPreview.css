@@ -31,9 +31,9 @@
   word-break: break-all;
 }
 
-.clipped-1 {
+.clip-1 {
   -webkit-line-clamp: 1;
 }
-.clipped-2 {
+.clip-2 {
   -webkit-line-clamp: 2;
 }
