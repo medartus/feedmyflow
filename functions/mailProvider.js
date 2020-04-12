@@ -29,7 +29,8 @@ class MailProvider {
         let html = fs.readFileSync(`./emailTemplates/${templateName}.html`,'utf8')
 
         Object.keys(context).forEach(key => {
-            html = html.replace(`{{${key}}}`,context[key]);
+            const regex = new RegExp(`{{${key}}}`,"g")
+            html = html.replace(regex,context[key]);
         });  
 
         return juice(html)
@@ -38,20 +39,20 @@ class MailProvider {
     sendPostConfirmation(data){
         const {userUID,shareCommentary} = data;
         return new Promise(async (resolve,reject) => {
-            const {email,displayName} = await admin.auth().getUser(userUID)
+            const {email,displayName,photoURL} = await admin.auth().getUser(userUID)
                 .then((userRecord) => {return userRecord})
                 .catch((err)=>reject(err));
             if (email !== undefined){
 
-                const html = this.getEmailTemplate("postConfirmation",{displayName,shareCommentary})
+                const html = this.getEmailTemplate("postConfirmation",{displayName,shareCommentary,photoURL})
                 const mailOptions = {
                     from: 'feedmyflow@gmail.com', // Something like: Jane Doe <janedoe@gmail.com>
-                    to: "nico.caill@live.fr",
-                    subject: `FeedMyFlow post confirmation ${email}`, // email subject
+                    to: email,
+                    subject: `FeedMyFlow post confirmation`, // email subject
                     html,
                     attachments: [{
                         path: './emailTemplates/fmf.PNG',
-                        cid: 'fmfLogo' //same cid value as in the html img src
+                        cid: 'fmfLogo'
                     }]
                 };
                 this.sendEmail(mailOptions)
@@ -72,7 +73,7 @@ class MailProvider {
                 html,
                 attachments: [{
                     path: './emailTemplates/fmf.PNG',
-                    cid: 'fmfLogo' //same cid value as in the html img src
+                    cid: 'fmfLogo'
                 }]
             };
             this.sendEmail(mailOptions)

@@ -2,22 +2,48 @@
 <html>
     <head>
         <style>
-            body{width: 100%;}
+
+            @media screen and (min-width: 1400px){
+                #body{width: 75%!important;padding: 0% 12.5%!important;}
+                #post{margin: 0% 10%!important;width: 77%!important;}
+
+                #title{font-size: 1.8em!important;}
+                #description{font-size: 1.3rem!important;}
+                #post-name{font-size: 1.8em!important;}
+                #post-desc{font-size: 1.5em!important;}
+                #post-comment{margin: 0% 10%!important;font-size: 1.5em!important;}
+            }
+
+            @media screen and (min-width: 800px){
+                #body{width: 80%!important;padding:0% 10%!important;}
+                #post,#post-comment{margin: 0% 6%!important;}
+                #post{width: 85%!important;}
+            }
+
+            #body{width: 100%;padding: 0%}
             #logo{width: 40%;padding: 2% 30%;align-self: center;}
             #header  {background-color:rgba(240, 240, 240, 0.705);display: block;}
-            #content {background-color:rgb(249, 254, 255);}
+            #content {background-color:rgb(236, 248, 250); padding-bottom: 5%;}
 
-            #title{color:#393E46; font-size: 1.8em; padding: 3% 0%;text-align: center;margin:0;}
-            #description{font-size: 1.5em; padding: 2% 0%;margin: 0% 0% 0% 10%;}
-            #signature{font-size: 1em; padding: 2% 0%;margin: 0% 0% 0% 10%;}
+            #title{color:#393E46; font-size: 1.5em; padding: 3% 0%;text-align: center;margin:0;}
+            #description{font-size: 1em; padding: 2% 0%;margin: 0% 0% 0% 10%;}
+            #signature{font-size: 1em; padding: 2% 0%;margin: 5% 0% 0% 10%;}
 
-            #post{background-color: white;width: 80%;margin: 0% 10%; border: solid 1px #d8d8d8}
-            #post-comment{font-size: 1.5em; padding: 2% 0%;margin: 0% 0% 0% 10%;}
+            #post{background-color: white;width: 91%;margin: 0% 3%;padding: 3% 1.5%;
+                  border-radius: 15px;}
+            #post-top{display: inline-flex;height:20%;margin-left: 10%;}
+            #photo{width: 20%;height: 20%; border-radius: 50px;margin-right: 7%;border: solid 1.7px rgb(119, 119, 119); }
+            #post-info {padding:4% 0%;}
+            #post-info p{margin:0}
+            #post-name{font-size: 1em;font-weight: bold;}
+            #post-desc{font-style: italic;font-size: 1em;}
 
+            #post-comment{font-size: 1em; padding: 2% 0%;margin: 0% 3%;}
+        
 
         </style>
     </head>
-    <body>
+    <body id="body">
         <div id="header">
             <img id="logo" src="cid:fmfLogo"/>
         </div>
@@ -25,6 +51,13 @@
             <p id="title"> Hello {{displayName}} !</p>
             <p id="description">Your post has been successfully posted on LinkedIn:</p>
             <div id="post">
+                <div id="post-top">
+                    <img id="photo" src="{{photoURL}}"/>
+                    <div id="post-info">
+                        <p id="post-name">{{displayName}}</p>
+                        <p id="post-desc">Posted on LinkedIn</p>
+                    </div>
+                </div>
                 <p id="post-comment">"{{shareCommentary}}"</p>
             </div>
             <p id="signature">FeedMyFlow team</p>
