@@ -18,6 +18,7 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import DateFnsUtils from "@date-io/date-fns";
 
 import fire from "../../provider/firebase";
+import moment from "moment";
 import { useTranslation } from "react-i18next";
 
 import "./creationModal.css";
@@ -192,10 +193,11 @@ const CreationModal = memo(
       let hours = publicationTime.getHours() == 0 ? "00" : publicationTime.getHours()
       let minutes = publicationTime.getMinutes() == 0 ? "00" : publicationTime.getMinutes()
       let rawTime = `${hours}:${minutes}`;
+      let time = moment(rawDate + " " + rawTime + ":00","DD/MM/YYYY");
       let linekdinPost = {
         author: "urn:li:person:" + userUid.split(":")[1],
         userUID: userUid,
-        publicationTime,
+        publicationTime:time.toDate(),
         shareCommentary,
         visibility,
         shareMediaCategory,
@@ -211,6 +213,7 @@ const CreationModal = memo(
           linekdinPost["media"]["description"] = mediaDescription;
         }
       }
+      console.log(linekdinPost)
       return linekdinPost;
     };
 
