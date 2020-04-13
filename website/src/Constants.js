@@ -13,8 +13,8 @@ const defaultAlertProps = {
   showCancel: true,
   title: "",
   confirmBtnBsStyle: "danger",
-  onConfirm: () => {},
-  onCancel: () => {},
+  onConfirm: () => { },
+  onCancel: () => { },
   focusCancelBtn: true,
 };
 
@@ -53,9 +53,21 @@ const getSuccessProps = (title, onConfirm) => ({
   onConfirm,
 });
 
-const URL_REGEX = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!$&'()*+,;=.]+$/;
+const isValidUrl = url => {
+  try {
+    const _ = new URL(url);
+    return true
+  }
+  catch (e) { return false; }
+}
 
-const extractDomain = (url) => (url ? new URL(url).hostname : "");
+const extractDomain = (url) => {
+  if (!url) return "";
+  try {
+    return new URL(url).hostname;
+  }
+  catch (e) { return url; }
+}
 
 export {
   Colors,
@@ -64,5 +76,5 @@ export {
   getDangerProps,
   getSuccessProps,
   extractDomain,
-  URL_REGEX,
+  isValidUrl
 };

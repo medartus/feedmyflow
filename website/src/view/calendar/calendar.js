@@ -80,14 +80,16 @@ const Mycalendar = (props) => {
 
   const NextPosts = () => (
     <div className="column">
-      <Scrollbars style={{ width: "44vw", height: "30vw" }}>
-        {eventsList.map((event) => (
-          <PostSummary event={event} />
-        ))}
-      </Scrollbars>
-      {eventsList.length === 0 && (
+      {eventsList.length === 0 ? (
         <img src={empty} alt="empty" className="empty-img" />
-      )}
+      )
+        :
+        <Scrollbars style={{ width: "44vw", height: "30vw", marginTop: "50px" }}>
+          {eventsList.map((event) => (
+            <PostSummary event={event} />
+          ))}
+        </Scrollbars>
+      }
     </div>
   );
 
@@ -98,20 +100,20 @@ const Mycalendar = (props) => {
     </div>
   );
 
-  const messageCalender = () =>{
+  const messageCalender = () => {
     return {
-      allDay:  t('calendar.messageCalendar.allDay'),
-      previous:  t('calendar.messageCalendar.previous'),
-      next:  t('calendar.messageCalendar.next'),
-      today:  t('calendar.messageCalendar.today'),
-      month:  t('calendar.messageCalendar.month'),
-      week:  t('calendar.messageCalendar.week'),
-      day:  t('calendar.messageCalendar.day'),
-      agenda:  t('calendar.messageCalendar.agenda'),
-      date:  t('calendar.messageCalendar.date'),
-      time:  t('calendar.messageCalendar.time'),
-      event:  t('calendar.messageCalendar.event'), // Or anything you want
-      showMore: total => t('calendar.messageCalendar.showMore',{total})
+      allDay: t('calendar.messageCalendar.allDay'),
+      previous: t('calendar.messageCalendar.previous'),
+      next: t('calendar.messageCalendar.next'),
+      today: t('calendar.messageCalendar.today'),
+      month: t('calendar.messageCalendar.month'),
+      week: t('calendar.messageCalendar.week'),
+      day: t('calendar.messageCalendar.day'),
+      agenda: t('calendar.messageCalendar.agenda'),
+      date: t('calendar.messageCalendar.date'),
+      time: t('calendar.messageCalendar.time'),
+      event: t('calendar.messageCalendar.event'), // Or anything you want
+      showMore: total => t('calendar.messageCalendar.showMore', { total })
     }
   }
 

@@ -15,7 +15,7 @@ const resources = {
   }
 };
 
-const userLang = navigator.language || navigator.userLanguage;
+// const userLang = navigator.language || navigator.userLanguage;
 
 i18n
   .use(detector)

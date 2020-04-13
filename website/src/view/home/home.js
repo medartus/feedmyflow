@@ -32,8 +32,7 @@ const UpperText = ({ t, iconSize }) => (
 
 const Home = memo((props) => {
   const auth = useAuth();
-  const { t, i18n } = useTranslation();
-
+  const { t } = useTranslation();
   const onAuth = useCallback(() => auth.signIn(true, props), [auth, props]);
 
   const GoButton = () => (

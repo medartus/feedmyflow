@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useState } from "react";
+import React, { memo, useCallback } from "react";
 import { useTranslation } from 'react-i18next';
 
 import FormControl from "@material-ui/core/FormControl";
@@ -50,7 +50,7 @@ const Header = memo((props) => {
 
   const changeLanguage = (lng) => {
     i18n.changeLanguage(lng);
-}
+  }
 
   const LanguageItem = () => (
     <div className="header-item" style={{ marginRight: "20px" }}>
@@ -76,10 +76,10 @@ const Header = memo((props) => {
       {auth.authStatus.isConnected ? (
         <HeaderItem text={t("header.disconnect")} onClick={onAuthOut} />
       ) : (
-        <HeaderItem text={t("header.connect")} onClick={onAuthIn} />
-      )}
+          <HeaderItem text={t("header.connect")} onClick={onAuthIn} />
+        )}
       <HeaderItem text={t("header.contact")} onClick={handleSendMail} />
-      <HeaderItem text={t("header.about")}  onClick={handleAbout} />
+      <HeaderItem text={t("header.about")} onClick={handleAbout} />
       <LanguageItem />
     </div>
   );

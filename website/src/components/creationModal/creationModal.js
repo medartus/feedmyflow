@@ -18,20 +18,24 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import DateFnsUtils from "@date-io/date-fns";
 
 import fire from "../../provider/firebase";
-import { useTranslation } from 'react-i18next';
-import moment from "moment";
+import { useTranslation } from "react-i18next";
+
 import "./creationModal.css";
 import {
   defaultAlertProps,
   getWarningProps,
   getDangerProps,
-  URL_REGEX,
+  isValidUrl,
 } from "../../Constants";
 import InfoAlert from "../InfoAlert/InfoAlert";
 import PostPreview from "../PostPreview/PostPreview";
-import { theme, ConfirmButton, DeleteButton, useStyles } from "./styling";
+import { theme, ConfirmButton, DeleteButton, CloseIcon, useStyles } from "./styling";
 
 const BACKDROP_PROPS = { timeout: 500, className: "backdrop" };
+const descriptionPredicate = (hideDescription, isLinkValid) => {
+  if (!isLinkValid || !hideDescription) return { display: "block" }
+  return { display: "none" }
+}
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -49,6 +53,8 @@ const reducer = (state, action) => {
       return { ...state, mediaTitle: action.payload };
     case "SET_DESCRIPTION":
       return { ...state, mediaDescription: action.payload };
+    case "SET_HIDE_DESCRIPTION":
+      return { ...state, hideDescription: action.payload };
     case "SET_URL":
       return { ...state, mediaUrl: action.payload };
     default:
@@ -69,6 +75,7 @@ const getInitialState = (props, isMedia, isEvent, date) => ({
   mediaTitle: isEvent ? props.event.visibility : "PUBLIC",
   mediaDescription: isEvent && isMedia ? props.event.media.description : "",
   mediaUrl: isEvent && isMedia ? props.event.media.originalUrl : "",
+  hideDescription: false
 });
 
 const CreationModal = memo(
@@ -76,7 +83,7 @@ const CreationModal = memo(
     // function variables
     let isEvent = props.event !== undefined;
     let isMedia = isEvent ? props.event.media !== undefined : false;
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
     const db = fire.firestore();
     const userUid = fire.auth().currentUser.uid;
     const classes = useStyles();
@@ -99,18 +106,15 @@ const CreationModal = memo(
         mediaTitle,
         mediaDescription,
         mediaUrl,
+        hideDescription
       },
       dispatch,
     ] = useReducer(reducer, getInitialState(props, isMedia, isEvent, date));
 
-  // side-effects
-  useEffect(() => {
-    if (URL_REGEX.test(mediaUrl)) {
-      setIsLinkValid(true);
-    } else {
-      setIsLinkValid(false);
-    }
-  }, [mediaUrl]);
+    // side-effects
+    useEffect(() => {
+      setIsLinkValid(isValidUrl(mediaUrl));
+    }, [mediaUrl]);
 
     useEffect(() => {
       if (!open && !isEvent) {
@@ -164,15 +168,14 @@ const CreationModal = memo(
       () => setAlertProps({ ...alertProps, show: false }),
       [alertProps]
     );
-    const setMediaDescriptionMemo = useCallback(
-      (payload) => dispatch({ type: "SET_DESCRIPTION", payload }),
-      []
-    );
     const setMediaTitleMemo = useCallback(
       (payload) => dispatch({ type: "SET_TITLE", payload }),
       []
     );
-
+    const setHideDescriptionMemo = useCallback(
+      (payload) => dispatch({ type: "SET_HIDE_DESCRIPTION", payload }),
+      []
+    );
     // helper functions
     const handleClose = () => {
       setOpen(false);
@@ -181,7 +184,7 @@ const CreationModal = memo(
     const formatData = () => {
       let rawDate = `${publicationDate.getDate()}/${
         publicationDate.getMonth() + 1
-      }/${publicationDate.getFullYear()}`;
+        }/${publicationDate.getFullYear()}`;
       let rawTime = `${publicationTime.getHours()}:${publicationTime.getMinutes()}`;
       let linekdinPost = {
         author: "urn:li:person:" + userUid.split(":")[1],
@@ -308,10 +311,10 @@ const CreationModal = memo(
           </ConfirmButton>
         </div>
       ) : (
-        <ConfirmButton onClick={onSendData} disabled={!canSave}>
-          {t("creationModal.button.create")}
-        </ConfirmButton>
-      );
+          <ConfirmButton onClick={onSendData} disabled={!canSave}>
+            {t("creationModal.button.create")}
+          </ConfirmButton>
+        );
 
     const topText = () => (
       <p
@@ -319,9 +322,11 @@ const CreationModal = memo(
         style={{ fontSize: "22px", marginTop: "20px" }}
       >
         {isEvent
-          ? t("creationModal.text.schedule",{rawDate:props.event.rawDate,rawTime:props.event.rawTime}) 
-          : t("creationModal.text.create")
-        }
+          ? t("creationModal.text.schedule", {
+            rawDate: props.event.rawDate,
+            rawTime: props.event.rawTime,
+          })
+          : t("creationModal.text.create")}
       </p>
     );
 
@@ -329,7 +334,6 @@ const CreationModal = memo(
       <div className="row">
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
           <KeyboardDatePicker
-            margin="normal"
             required
             style={{ marginRight: "20px" }}
             id="date-picker-dialog"
@@ -342,7 +346,6 @@ const CreationModal = memo(
             }}
           />
           <KeyboardTimePicker
-            margin="normal"
             required
             id="time-picker"
             style={{ marginRight: "20px" }}
@@ -355,9 +358,8 @@ const CreationModal = memo(
               "aria-label": "change time",
             }}
           />
-          <div className="column" style={{ paddingTop: "24px" }}>
+          <div className="column" style={{ paddingTop: "16px" }}>
             <Select
-              margin="normal"
               labelId={t("creationModal.input.visibility")}
               id="visibility"
               value={visibility}
@@ -365,8 +367,12 @@ const CreationModal = memo(
                 dispatch({ type: "SET_VISIBILITY", payload: value })
               }
             >
-              <MenuItem value="PUBLIC">{t("creationModal.input.visibilityValue.public")}</MenuItem>
-              <MenuItem value="CONNECTIONS">{t("creationModal.input.visibilityValue.connexions")}</MenuItem>
+              <MenuItem value="PUBLIC">
+                {t("creationModal.input.visibilityValue.public")}
+              </MenuItem>
+              <MenuItem value="CONNECTIONS">
+                {t("creationModal.input.visibilityValue.connexions")}
+              </MenuItem>
             </Select>
           </div>
         </MuiPickersUtilsProvider>
@@ -379,7 +385,6 @@ const CreationModal = memo(
           fullWidth
           label={t("creationModal.input.shareCommentary")}
           id="shareCommentary"
-          rowsMax={5}
           value={shareCommentary}
           onChange={({ target: { value } }) =>
             dispatch({ type: "SET_COMMENTARY", payload: value })
@@ -405,7 +410,7 @@ const CreationModal = memo(
     );
 
     const mediaTitleRow = () => (
-      <div className="row" style={{ display: isLinkValid ? "block" : "none" }}>
+      <div className="row">
         <TextField
           fullWidth
           id="mediaTitle"
@@ -419,7 +424,7 @@ const CreationModal = memo(
     );
 
     const mediaDescriptionRow = () => (
-      <div className="row" style={{ display: isLinkValid ? "block" : "none" }}>
+      <div className="row" style={descriptionPredicate(hideDescription, isLinkValid)}>
         <TextField
           fullWidth
           id="mediaDescription"
@@ -431,6 +436,13 @@ const CreationModal = memo(
           multiline
         />
       </div>
+    );
+
+    const closeButton = () => (
+      <CloseIcon
+        onClick={handleClose}
+        className="close-icon"
+      />
     );
 
     return (
@@ -447,6 +459,7 @@ const CreationModal = memo(
         <Fade in={open}>
           <ThemeProvider theme={theme}>
             <div className="column card overflowable">
+              {closeButton()}
               {topText()}
               {timeRow()}
               {contentRow()}
@@ -464,7 +477,8 @@ const CreationModal = memo(
               url={mediaUrl}
               description={mediaDescription}
               setTitle={setMediaTitleMemo}
-              setDescription={setMediaDescriptionMemo}
+              setHideDescription={setHideDescriptionMemo}
+              hideDescription={hideDescription}
             />
             <CustomAlert />
           </ThemeProvider>

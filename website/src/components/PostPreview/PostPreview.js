@@ -16,23 +16,33 @@ export default memo(
     description,
     url,
     setTitle,
-    setDescription,
+    hideDescription,
+    setHideDescription
   }) => {
     const [embedImage, setEmbedImg] = useState(null);
 
     useEffect(() => {
-      if (isLinkValid) {
-        fetch(`https://url-preview.herokuapp.com/api/v1/preview?url=${url}`)
-          .then((res) => res.json())
+      if (isLinkValid && url !== "") {
+        const encoded = encodeURIComponent(url);
+        fetch(`https://url-preview.herokuapp.com/api/v1/preview?url=${encoded}`)
+          .then((res) => {
+            if (res.ok) return res.json()
+            throw new Error(`${res.status}: ${res.statusText}`)
+          })
           .then((json) => {
-            const { title, image: url, description } = json;
+            const { title, image: url } = json;
             setEmbedImg(url);
             setTitle(title);
-            setDescription(description);
+            setHideDescription(true);
           })
-          .catch((err) => console.error(err));
+          .catch((err) => {
+            // console.log(err);
+            setHideDescription(false);
+            setEmbedImg(null);
+            setTitle("");
+          });
       } else if (embedImage !== null) setEmbedImg(null);
-    }, [isLinkValid, url, embedImage, setTitle, setDescription]);
+    }, [isLinkValid, url, embedImage, setTitle, setHideDescription]);
 
     const HeaderPost = () => (
       <div className="row" style={{ marginTop: "20px" }}>
@@ -56,25 +66,26 @@ export default memo(
       </div>
     );
 
-    const renderBottom = () =>
-      embedImage && (
-        <div className="column">
-          <img src={embedImage} alt="embed" className="embed-img" />
-          <div className="column url-info-container">
-            <p className="description-text clipped clip-1">{title}</p>
-            <p
-              className="second-text"
-              style={{ fontSize: "14px", margin: "6px 0 6px 0" }}
-            >
-              {extractDomain(url)}
-            </p>
-            <p className="description-text clipped clip-2">{description}</p>
-          </div>
+    const renderBottom = () => (
+      <div className="column" style={{ width: "100%" }}>
+        <div className="img-container">
+          {embedImage && <img src={embedImage} alt="embed" className="embed-img" />}
         </div>
-      );
+        <div className="column url-info-container">
+          <p className="description-text clipped clip-1">{title}</p>
+          <p
+            className="second-text"
+            style={{ fontSize: "14px", margin: "6px 0 6px 0" }}
+          >
+            {isLinkValid ? extractDomain(url) : url}
+          </p>
+          {!hideDescription && <p className="description-text clipped clip-2">{description}</p>}
+        </div>
+      </div>
+    );
 
     return (
-      <div className="column card" style={{ overflowY: "scroll" }}>
+      <div className="column card" style={{ overflowY: "auto" }}>
         <HeaderPost />
         <ContentPost />
         {renderBottom()}

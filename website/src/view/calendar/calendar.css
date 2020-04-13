@@ -31,7 +31,6 @@
   max-height: 20vh;
   margin-bottom: 7px;
   cursor: pointer;
-  box-shadow: rgba(0, 0, 0, 0.3) 0 0 20px;
   margin-bottom: 20px;
 }
 
@@ -56,6 +55,7 @@
 .empty-img {
   height: 50vh;
   width: auto;
+  margin-top: 50px;
 }
 
 /* calendar classes */

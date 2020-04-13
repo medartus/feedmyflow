@@ -13,7 +13,7 @@ const md = require("markdown-it")()
   .use(require("markdown-it-mark"));
 
 const getContent = (t, key) => {
-  const contentArr = t("about.text."+key,{ returnObjects: true });
+  const contentArr = t("about.text." + key, { returnObjects: true });
   console.log(contentArr)
   return contentArr.map(c => <p className="about-text" dangerouslySetInnerHTML={{ __html: md.render(c) }} />)
 }
@@ -31,10 +31,10 @@ const Section = ({ title, image, content }) => (
 )
 
 const About = memo((props) => {
-  const { t, i18n } = useTranslation();
-  const usageContent = useMemo(() => getContent(t,'usage'), [t]);
-  const guideContent = useMemo(() => getContent(t,'guide'), [t]);
-  const teamContent = useMemo(() => getContent(t,'team'), [t]);
+  const { t } = useTranslation();
+  const usageContent = useMemo(() => getContent(t, 'usage'), [t]);
+  const guideContent = useMemo(() => getContent(t, 'guide'), [t]);
+  const teamContent = useMemo(() => getContent(t, 'team'), [t]);
   return (
     <div className="home-container">
       <Header {...props} />

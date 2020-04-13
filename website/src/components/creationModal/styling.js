@@ -5,6 +5,7 @@ import {
   makeStyles,
   createMuiTheme,
 } from "@material-ui/core";
+import CancelIcon from "@material-ui/icons/Cancel";
 
 const theme = createMuiTheme({
   palette: {
@@ -61,6 +62,13 @@ const DeleteButton = withStyles({
   },
 })(Button);
 
+const CloseIcon = withStyles({
+  root: {
+    fill: Colors.shade1
+  }
+})(CancelIcon);
+
+
 const useStyles = makeStyles((theme) => ({
   modal: {
     display: "flex",
@@ -69,4 +77,4 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export { theme, useStyles, DeleteButton, ConfirmButton };
+export { theme, useStyles, DeleteButton, ConfirmButton, CloseIcon };

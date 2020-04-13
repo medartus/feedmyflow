@@ -1,7 +1,27 @@
-html, body {
+html,
+body {
   height: 100%;
 }
 body {
   margin: 0;
-  background-color: #E3EFF3;
+  background-color: #e3eff3;
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  border-radius: 20px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #003040;
+  border-radius: 0 0 20px 20px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #00698c;
 }

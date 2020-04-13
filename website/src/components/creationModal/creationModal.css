@@ -19,10 +19,11 @@
   display: flex;
   align-items: center;
   justify-content: flex-start;
+  position: relative;
 }
 
 .overflowable {
-  overflow-y: scroll;
+  overflow-y: auto;
   padding-bottom: 20px;
   height: calc(80vh - 20px);
 }
@@ -33,4 +34,11 @@
   justify-content: space-between;
   width: 80%;
   margin-bottom: 20px;
+}
+
+.close-icon {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  cursor: pointer;
 }
