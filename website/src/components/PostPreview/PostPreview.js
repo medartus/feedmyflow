@@ -26,16 +26,23 @@ export default memo(
         const encoded = encodeURIComponent(url);
         fetch(`https://url-preview.herokuapp.com/api/v1/preview?url=${encoded}`)
           .then((res) => {
+            console.log(res)
             if (res.ok) return res.json()
             throw new Error(`${res.status}: ${res.statusText}`)
           })
           .then((json) => {
+            console.log(1)
             const { title, image: url } = json;
             setEmbedImg(url);
             setTitle(title);
-            setHideDescription(true);
+            if(url !== undefined && url !== null){
+              setHideDescription(true);
+            } else {
+              setHideDescription(false);
+            }
           })
           .catch((err) => {
+            console.log(2)
             // console.log(err);
             setHideDescription(false);
             setEmbedImg(null);

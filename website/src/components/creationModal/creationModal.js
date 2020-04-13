@@ -32,8 +32,9 @@ import PostPreview from "../PostPreview/PostPreview";
 import { theme, ConfirmButton, DeleteButton, CloseIcon, useStyles } from "./styling";
 
 const BACKDROP_PROPS = { timeout: 500, className: "backdrop" };
+
 const descriptionPredicate = (hideDescription, isLinkValid) => {
-  if (!isLinkValid || !hideDescription) return { display: "block" }
+  if (isLinkValid && !hideDescription) return { display: "block" }
   return { display: "none" }
 }
 
@@ -55,6 +56,8 @@ const reducer = (state, action) => {
       return { ...state, mediaDescription: action.payload };
     case "SET_HIDE_DESCRIPTION":
       return { ...state, hideDescription: action.payload };
+    case "SET_LINK_VALID":
+      return { ...state, isLinkValid: action.payload };
     case "SET_URL":
       return { ...state, mediaUrl: action.payload };
     default:
@@ -72,10 +75,11 @@ const getInitialState = (props, isMedia, isEvent, date) => ({
   shareCommentary: isEvent ? props.event.shareCommentary : "",
   shareMediaCategory: isEvent ? props.event.shareMediaCategory : "NONE",
   visibility: isEvent ? props.event.visibility : "PUBLIC",
-  mediaTitle: isEvent ? props.event.visibility : "PUBLIC",
+  mediaTitle: isEvent && isMedia ? props.event.media.title : "",
   mediaDescription: isEvent && isMedia ? props.event.media.description : "",
   mediaUrl: isEvent && isMedia ? props.event.media.originalUrl : "",
-  hideDescription: false
+  hideDescription: isEvent && isMedia && props.event.media.description === undefined ? true : false,
+  isLinkValid : isEvent && isMedia && props.event.media.originalUrl !== undefined ? true : false
 });
 
 const CreationModal = memo(
@@ -95,7 +99,6 @@ const CreationModal = memo(
     const [haveModification, setHaveModification] = useState(false);
     const [canSave, setCanSave] = useState(false);
     const [alertProps, setAlertProps] = useState(defaultAlertProps);
-    const [isLinkValid, setIsLinkValid] = useState(false);
     const [
       {
         publicationDate,
@@ -106,14 +109,15 @@ const CreationModal = memo(
         mediaTitle,
         mediaDescription,
         mediaUrl,
-        hideDescription
+        hideDescription,
+        isLinkValid
       },
       dispatch,
     ] = useReducer(reducer, getInitialState(props, isMedia, isEvent, date));
 
     // side-effects
     useEffect(() => {
-      setIsLinkValid(isValidUrl(mediaUrl));
+      dispatch({ type: "SET_LINK_VALID", payload: isValidUrl(mediaUrl) })
     }, [mediaUrl]);
 
     useEffect(() => {
@@ -198,17 +202,14 @@ const CreationModal = memo(
         rawDate,
         rawTime,
       };
-      if (
-        shareMediaCategory !== "NONE" &&
-        mediaTitle !== "" &&
-        mediaDescription !== "" &&
-        mediaUrl !== ""
-      ) {
+      if (isLinkValid){
         linekdinPost["media"] = {
           title: mediaTitle,
-          description: mediaDescription,
           originalUrl: mediaUrl,
         };
+        if(!hideDescription){
+          linekdinPost["media"]["description"] = mediaDescription;
+        }
       }
       return linekdinPost;
     };
@@ -412,7 +413,7 @@ const CreationModal = memo(
     );
 
     const mediaTitleRow = () => (
-      <div className="row">
+      <div className="row" style={{display : isLinkValid ? "block" : "none"}}>
         <TextField
           fullWidth
           id="mediaTitle"

@@ -84,7 +84,7 @@ const Mycalendar = (props) => {
         <img src={empty} alt="empty" className="empty-img" />
       )
         :
-        <Scrollbars style={{ width: "44vw", height: "30vw", marginTop: "50px" }}>
+        <Scrollbars style={{ width: "44vw", height: "27vw", marginTop: "50px" }}>
           {eventsList.map((event) => (
             <PostSummary event={event} />
           ))}
