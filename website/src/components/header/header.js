@@ -64,8 +64,8 @@ const Header = memo((props) => {
             icon: "white",
           }}
         >
-          <option value="fr">Français</option>
-          <option value="en">English</option>
+          <option value="fr">{t("header.language.french")}</option>
+          <option value="en">{t("header.language.english")}</option>
         </Select>
       </FormControl>
     </div>

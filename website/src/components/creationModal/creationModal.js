@@ -182,7 +182,9 @@ const CreationModal = memo(
       let rawDate = `${publicationDate.getDate()}/${
         publicationDate.getMonth() + 1
       }/${publicationDate.getFullYear()}`;
-      let rawTime = `${publicationTime.getHours()}:${publicationTime.getMinutes()}`;
+      let hours = publicationTime.getHours() == 0 ? "00" : publicationTime.getHours()
+      let minutes = publicationTime.getMinutes() == 0 ? "00" : publicationTime.getMinutes()
+      let rawTime = `${hours}:${minutes}`;
       let linekdinPost = {
         author: "urn:li:person:" + userUid.split(":")[1],
         userUID: userUid,

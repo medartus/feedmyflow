@@ -3,7 +3,11 @@
         "disconnect":"Déconnexion",
         "connect":"Connexion",
         "about":"À Propos",
-        "contact":"Contact"
+        "contact":"Contact",
+        "language":{
+            "english":"Anglais",
+            "french":"Français"
+        }
     },
     "about":{
         "text":{
