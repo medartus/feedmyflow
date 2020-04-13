@@ -321,7 +321,7 @@ const CreationModal = memo(
     const topText = () => (
       <p
         className="important-text"
-        style={{ fontSize: "22px", marginTop: "20px" }}
+        id="creation-modal-toptext"
       >
         {isEvent
           ? t("creationModal.text.schedule", {
@@ -392,6 +392,7 @@ const CreationModal = memo(
             dispatch({ type: "SET_COMMENTARY", payload: value })
           }
           multiline
+          rowsMax={5}
           required
         />
       </div>
@@ -460,7 +461,7 @@ const CreationModal = memo(
       >
         <Fade in={open}>
           <ThemeProvider theme={theme}>
-            <div className="column card overflowable">
+            <div className="column card overflowable" id="creation-modal-container">
               {closeButton()}
               {topText()}
               {timeRow()}
