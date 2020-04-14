@@ -31,6 +31,7 @@
 
 .embed-img {
   height: 100%;
+  max-width: 100%;
   object-fit: contain; 
   background-color: white;
 }
@@ -49,6 +50,17 @@
 }
 
 
+#post-content{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
 .next-post-item{
-  min-height: 4vh;
+  margin: 0;
+}
+
+#preview-card{
+  height: auto!important;
+  max-height: 80vh!important;
 }

@@ -59,18 +59,26 @@ export default memo(
     );
 
     const ContentPost = () => (
-      <div className="row">
-        <p className="next-post-item" style={{ margin: 0 }}>
-          {content}
-        </p>
+      <div className="row" id="post-content">
+        {content.split('\n').map((line,index)=>{
+          return (
+            <p className="next-post-item">
+              {line}
+            </p>
+          )
+        })}
       </div>
     );
 
+
     const renderBottom = () => (
       <div className="column" style={{ width: "100%" }}>
+        {embedImage &&
         <div className="img-container">
-          {embedImage && <img src={embedImage} alt="embed" className="embed-img" />}
-        </div>
+           <img src={embedImage} alt="embed" className="embed-img" />
+        </div>}
+
+        {(url || title || description) &&
         <div className="column url-info-container">
           <p className="description-text clipped clip-1">{title}</p>
           <p
@@ -80,12 +88,12 @@ export default memo(
             {isLinkValid ? extractDomain(url) : url}
           </p>
           {!hideDescription && <p className="description-text clipped clip-2">{description}</p>}
-        </div>
+        </div>}
       </div>
     );
 
     return (
-      <div className="column card" style={{ overflowY: "auto" }}>
+      <div className="column card" id="preview-card" style={{ overflowY: "auto" }}>
         <HeaderPost />
         <ContentPost />
         {renderBottom()}
