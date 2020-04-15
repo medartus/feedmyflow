@@ -94,9 +94,9 @@ const Mycalendar = (props) => {
   );
 
   const HeaderText = () => (
-    <div className="column" style={{ alignItems: "flex-start" }}>
-      <p className="important-text">{t("calendar.schedule")}</p>
-      <p className="second-text">{t("calendar.automate")}</p>
+    <div className="column" id="schedule-container" style={{ alignItems: "flex-start" }}>
+      <p id="schedule-title" className="important-text">{t("calendar.schedule")}</p>
+      <p id="schedule-subtitle" className="second-text">{t("calendar.automate")}</p>
     </div>
   );
 
@@ -157,12 +157,11 @@ const Mycalendar = (props) => {
   );
 
   const UpcomingPosts = () => (
-    <div
-      className="upcoming-container"
-      style={{ backgroundColor: Colors.primary }}
-    >
-      <p className="upcoming-text">{t("calendar.upcoming")}</p>
-    </div>
+      <p 
+        className="upcoming-text"
+        style={{ backgroundColor: Colors.primary }}>
+          {t("calendar.upcoming")}
+      </p>
   );
 
   const RightPart = () => (
@@ -177,6 +176,7 @@ const Mycalendar = (props) => {
   return (
     <>
       <Header {...props} />
+      <div className="fakenav"></div>
       <div className="wrapper">
         <LeftPart />
         <RightPart />

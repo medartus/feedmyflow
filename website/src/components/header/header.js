@@ -1,8 +1,9 @@
-import React, { memo, useCallback } from "react";
+import React, { memo, useCallback, useState } from "react";
 import { useTranslation } from 'react-i18next';
 
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
+import { Menu } from '@material-ui/icons';
 import { withStyles } from "@material-ui/core/styles";
 import InputBase from "@material-ui/core/InputBase";
 
@@ -52,8 +53,17 @@ const Header = memo((props) => {
     i18n.changeLanguage(lng);
   }
 
+  const [MobileNavVisible,SetMobileNavVisible] = useState(false);
+
+  const toogleMobileNav = () => {
+    SetMobileNavVisible(!MobileNavVisible)
+  }
+
+  const languageDic = window.innerWidth > 600 ? "header.language." : "header.language-small.";
+  const logoSize = window.innerWidth > 600 ? 50 : 35;
+
   const LanguageItem = () => (
-    <div className="header-item" style={{ marginRight: "20px" }}>
+    <div className="header-item" id="language-selection">
       <FormControl variant="outlined">
         <Select
           native
@@ -64,22 +74,24 @@ const Header = memo((props) => {
             icon: "white",
           }}
         >
-          <option value="fr">{t("header.language.french")}</option>
-          <option value="en">{t("header.language.english")}</option>
+          <option value="fr">{t(`${languageDic}french`)}</option>
+          <option value="en">{t(`${languageDic}english`)}</option>
         </Select>
       </FormControl>
     </div>
   );
 
   const HeaderItems = () => (
-    <div className="options-container">
-      {auth.authStatus.isConnected ? (
-        <HeaderItem text={t("header.disconnect")} onClick={onAuthOut} />
-      ) : (
+    <div className="options-container">.
+      <nav hidden={!MobileNavVisible}>
+        {auth.authStatus.isConnected ? (
+          <HeaderItem text={t("header.disconnect")} onClick={onAuthOut} />
+          ) : (
           <HeaderItem text={t("header.connect")} onClick={onAuthIn} />
         )}
-      <HeaderItem text={t("header.contact")} onClick={handleSendMail} />
-      <HeaderItem text={t("header.about")} onClick={handleAbout} />
+        <HeaderItem text={t("header.contact")} onClick={handleSendMail} />
+        <HeaderItem text={t("header.about")} onClick={handleAbout} />
+      </nav>
       <LanguageItem />
     </div>
   );
@@ -89,7 +101,8 @@ const Header = memo((props) => {
       className="header-container"
       style={{ backgroundColor: Colors.shade1 }}
     >
-      <FeedLogo action={backToHome} />
+      <Menu id="menu-button" onClick={()=>toogleMobileNav()}/>
+      <FeedLogo size={logoSize} action={backToHome} />
       <HeaderItems />
     </div>
   );

@@ -8,16 +8,11 @@
   justify-content: space-between;
 }
 
-.upcoming-container {
-  width: 30vw;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 20px 20px 5px 20px;
-}
 
 .upcoming-text {
+  margin: 20px 20px 5px 20px;
+  margin: 0;
+  padding: 1% 2%;
   letter-spacing: 6px;
   color: white;
   font-size: 22px;
@@ -53,9 +48,9 @@
 }
 
 .empty-img {
-  height: 50vh;
-  width: auto;
-  margin-top: 50px;
+  height: auto;
+  width: 80%;
+  margin-top: 10%;
 }
 
 /* calendar classes */
@@ -74,4 +69,98 @@
 .rbc-day-slot,
 .rbc-day-bg {
   cursor: pointer;
+}
+
+.scroll-container{
+  width: 44vw;
+  height: 30vw;
+  margin-top: 50px;
+}
+
+
+
+@media screen and (max-width: 1000px){
+  /* GENERAL  */
+  .wrapper {
+    width: 90%;
+    height: 90%;
+    padding: 5%;
+    flex-direction: column;
+  }
+  .column{
+    width: 100%;
+  }
+  .important-text{
+    text-align: center;
+  }
+
+  #schedule-container{
+    margin-top: 10%;
+  }
+}
+
+@media screen and (max-width: 600px){
+
+  /* GENERAL */
+  .wrapper {
+    width: 100%;
+    height: 95%;
+    padding: 0%;
+    padding-top: 5%;
+    flex-direction: column-reverse;
+  }
+  .column{
+    width: 100%;
+  }
+
+  .upcoming-text{
+    font-size: 1.2em;
+  }
+  #schedule-title{
+    font-size: 1.7em;
+    margin:0;
+    padding: 0 5%;
+    padding-top: 5%;
+    background-color: white;
+
+    box-shadow: 0px -5px 20px 2px rgba(61, 61, 61, 0.26);
+  }
+  #schedule-subtitle{
+    font-size: 1.2em;
+    margin: 0;
+    padding: 0 5%;
+    padding-bottom: 5%;
+    background-color: white;
+  }
+
+  /* NEXT POSTS  */
+
+  .next-post {
+    width: 90%;
+    padding: 10px;
+    margin-bottom: 7px;
+    cursor: pointer;
+    margin-bottom: 20px;
+  }
+
+  /* CALENDAR  */
+  .calendar{
+    box-shadow: none;
+    border-radius: 0;
+  }
+  .rbc-toolbar{
+    flex-direction: column;
+  }
+  .rbc-toolbar-label{
+    order:3;
+    font-weight: bold;
+  }
+  .rbc-btn-group{
+    display: flex;
+    margin-bottom: 2%;
+    width: 100%;
+  }
+  .rbc-btn-group button{
+    width: 100%;
+  }
 }

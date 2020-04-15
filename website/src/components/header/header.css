@@ -21,6 +21,10 @@
   cursor: pointer;
 }
 
+#language-selection{
+  margin-right: 30px;
+}
+
 .header-text {
   color: #fff;
   font-size: 18px;
@@ -31,3 +35,72 @@
 .MuiSelect-iconOutlined {
   fill: white !important;
 }
+
+#menu-button{
+  color: white;
+  display: none;
+}
+
+nav{
+  display: flex;
+  flex-direction: row;
+}
+
+
+
+@media screen and (max-width:600px){
+
+  .header-container{
+    position: fixed;
+
+    height: 50px;
+    padding: 8px 2%;
+    width: 96%;
+    margin: 0;
+
+    box-shadow: 0 0 5px 8px rgba(71, 71, 71, 0.767);
+  
+  }
+
+  .fakenav{
+    height: 64px;
+  }
+
+  nav{
+    position: absolute;
+    left: 0;
+    top: 64px;
+    flex-direction: column-reverse;
+    background-color: white;
+    width: 35%;
+    border: solid 0 transparent;
+    border-bottom-right-radius: 10px;
+    box-shadow: 5px 5px 5px 3px rgba(71, 71, 71, 0.548);
+  }
+  nav[hidden]{
+    display: none;
+  }
+
+  nav .header-item{
+    width: 100%;
+  }
+  nav .header-text{
+    color: black;
+  }
+  nav .header-item:first-child .header-text{
+    color: red;
+  }
+  #menu-button{
+    display: flex;
+    font-size: 3em;
+    margin-right: 4%;
+  }
+  #language-selection{
+    margin-right: 2%;
+  }
+  .MuiSelect-outlined.MuiSelect-outlined{
+    padding: 8% 10%;
+  }
+}
+
+
