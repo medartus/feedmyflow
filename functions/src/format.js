@@ -3,16 +3,15 @@ const generateMediaArray = (data) => {
     const { shareMediaCategory, media } = data;
     if(shareMediaCategory !== null && shareMediaCategory !== "NONE" && media !== null){
       const { description, originalUrl, title } = media;
-      mediaArray=[{
+      let mediaObject = {
         "status": "READY",
-        "description": {
-          "text": description 
-        },
         "originalUrl": originalUrl,
         "title": {
           "text": title
         }
-      }]
+      }
+      if(description != undefined) mediaObject['description']['text'] = description;
+      mediaArray=[mediaObject]
     }
     return mediaArray;
   }
@@ -27,7 +26,7 @@ const generateBodyContent = (data) => {
         "specificContent": {
             "com.linkedin.ugc.ShareContent": {
                 "shareCommentary": {
-                    "text": shareCommentary
+                  "text": shareCommentary
                 },
                 "shareMediaCategory": shareMediaCategory
             }
