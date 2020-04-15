@@ -24,11 +24,16 @@
 .img-container {
   width: 100%;
   height: 40vh;
+  background-color: #d6f3fd;
+  display: flex;
+  justify-content: center;
 }
 
 .embed-img {
-  width: 100%;
   height: 100%;
+  max-width: 100%;
+  object-fit: contain; 
+  background-color: white;
 }
 
 .description-text {
@@ -42,4 +47,20 @@
 }
 .clip-2 {
   -webkit-line-clamp: 2;
+}
+
+
+#post-content{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.next-post-item{
+  margin: 0;
+}
+
+#preview-card{
+  height: auto!important;
+  max-height: 80vh!important;
 }

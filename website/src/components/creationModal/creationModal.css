@@ -42,3 +42,13 @@
   right: 20px;
   cursor: pointer;
 }
+
+#creation-modal-container{
+  display: flex;
+  justify-content: center;
+}
+
+#creation-modal-toptext{
+  font-size: 1.5em;
+  margin-bottom: 6%;
+}

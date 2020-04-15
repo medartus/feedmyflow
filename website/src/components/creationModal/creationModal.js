@@ -121,7 +121,7 @@ const CreationModal = memo(
         const date = new Date();
         dispatch({ type: "SET_DATE", payload: date });
         dispatch({ type: "SET_TIME", payload: date });
-        dispatch({ type: "SET_COMMENTAERY", payload: "date" });
+        dispatch({ type: "SET_COMMENTARY", payload: "" });
         dispatch({ type: "SET_CATEGORY", payload: "NONE" });
         dispatch({ type: "SET_VISIBILITY", payload: "PUBLIC" });
         dispatch({ type: "SET_TITLE", payload: "" });
@@ -321,7 +321,7 @@ const CreationModal = memo(
     const topText = () => (
       <p
         className="important-text"
-        style={{ fontSize: "22px", marginTop: "20px" }}
+        id="creation-modal-toptext"
       >
         {isEvent
           ? t("creationModal.text.schedule", {
@@ -392,6 +392,7 @@ const CreationModal = memo(
             dispatch({ type: "SET_COMMENTARY", payload: value })
           }
           multiline
+          rowsMax={4}
           required
         />
       </div>
@@ -460,7 +461,7 @@ const CreationModal = memo(
       >
         <Fade in={open}>
           <ThemeProvider theme={theme}>
-            <div className="column card overflowable">
+            <div className="column card overflowable" id="creation-modal-container">
               {closeButton()}
               {topText()}
               {timeRow()}
