@@ -1,18 +1,41 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "moment/locale/fr";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 
 import CreationModal from "../../components/creationModal/creationModal";
-import { Scrollbars } from 'react-custom-scrollbars';
+import { Scrollbars } from "react-custom-scrollbars";
 import Header from "../../components/header/header";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 import fire from "../../provider/firebase";
 
 import { Colors } from "../../Constants";
 import empty from "../../assets/empty.svg";
 import "./calendar.css";
+
+const useModalWithData = (initialMode = false, initialSelected = null) => {
+  const [modalOpen, setModalOpen] = useState(initialMode);
+  const [selected, setSelected] = useState(initialSelected);
+  const setModalState = useCallback(
+    (state) => {
+      setModalOpen(state);
+      if (state === false) {
+        setSelected(null);
+      }
+    },
+    [setModalOpen, setSelected]
+  );
+  const handleClose = useCallback(() => setModalState(false), [setModalState]);
+  return {
+    modalOpen,
+    setModalOpen,
+    selected,
+    setSelected,
+    setModalState,
+    handleClose,
+  };
+};
 
 const CALENDAR_STYLE = { height: "65vh", width: "100%" };
 const CALENDAR_VIEWS = { month: true, week: true };
@@ -21,9 +44,16 @@ const localizer = momentLocalizer(moment);
 
 const Mycalendar = (props) => {
   const [eventsList, setEventsList] = useState([]);
-  const creationModalRef = useRef();
-  const eventsRef = useRef([]);
+  const {
+    modalOpen,
+    selected,
+    handleClose,
+    setSelected,
+    setModalState,
+  } = useModalWithData();
   const { t, i18n } = useTranslation();
+  if (eventsList.length > 0)
+    console.log(new Date(eventsList[0].publicationTime.toDate()));
 
   useEffect(() => {
     const currentUser = fire.auth().currentUser;
@@ -51,30 +81,22 @@ const Mycalendar = (props) => {
       });
   }, []);
 
-  // useEffect(() => {
-  //   eventsRef.current = eventsRef.current.slice(0, eventsList.length);
-  // }, [eventsList]);
-
-  const PostSummary = ({ event }) => (
+  const PostSummary = ({ rawDate, rawTime, title, id }) => (
     <div
       className="next-post"
-      key={event.id}
       onClick={() => {
-        eventsRef.current[event.itemId].handleOpen();
+        setSelected(id);
+        setModalState(true);
       }}
     >
       <p className="next-post-item">
         <span className="span-item">{t("calendar.date")}</span>
-        {`${event.rawDate} ${event.rawTime}`}
+        {`${rawDate} ${rawTime}`}
       </p>
       <p className="next-post-item clipped">
         <span className="span-item">{t("calendar.content")}</span>
-        {event.title}
+        {title}
       </p>
-      <CreationModal
-        ref={(r) => (eventsRef.current[event.itemId] = r)}
-        event={event}
-      />
     </div>
   );
 
@@ -82,14 +104,15 @@ const Mycalendar = (props) => {
     <div className="column">
       {eventsList.length === 0 ? (
         <img src={empty} alt="empty" className="empty-img" />
-      )
-        :
-        <Scrollbars style={{ width: "44vw", height: "27vw", marginTop: "50px" }}>
-          {eventsList.map((event) => (
-            <PostSummary event={event} />
+      ) : (
+        <Scrollbars
+          style={{ width: "44vw", height: "27vw", marginTop: "50px" }}
+        >
+          {eventsList.map(({ itemId, ...data }) => (
+            <PostSummary key={itemId} {...data} />
           ))}
         </Scrollbars>
-      }
+      )}
     </div>
   );
 
@@ -102,20 +125,20 @@ const Mycalendar = (props) => {
 
   const messageCalender = () => {
     return {
-      allDay: t('calendar.messageCalendar.allDay'),
-      previous: t('calendar.messageCalendar.previous'),
-      next: t('calendar.messageCalendar.next'),
-      today: t('calendar.messageCalendar.today'),
-      month: t('calendar.messageCalendar.month'),
-      week: t('calendar.messageCalendar.week'),
-      day: t('calendar.messageCalendar.day'),
-      agenda: t('calendar.messageCalendar.agenda'),
-      date: t('calendar.messageCalendar.date'),
-      time: t('calendar.messageCalendar.time'),
-      event: t('calendar.messageCalendar.event'), // Or anything you want
-      showMore: total => t('calendar.messageCalendar.showMore', { total })
-    }
-  }
+      allDay: t("calendar.messageCalendar.allDay"),
+      previous: t("calendar.messageCalendar.previous"),
+      next: t("calendar.messageCalendar.next"),
+      today: t("calendar.messageCalendar.today"),
+      month: t("calendar.messageCalendar.month"),
+      week: t("calendar.messageCalendar.week"),
+      day: t("calendar.messageCalendar.day"),
+      agenda: t("calendar.messageCalendar.agenda"),
+      date: t("calendar.messageCalendar.date"),
+      time: t("calendar.messageCalendar.time"),
+      event: t("calendar.messageCalendar.event"), // Or anything you want
+      showMore: (total) => t("calendar.messageCalendar.showMore", { total }),
+    };
+  };
 
   const LeftPart = () => (
     <div className="column" style={{ alignItems: "flex-start" }}>
@@ -134,11 +157,10 @@ const Mycalendar = (props) => {
         style={CALENDAR_STYLE}
         views={CALENDAR_VIEWS}
         selectable
-        onSelectSlot={({ start }) => {
-          creationModalRef.current.handleOpen(new Date(start));
-        }}
+        onSelectSlot={({ start }) => setModalState(true)}
         onSelectEvent={(event, e) => {
-          eventsRef.current[event.itemId].handleOpen();
+          setSelected(event.id);
+          setModalState(true);
         }}
       />
     </div>
@@ -148,11 +170,11 @@ const Mycalendar = (props) => {
     <div
       className="cta-container"
       style={{ backgroundColor: Colors.shade1, margin: "20px" }}
-      onClick={() => {
-        creationModalRef.current.handleOpen();
-      }}
+      onClick={() => setModalState(true)}
     >
-      <p style={{ fontSize: "16px" }} className="cta-text">{t("calendar.create")}</p>
+      <p style={{ fontSize: "16px" }} className="cta-text">
+        {t("calendar.create")}
+      </p>
     </div>
   );
 
@@ -170,7 +192,11 @@ const Mycalendar = (props) => {
       <UpcomingPosts />
       <NextPosts />
       <CreatePost />
-      <CreationModal ref={creationModalRef} />
+      <CreationModal
+        isOpen={modalOpen}
+        handleClose={handleClose}
+        data={selected ? eventsList.filter((e) => e.id === selected)[0] : null}
+      />
     </div>
   );
 
