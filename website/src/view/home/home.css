@@ -112,12 +112,10 @@
     }
 
     .post-image {
-        width: 45vw;
+        width: 70vw;
     }
     
     .linkedin-image {
-        width: 45vw;
-        margin-top: 10%;
-        margin-bottom: 10%;
+        display: none;
     }
 }
