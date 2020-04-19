@@ -52,3 +52,45 @@
   font-size: 1.5em;
   margin-bottom: 6%;
 }
+
+
+@media screen and (max-width:1000px){
+  #modal{
+    flex-direction: column-reverse;
+    padding: 0 5%;
+  }
+
+  #preview-card{
+    margin-bottom: 10%;
+  }
+
+  #modal .column.card {
+    flex: none;
+    height: auto;
+    max-height: 40vh;
+  }
+
+  .img-container{
+    height: auto;
+    width: 100%!important;
+  }
+
+  .column.card .column{
+    flex-direction: row;
+    max-height: 20%;
+    height: auto;
+    flex: auto;
+  }
+
+  #modal .column.url-info-container{
+    flex-direction: column;
+    width: 90%;
+    padding: 0 5%;
+  }
+
+  .column.card .row .column{
+    flex-direction: column;
+    max-height: none;
+    height: auto;
+  }
+}

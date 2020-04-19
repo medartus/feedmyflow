@@ -175,7 +175,7 @@ const Mycalendar = (props) => {
       <UpcomingPosts />
       <NextPosts />
       <CreatePost />
-      <CreationModal ref={creationModalRef} />
+      <CreationModal ref={creationModalRef}/>
     </div>
   );
 

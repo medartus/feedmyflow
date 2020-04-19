@@ -452,6 +452,7 @@ const CreationModal = memo(
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
+        id="modal"
         className={classes.modal}
         open={open}
         onClose={handleClose}
