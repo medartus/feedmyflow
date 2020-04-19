@@ -104,11 +104,12 @@
 
 @media screen and (max-width:600px){
     .home-wrapper{ flex-direction: column;}
-    .home-wrapper .absolute-text{width: 80vw;}
+    .home-wrapper .absolute-text{width: 60vw;}
     .home-wrapper .important-text{font-size: 2em;}
     .home-wrapper .second-text{ font-size: 1.5em;}
     #home-left-column{
         margin-left: 5%;
+        width: 70%;
     }
 
     .post-image {
