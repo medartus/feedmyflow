@@ -30,7 +30,7 @@ const BootstrapInput = withStyles((_) => ({
 }))(InputBase);
 
 const handleSendMail = () => {
-  window.location.href = "mailto:feedmyflow@gmail.com";
+  window.location.href = "mailto: feedmyflow@gmail.com";
 };
 
 const HeaderItem = memo(({ text, onClick }) => (

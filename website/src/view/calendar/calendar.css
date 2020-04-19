@@ -18,15 +18,21 @@
   font-size: 22px;
 }
 
+#next-posts-container{
+  width: 90%;
+  display: flex;
+  justify-content: center;
+}
 .next-post {
   background-color: white;
   border-radius: 10px;
-  width: 40vw;
+  width: 95%;
   padding: 10px;
   max-height: 20vh;
   margin-bottom: 7px;
   cursor: pointer;
   margin-bottom: 20px;
+
 }
 
 .next-post-item {
@@ -49,8 +55,15 @@
 
 .empty-img {
   height: auto;
-  width: 80%;
+  width: 60%;
+  margin-top: 6%;
+}
+
+.posts-container{
   margin-top: 10%;
+  max-height: 60vh;
+  overflow: scroll;
+  width: 100%;
 }
 
 /* calendar classes */
@@ -78,16 +91,15 @@
 }
 
 
-
 @media screen and (max-width: 1000px){
   /* GENERAL  */
   .wrapper {
     width: 90%;
     height: 90%;
     padding: 5%;
-    flex-direction: column;
+    flex-direction: column-reverse;
   }
-  .column{
+  .column:not(#home-left-column){
     width: 100%;
   }
   .important-text{
@@ -101,36 +113,37 @@
 
 @media screen and (max-width: 600px){
 
+  .posts-container{
+    max-height: 40vh;
+  }
+
   /* GENERAL */
   .wrapper {
     width: 100%;
     height: 95%;
     padding: 0%;
     padding-top: 5%;
-    flex-direction: column-reverse;
-  }
-  .column{
-    width: 100%;
   }
 
   .upcoming-text{
     font-size: 1.2em;
   }
-  #schedule-title{
-    font-size: 1.7em;
+  #schedule-title,
+  #schedule-subtitle{
+    text-align: left;
     margin:0;
     padding: 0 5%;
     padding-top: 5%;
     background-color: white;
-
+    width: 90%;
+  }
+  #schedule-title{
+    font-size: 1.7em;
     box-shadow: 0px -5px 20px 2px rgba(61, 61, 61, 0.26);
   }
   #schedule-subtitle{
     font-size: 1.2em;
-    margin: 0;
-    padding: 0 5%;
-    padding-bottom: 5%;
-    background-color: white;
+    padding-top: 0;
   }
 
   /* NEXT POSTS  */
@@ -163,4 +176,13 @@
   .rbc-btn-group button{
     width: 100%;
   }
+  .rbc-time-view .rbc-time-gutter span{
+    font-size: 0.8em;
+  }
+  .rbc-label .rbc-time-header-gutter{
+    width: 62.3px;
+    min-width: 62.3px;
+    max-width: 62.3px;
+  }
+
 }

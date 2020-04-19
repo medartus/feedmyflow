@@ -52,7 +52,7 @@ nav{
 
   .header-container{
     position: fixed;
-
+    top:0;
     height: 50px;
     padding: 8px 2%;
     width: 96%;
@@ -60,6 +60,7 @@ nav{
 
     box-shadow: 0 0 5px 8px rgba(71, 71, 71, 0.767);
   
+    z-index: 2;
   }
 
   .fakenav{
@@ -69,13 +70,14 @@ nav{
   nav{
     position: absolute;
     left: 0;
-    top: 64px;
+    top: 66px;
     flex-direction: column-reverse;
     background-color: white;
     width: 35%;
     border: solid 0 transparent;
     border-bottom-right-radius: 10px;
     box-shadow: 5px 5px 5px 3px rgba(71, 71, 71, 0.548);
+    transition: all 0.5s ease-in-out;
   }
   nav[hidden]{
     display: none;

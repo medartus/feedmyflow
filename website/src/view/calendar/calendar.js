@@ -25,6 +25,10 @@ const Mycalendar = (props) => {
   const eventsRef = useRef([]);
   const { t, i18n } = useTranslation();
 
+  const scrollbarStyle = window.innerWidth > 1000
+  ?{width: "44vw", height: "30vw", marginTop: "50px"}
+  :{width: "90vw", height: "40vh",maxHeight: "40vh", marginTop: "50px" };
+
   useEffect(() => {
     const currentUser = fire.auth().currentUser;
     const userUid = currentUser.uid;
@@ -79,16 +83,18 @@ const Mycalendar = (props) => {
   );
 
   const NextPosts = () => (
-    <div className="column">
+    <div id="next-posts-container">
       {eventsList.length === 0 ? (
         <img src={empty} alt="empty" className="empty-img" />
       )
         :
-        <Scrollbars style={{ width: "44vw", height: "30vw", marginTop: "50px" }}>
+        // <Scrollbars style={scrollbarStyle}>
+        <div className="posts-container">
           {eventsList.map((event) => (
             <PostSummary event={event} />
           ))}
-        </Scrollbars>
+        </div>
+        // </Scrollbars>
       }
     </div>
   );
@@ -175,6 +181,7 @@ const Mycalendar = (props) => {
 
   return (
     <>
+      {/* <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/> */}
       <Header {...props} />
       <div className="fakenav"></div>
       <div className="wrapper">
