@@ -93,7 +93,7 @@ export default memo(
     );
 
     return (
-      <div className="column card" id="preview-card" style={{ overflowY: "auto" }}>
+      <div className="card overflowable" id="preview-card">
         <HeaderPost />
         <ContentPost />
         {renderBottom()}

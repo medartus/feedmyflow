@@ -333,7 +333,7 @@ const CreationModal = memo(
     );
 
     const timeRow = () => (
-      <div className="row">
+      <div className="row" id="time-row">
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
           <KeyboardDatePicker
             required
@@ -360,7 +360,7 @@ const CreationModal = memo(
               "aria-label": "change time",
             }}
           />
-          <div className="column" style={{ paddingTop: "16px" }}>
+          <div className="column" id="visibility-container" style={{ paddingTop: "16px" }}>
             <Select
               labelId={t("creationModal.input.visibility")}
               id="visibility"
@@ -437,6 +437,7 @@ const CreationModal = memo(
             dispatch({ type: "SET_DESCRIPTION", payload: value })
           }
           multiline
+          rowsMax={4}
         />
       </div>
     );
@@ -462,7 +463,7 @@ const CreationModal = memo(
       >
         <Fade in={open}>
           <ThemeProvider theme={theme}>
-            <div className="column card overflowable" id="creation-modal-container">
+            <div className="card overflowable" id="creation-modal-container">
               {closeButton()}
               {topText()}
               {timeRow()}
