@@ -96,6 +96,7 @@ const CreationModal = memo(
     const [canSave, setCanSave] = useState(false);
     const [alertProps, setAlertProps] = useState(defaultAlertProps);
     const [isLinkValid, setIsLinkValid] = useState(false);
+    const [inPreviewMode, setPreviewMode] = useState(false);
     const [
       {
         publicationDate,
@@ -449,6 +450,15 @@ const CreationModal = memo(
       />
     );
 
+    const phoneModeToggle = () => (
+      <div id="phone-mode-toggle">
+        <input type="radio" name="phonemode" id="edit" onClick={() => setPreviewMode(false)} checked={!inPreviewMode}/>
+        <label for="edit" id="edit-label">Edit</label>
+        <input type="radio" name="phonemode" id="preview" onClick={() => setPreviewMode(true)} checked={inPreviewMode}/>
+        <label for="preview" id="preview-label">Preview</label>
+      </div>
+    )
+
     return (
       <Modal
         aria-labelledby="transition-modal-title"
@@ -463,7 +473,11 @@ const CreationModal = memo(
       >
         <Fade in={open}>
           <ThemeProvider theme={theme}>
-            <div className="card overflowable" id="creation-modal-container">
+
+            {phoneModeToggle()}
+
+            <div id="creation-modal-container"
+                 className = {inPreviewMode ? "card overflowable" : "card overflowable visible"}>
               {closeButton()}
               {topText()}
               {timeRow()}
@@ -474,6 +488,7 @@ const CreationModal = memo(
               {buttonSection()}
             </div>
             <PostPreview
+              inPreviewMode={inPreviewMode}
               photoUrl={fire.auth().currentUser.photoURL}
               displayName={fire.auth().currentUser.displayName}
               content={shareCommentary}

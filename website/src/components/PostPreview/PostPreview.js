@@ -3,11 +3,12 @@ import "./PostPreview.css";
 
 import { extractDomain } from "../../Constants";
 
-const WIDTH_BONE_1 = { width: "30vw" };
+const WIDTH_BONE_1 = { width: "20vw" };
 const WIDTH_BONE_2 = { width: "10vw" };
 
 export default memo(
   ({
+    inPreviewMode,
     photoUrl,
     displayName,
     content,
@@ -79,7 +80,7 @@ export default memo(
         </div>}
 
         {(url || title || description) &&
-        <div className="column url-info-container">
+        <div className="url-info-container">
           <p className="description-text clipped clip-1">{title}</p>
           <p
             className="second-text"
@@ -93,7 +94,7 @@ export default memo(
     );
 
     return (
-      <div className="card overflowable" id="preview-card">
+      <div className = {inPreviewMode ? "card overflowable visible" : "card overflowable"} id="preview-card">
         <HeaderPost />
         <ContentPost />
         {renderBottom()}
