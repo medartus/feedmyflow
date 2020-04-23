@@ -17,7 +17,7 @@ export default memo(
     url,
     setTitle,
     hideDescription,
-    setHideDescription
+    setHideDescription,
   }) => {
     const [embedImage, setEmbedImg] = useState(null);
 
@@ -26,23 +26,20 @@ export default memo(
         const encoded = encodeURIComponent(url);
         fetch(`https://url-preview.herokuapp.com/api/v1/preview?url=${encoded}`)
           .then((res) => {
-            console.log(res)
-            if (res.ok) return res.json()
-            throw new Error(`${res.status}: ${res.statusText}`)
+            if (res.ok) return res.json();
+            throw new Error(`${res.status}: ${res.statusText}`);
           })
           .then((json) => {
-            console.log(1)
             const { title, image: url } = json;
             setEmbedImg(url);
             setTitle(title);
-            if(url !== undefined && url !== null){
+            if (url !== undefined && url !== null) {
               setHideDescription(true);
             } else {
               setHideDescription(false);
             }
           })
           .catch((err) => {
-            console.log(2)
             // console.log(err);
             setHideDescription(false);
             setEmbedImg(null);
@@ -67,40 +64,47 @@ export default memo(
 
     const ContentPost = () => (
       <div className="row" id="post-content">
-        {content.split('\n').map((line,index)=>{
+        {content.split("\n").map((line, i) => {
           return (
-            <p className="next-post-item">
+            <p key={i} className="next-post-item">
               {line}
             </p>
-          )
+          );
         })}
       </div>
     );
 
-
     const renderBottom = () => (
       <div className="column" style={{ width: "100%" }}>
-        {embedImage &&
-        <div className="img-container">
-           <img src={embedImage} alt="embed" className="embed-img" />
-        </div>}
+        {embedImage && (
+          <div className="img-container">
+            <img src={embedImage} alt="embed" className="embed-img" />
+          </div>
+        )}
 
-        {(url || title || description) &&
-        <div className="column url-info-container">
-          <p className="description-text clipped clip-1">{title}</p>
-          <p
-            className="second-text"
-            style={{ fontSize: "14px", margin: "6px 0 6px 0" }}
-          >
-            {isLinkValid ? extractDomain(url) : url}
-          </p>
-          {!hideDescription && <p className="description-text clipped clip-2">{description}</p>}
-        </div>}
+        {(url || title || description) && (
+          <div className="column url-info-container">
+            <p className="description-text clipped clip-1">{title}</p>
+            <p
+              className="second-text"
+              style={{ fontSize: "14px", margin: "6px 0 6px 0" }}
+            >
+              {isLinkValid ? extractDomain(url) : url}
+            </p>
+            {!hideDescription && (
+              <p className="description-text clipped clip-2">{description}</p>
+            )}
+          </div>
+        )}
       </div>
     );
 
     return (
-      <div className="column card" id="preview-card" style={{ overflowY: "auto" }}>
+      <div
+        className="column card"
+        id="preview-card"
+        style={{ overflowY: "auto" }}
+      >
         <HeaderPost />
         <ContentPost />
         {renderBottom()}
