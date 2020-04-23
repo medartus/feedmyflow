@@ -126,7 +126,7 @@ const CreationModal = memo(
     }, [mediaUrl]);
 
     useEffect(() => {
-      if (!isOpen && !isEvent) {
+      if (!open && !isEvent) {
         const date = new Date();
         dispatch({ type: "SET_DATE", payload: date });
         dispatch({ type: "SET_TIME", payload: date });
@@ -137,7 +137,7 @@ const CreationModal = memo(
         dispatch({ type: "SET_DESCRIPTION", payload: "" });
         dispatch({ type: "SET_URL", payload: "" });
       }
-    }, [isOpen, isEvent]);
+    }, [open, isEvent]);
 
     useEffect(() => {
       if (shareCommentary !== "") {
@@ -175,7 +175,12 @@ const CreationModal = memo(
       (payload) => dispatch({ type: "SET_HIDE_DESCRIPTION", payload }),
       []
     );
+    
     // helper functions
+    const handleClose = () => {
+      setOpen(false);
+    };
+    
 
     const formatData = () => {
       let rawDate = `${publicationDate.getDate()}/${
@@ -264,7 +269,7 @@ const CreationModal = memo(
     const onUpdateData = () => {
       if (validDate()) {
         const linekdinPost = formatData();
-        let postId = data.id;
+        let postId = props.event.id;
         db.collection("user")
           .doc(userUid)
           .collection("post")
@@ -276,7 +281,7 @@ const CreationModal = memo(
     };
 
     const onDeleteData = () => {
-      let postId = data.id;
+      let postId = props.event.id;
       const onConfirm = () => {
         db.collection("user")
           .doc(userUid)
@@ -321,8 +326,8 @@ const CreationModal = memo(
       <p className="important-text" id="creation-modal-toptext">
         {isEvent
           ? t("creationModal.text.schedule", {
-              rawDate: data.rawDate,
-              rawTime: data.rawTime,
+              rawDate: props.event.rawDate,
+              rawTime: props.event.rawTime,
             })
           : t("creationModal.text.create")}
       </p>
