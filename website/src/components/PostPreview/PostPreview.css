@@ -61,6 +61,6 @@
 }
 
 #preview-card{
-  height: auto!important;
-  max-height: 80vh!important;
+  height: auto;
+  max-height: 80vh;
 }

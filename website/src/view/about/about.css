@@ -24,12 +24,40 @@ a {
 }
 
 .right-image {
-    height: 50vh; 
-    width: auto;
+    width: 30vw; 
+    height: auto;
     border-radius: 20px;
 }
 
 .about-text {
     font-family: "Trocchi"!important;
     font-size: 20px;
+}
+
+@media screen and (max-width:800px){
+    .section-container {
+        flex-direction: column;
+        width: 90%;
+        padding: 0 5%;
+    }
+    .section-container p{
+        margin-top: 2.5%;
+        margin-bottom: 0;
+    }
+    .right-image {
+        width: 60vw; 
+        margin-top: 7%;
+    }
+}
+
+@media screen and (max-width:650px){
+    .section-title {
+        font-size: 1.4em;
+    }
+    .about-text {
+        font-size: 1em;
+    }
+    .right-image {
+        margin-top: 10%;
+    }
 }

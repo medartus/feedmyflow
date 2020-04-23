@@ -28,9 +28,10 @@ const theme = createMuiTheme({
 const ConfirmButton = withStyles({
   root: {
     backgroundColor: Colors.shade1,
-    marginTop: "20px",
+    marginTop: "3%",
+    marginBottom: "5%",
     borderRadius: "100px",
-    width: "15vw",
+    padding: "1% 2%",
     "&:hover": {
       backgroundColor: Colors.primary,
     },
@@ -48,9 +49,10 @@ const ConfirmButton = withStyles({
 const DeleteButton = withStyles({
   root: {
     backgroundColor: Colors.error,
-    marginTop: "20px",
+    marginTop: "3%",
+    marginBottom: "5%",
     borderRadius: "100px",
-    width: "15vw",
+    padding: "1% 2%",
     "&:hover": {
       backgroundColor: Colors.error,
     },

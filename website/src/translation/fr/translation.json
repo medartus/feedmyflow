@@ -7,6 +7,10 @@
         "language":{
             "english":"English",
             "french":"Français"
+        },
+        "language-small":{
+            "english":"En",
+            "french":"Fr"
         }
     },
     "about":{

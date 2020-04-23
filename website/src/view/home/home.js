@@ -10,7 +10,8 @@ import post from "../../assets/post.svg";
 import { Colors } from "../../Constants";
 import "./home.css";
 
-const ICON_SIZE = 80;
+
+const ICON_SIZE = window.innerWidth > 600 ? 60 : 50;
 
 const RightPart = () => (
   <div className="column">
@@ -19,7 +20,7 @@ const RightPart = () => (
 );
 
 const UpperText = ({ t, iconSize }) => (
-  <div className="column" style={{ alignItems: "flex-start" }}>
+  <div className="column" id="home-left-column">
     <div className="main-text">
       <FeedLogo isMonotone={false} size={iconSize} />
       <div className="absolute-text" style={{ left: (3 * iconSize) / 5 }}>
@@ -56,6 +57,7 @@ const Home = memo((props) => {
   return (
     <div className="home-container">
       <Header {...props} />
+      <div className="fakenav"></div>
       <div className="home-wrapper">
         <LeftPart />
         <RightPart />

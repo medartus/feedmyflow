@@ -55,6 +55,10 @@ const Mycalendar = (props) => {
   if (eventsList.length > 0)
     console.log(new Date(eventsList[0].publicationTime.toDate()));
 
+  const scrollbarStyle = window.innerWidth > 1000
+  ?{width: "44vw", height: "30vw", marginTop: "50px"}
+  :{width: "90vw", height: "40vh",maxHeight: "40vh", marginTop: "50px" };
+
   useEffect(() => {
     const currentUser = fire.auth().currentUser;
     const userUid = currentUser.uid;
@@ -101,25 +105,26 @@ const Mycalendar = (props) => {
   );
 
   const NextPosts = () => (
-    <div className="column">
+    <div id="next-posts-container">
       {eventsList.length === 0 ? (
         <img src={empty} alt="empty" className="empty-img" />
-      ) : (
-        <Scrollbars
-          style={{ width: "44vw", height: "27vw", marginTop: "50px" }}
-        >
-          {eventsList.map(({ itemId, ...data }) => (
-            <PostSummary key={itemId} {...data} />
+      )
+        :
+        // <Scrollbars style={scrollbarStyle}>
+        <div className="posts-container">
+          {eventsList.map((event) => (
+            <PostSummary event={event} />
           ))}
-        </Scrollbars>
-      )}
+        </div>
+        // </Scrollbars>
+      }
     </div>
   );
 
   const HeaderText = () => (
-    <div className="column" style={{ alignItems: "flex-start" }}>
-      <p className="important-text">{t("calendar.schedule")}</p>
-      <p className="second-text">{t("calendar.automate")}</p>
+    <div className="column" id="schedule-container" style={{ alignItems: "flex-start" }}>
+      <p id="schedule-title" className="important-text">{t("calendar.schedule")}</p>
+      <p id="schedule-subtitle" className="second-text">{t("calendar.automate")}</p>
     </div>
   );
 
@@ -179,12 +184,11 @@ const Mycalendar = (props) => {
   );
 
   const UpcomingPosts = () => (
-    <div
-      className="upcoming-container"
-      style={{ backgroundColor: Colors.primary }}
-    >
-      <p className="upcoming-text">{t("calendar.upcoming")}</p>
-    </div>
+      <p 
+        className="upcoming-text"
+        style={{ backgroundColor: Colors.primary }}>
+          {t("calendar.upcoming")}
+      </p>
   );
 
   const RightPart = () => (
@@ -202,7 +206,9 @@ const Mycalendar = (props) => {
 
   return (
     <>
+      {/* <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/> */}
       <Header {...props} />
+      <div className="fakenav"></div>
       <div className="wrapper">
         <LeftPart />
         <RightPart />

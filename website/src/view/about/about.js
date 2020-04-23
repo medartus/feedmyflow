@@ -38,6 +38,7 @@ const About = memo((props) => {
   return (
     <div className="home-container">
       <Header {...props} />
+      <div className="fakenav"></div>
       <div className="home-wrapper" style={{ flexDirection: "column" }}>
         <Section title={t("about.title.usage")} image={setup} content={usageContent} />
         <Section title={t("about.title.guide")} image={example} content={guideContent} />
