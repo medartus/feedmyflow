@@ -112,8 +112,8 @@ const Mycalendar = (props) => {
         :
         // <Scrollbars style={scrollbarStyle}>
         <div className="posts-container">
-          {eventsList.map((event) => (
-            <PostSummary event={event} />
+          {eventsList.map(({ itemId, ...data }) => (
+            <PostSummary key={itemId} {...data} />
           ))}
         </div>
         // </Scrollbars>

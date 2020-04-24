@@ -86,11 +86,10 @@ const getInitialState = (props, isMedia, isEvent, date) => ({
     isEvent && isMedia && props.media.originalUrl !== undefined ? true : false,
 });
 
-const CreationModal = memo(
-  forwardRef((props, ref) => {
-    // function variables
-    let isEvent = props.event !== undefined;
-    let isMedia = isEvent ? props.event.media !== undefined : false;
+const CreationModal = memo(({ isOpen, data, handleClose }) => {
+  // function variables
+  let isEvent = data !== null;
+  let isMedia = isEvent ? data.media !== undefined : false;
     const { t } = useTranslation();
     const db = fire.firestore();
     const userUid = fire.auth().currentUser.uid;
@@ -99,7 +98,6 @@ const CreationModal = memo(
     date.setMinutes(60);
 
     // stateful values
-    const [open, setOpen] = useState(false);
     const [haveModification, setHaveModification] = useState(false);
     const [canSave, setCanSave] = useState(false);
     const [alertProps, setAlertProps] = useState(defaultAlertProps);
@@ -118,7 +116,7 @@ const CreationModal = memo(
         hideDescription
       },
       dispatch,
-    ] = useReducer(reducer, getInitialState(props, isMedia, isEvent, date));
+    ] = useReducer(reducer, getInitialState(data, isMedia, isEvent, date));
 
     // side-effects
     useEffect(() => {
@@ -126,7 +124,7 @@ const CreationModal = memo(
     }, [mediaUrl]);
 
     useEffect(() => {
-      if (!open && !isEvent) {
+      if (!isOpen && !isEvent) {
         const date = new Date();
         dispatch({ type: "SET_DATE", payload: date });
         dispatch({ type: "SET_TIME", payload: date });
@@ -137,7 +135,7 @@ const CreationModal = memo(
         dispatch({ type: "SET_DESCRIPTION", payload: "" });
         dispatch({ type: "SET_URL", payload: "" });
       }
-    }, [open, isEvent]);
+    }, [isOpen, isEvent]);
 
     useEffect(() => {
       if (shareCommentary !== "") {
@@ -175,11 +173,6 @@ const CreationModal = memo(
       (payload) => dispatch({ type: "SET_HIDE_DESCRIPTION", payload }),
       []
     );
-    
-    // helper functions
-    const handleClose = () => {
-      setOpen(false);
-    };
     
 
     const formatData = () => {
@@ -269,7 +262,7 @@ const CreationModal = memo(
     const onUpdateData = () => {
       if (validDate()) {
         const linekdinPost = formatData();
-        let postId = props.event.id;
+        let postId = data.id;
         db.collection("user")
           .doc(userUid)
           .collection("post")
@@ -281,7 +274,7 @@ const CreationModal = memo(
     };
 
     const onDeleteData = () => {
-      let postId = props.event.id;
+      let postId = data.id;
       const onConfirm = () => {
         db.collection("user")
           .doc(userUid)
@@ -326,8 +319,8 @@ const CreationModal = memo(
       <p className="important-text" id="creation-modal-toptext">
         {isEvent
           ? t("creationModal.text.schedule", {
-              rawDate: props.event.rawDate,
-              rawTime: props.event.rawTime,
+              rawDate: data.rawDate,
+              rawTime: data.rawTime,
             })
           : t("creationModal.text.create")}
       </p>
@@ -462,13 +455,13 @@ const CreationModal = memo(
         aria-describedby="transition-modal-description"
         id="modal"
         className={classes.modal}
-        open={open}
+        open={isOpen}
         onClose={handleClose}
         closeAfterTransition
         BackdropComponent={Backdrop}
         BackdropProps={BACKDROP_PROPS}
       >
-        <Fade in={open}>
+        <Fade in={isOpen}>
           <ThemeProvider theme={theme}>
 
             {phoneModeToggle()}
@@ -503,6 +496,5 @@ const CreationModal = memo(
       </Modal>
     );
   })
-);
 
 export default CreationModal;
