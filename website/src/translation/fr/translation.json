@@ -1,11 +1,13 @@
 {
     "header":{
-        "disconnect":"Déconnexion",
-        "connect":"Connexion",
+        "home":"Accueil",
+        "dashboard":"Tableau de bord",
         "about":"À Propos",
         "contact":"Contact",
+        "disconnect":"Déconnexion",
+        "connect":"Connexion",
         "language":{
-            "english":"English",
+            "english":"Anglais",
             "french":"Français"
         },
         "language-small":{
@@ -60,7 +62,7 @@
     },
     "home":{
         "go":"C'EST PARTI",
-        "slogan":"Planifieur gratuit de publication Linkedin"
+        "slogan":"Planificateur gratuit de publication Linkedin"
     },
     "creationModal":{
         "validDate":{

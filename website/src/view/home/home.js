@@ -23,7 +23,7 @@ const UpperText = ({ t, iconSize }) => (
   <div className="column" id="home-left-column">
     <div className="main-text">
       <FeedLogo isMonotone={false} size={iconSize} />
-      <div className="absolute-text" style={{ left: (3 * iconSize) / 5 }}>
+      <div className="absolute-text" style={{ left: (3 * iconSize) / 6 }}>
         <p className="important-text">eed my flow</p>
       </div>
     </div>

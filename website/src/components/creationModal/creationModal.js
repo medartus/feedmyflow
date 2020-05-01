@@ -2,7 +2,6 @@ import React, {
   useState,
   useEffect,
   useCallback,
-  forwardRef,
   memo,
   useReducer,
 } from "react";
@@ -40,7 +39,7 @@ import {
 const BACKDROP_PROPS = { timeout: 500, className: "backdrop" };
 
 const descriptionPredicate = (hideDescription, isLinkValid) => {
-  if (isLinkValid && !hideDescription) return { display: "block" };
+  if (!hideDescription && isLinkValid) return { display: "block" };
   return { display: "none" };
 };
 
@@ -81,7 +80,7 @@ const getInitialState = (props, isMedia, isEvent, date) => ({
   mediaDescription: isEvent && isMedia ? props.media.description : "",
   mediaUrl: isEvent && isMedia ? props.media.originalUrl : "",
   hideDescription:
-    isEvent && isMedia && props.media.description === undefined ? true : false,
+    isEvent && isMedia && props.media.description === undefined || !isEvent ? true : false,
   isLinkValid:
     isEvent && isMedia && props.media.originalUrl !== undefined ? true : false,
 });
@@ -476,6 +475,7 @@ const CreationModal = memo(({ isOpen, data, handleClose }) => {
               {mediaTitleRow()}
               {mediaDescriptionRow()}
               {buttonSection()}
+              {console.log(hideDescription, isLinkValid)}
             </div>
             <PostPreview
               inPreviewMode={inPreviewMode}

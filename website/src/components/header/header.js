@@ -44,8 +44,9 @@ const Header = memo((props) => {
 
   const { t, i18n } = useTranslation();
 
+  const handleDashboard = useCallback(() => props.history.push("/dashboard"), [props]);
+  const handleHome = useCallback(() => props.history.push("/"), [props]);
   const handleAbout = useCallback(() => props.history.push("/about"), [props]);
-  const backToHome = useCallback(() => props.history.push("/"), [props]);
   const onAuthOut = useCallback(() => auth.signOut(props), [auth, props]);
   const onAuthIn = useCallback(() => auth.signIn(true, props), [auth, props]);
 
@@ -85,12 +86,17 @@ const Header = memo((props) => {
     <div className="options-container">.
       <nav hidden={!MobileNavVisible}>
         {auth.authStatus.isConnected ? (
+          <HeaderItem text={t("header.dashboard")} onClick={handleDashboard} />
+          ) : (
+          <HeaderItem text={t("header.home")} onClick={handleHome} />
+        )}
+        <HeaderItem text={t("header.about")} onClick={handleAbout} />
+        <HeaderItem text={t("header.contact")} onClick={handleSendMail} />
+        {auth.authStatus.isConnected ? (
           <HeaderItem text={t("header.disconnect")} onClick={onAuthOut} />
           ) : (
           <HeaderItem text={t("header.connect")} onClick={onAuthIn} />
         )}
-        <HeaderItem text={t("header.contact")} onClick={handleSendMail} />
-        <HeaderItem text={t("header.about")} onClick={handleAbout} />
       </nav>
       <LanguageItem />
     </div>
@@ -102,7 +108,7 @@ const Header = memo((props) => {
       style={{ backgroundColor: Colors.shade1 }}
     >
       <Menu id="menu-button" onClick={()=>toogleMobileNav()}/>
-      <FeedLogo size={logoSize} action={backToHome} />
+      <FeedLogo size={logoSize} action={handleHome} />
       <HeaderItems />
     </div>
   );

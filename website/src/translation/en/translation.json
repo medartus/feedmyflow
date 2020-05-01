@@ -1,12 +1,14 @@
 {
     "header":{
-        "disconnect":"Log Out",
-        "connect":"Log In",
+        "home":"Home",
+        "dashboard":"Dashboard",
         "about":"About",
         "contact":"Contact",
+        "disconnect":"Log Out",
+        "connect":"Log In",
         "language":{
             "english":"English",
-            "french":"Français"
+            "french":"French"
         },
         "language-small":{
             "english":"En",
