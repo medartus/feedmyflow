@@ -10,7 +10,7 @@ const generateMediaArray = (data) => {
           "text": title
         }
       }
-      if(description != undefined) mediaObject['description']['text'] = description;
+      if(description !== undefined) mediaObject['description']['text'] = description;
       mediaArray=[mediaObject]
     }
     return mediaArray;

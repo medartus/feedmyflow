@@ -8,7 +8,7 @@ const Login = ({ component: Component, ...rest }) => {
   const userCanceled = rest.location.search.includes("error=user_cancelled_login");
 
   useEffect(()=>{
-    if(!auth.authStatus.haveTriedLogin) auth.signIn(false,null)
+    if(!auth.authStatus.haveTriedLogin && !userCanceled) auth.signIn(false,null)
   },[])
 
   return (

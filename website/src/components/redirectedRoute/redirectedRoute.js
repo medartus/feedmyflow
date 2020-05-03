@@ -17,7 +17,6 @@ const RedirectedRoute = ({ path, comp: Component, redirect, needToBeConnected, .
       {...rest}
       render={props => {
         if (!auth.authStatus.haveTriedLogin && needToBeConnected) {
-          // console.log("check")
           return (
             <div className="center">
               <FeedLogo size={100} animated={true} isMonotone={false} />
@@ -26,10 +25,8 @@ const RedirectedRoute = ({ path, comp: Component, redirect, needToBeConnected, .
         }
         else {
           if ((auth.authStatus.isConnected && needToBeConnected) || (!auth.authStatus.isConnected && !needToBeConnected)) {
-            // console.log("1")
             return <Component {...props} />;
           } else {
-            // console.log("2",redirect)
             return (
               <Redirect
                 to={{

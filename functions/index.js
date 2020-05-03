@@ -18,17 +18,9 @@ const linkedInClient = () => {
   return require('node-linkedin')(
     functions.config().linkedin.client_id,
     functions.config().linkedin.client_secret,
-    `http://localhost:3000/login`);
-    // `https://${process.env.GCLOUD_PROJECT}.web.app/login`);
+    // `http://localhost:3000/login`);
+    `https://${process.env.GCLOUD_PROJECT}.web.app/login`);
 }
-
-// exports.mailTest = functions.https.onRequest((req,res) =>{
-//   const mailprovider = new MailProvider()
-//   mailprovider.sendWelcomeEmail("nico.caill@live.fr","Nicolas Caillieux")
-//   // mailprovider.sendPostConfirmation({userUID:"linkedin:hV1NxWo7fQ",shareCommentary:"How I became EL Connector. By blabla ldzadzefojezifjozhfzohfouzehclkpo zeifjzeoi  czeoijfçzrjgeto"})
-//   .then(() => res.send("ok"))
-//   .catch((er) => console.log(er))
-// })
 
 /**
  * Redirects the User to the LinkedIn authentication consent screen. ALso the 'state' cookie is set for later state

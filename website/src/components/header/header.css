@@ -71,9 +71,9 @@ nav{
     position: absolute;
     left: 0;
     top: 66px;
-    flex-direction: column-reverse;
+    flex-direction: column;
     background-color: white;
-    width: 35%;
+    width: 100%;
     border: solid 0 transparent;
     border-bottom-right-radius: 10px;
     box-shadow: 5px 5px 5px 3px rgba(71, 71, 71, 0.548);
@@ -89,7 +89,7 @@ nav{
   nav .header-text{
     color: black;
   }
-  nav .header-item:first-child .header-text{
+  nav .header-item:last-child .header-text{
     color: red;
   }
   #menu-button{
