@@ -139,7 +139,7 @@ The labels are loosely grouped by their purpose, but it's not required that ever
 #### Type of Issue and Issue State
 
 | Label name | Description |
-| --- | --- | --- | --- |
+| --- | --- |
 | `enhancement` | Feature requests. |
 | `bug` |  Confirmed bugs or reports that are very likely to be bugs. |
 | `question` | Questions more than bug reports or feature requests (e.g. how do I do X). |
@@ -156,7 +156,7 @@ The labels are loosely grouped by their purpose, but it's not required that ever
 #### Topic Categories
 
 | Label name | Description |
-| --- | --- | --- | --- |
+| --- | --- |
 | `documentation` | Related to any type of documentation. |
 | `performance` | Related to performance. |
 | `security` | Related to security. |
@@ -170,7 +170,7 @@ The labels are loosely grouped by their purpose, but it's not required that ever
 #### Pull Request Labels
 
 | Label name | Description
-| --- | --- | --- | --- |
+| --- |  --- |
 | `work-in-progress` | Pull requests which are still being worked on, more changes will follow. |
 | `needs-review` |  Pull requests which need code review, and approval from maintainers or Feed My Flow core team. |
 | `under-review` | Pull requests being reviewed by maintainers or Feed My Flow core team. |
