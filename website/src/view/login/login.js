@@ -5,7 +5,7 @@ import FeedLogo from "../../components/feedlogo/feedlogo";
 
 const Login = ({ component: Component, ...rest }) => {
   const auth = useAuth();
-  const userCanceled = rest.location.search.includes("error=user_cancelled_login");
+  const userCanceled = rest.location.search.includes("error=user_cancelled_login") || rest.location.search.includes("error=user_cancelled_authorize");
 
   useEffect(()=>{
     if(!auth.authStatus.haveTriedLogin && !userCanceled) auth.signIn(false,null)

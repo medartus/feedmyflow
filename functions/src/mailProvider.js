@@ -5,12 +5,14 @@ const juice = require('juice')
 
 const fs = require("fs")
 
+const emailAddress = functions.config().email.address;
+
 class MailProvider {
     constructor() {
         this.transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
-                user: 'feedmyflow@gmail.com',
+                user: functions.config().email.address,
                 pass: functions.config().email.password,
             }
         });
@@ -46,7 +48,7 @@ class MailProvider {
 
                 const html = this.getEmailTemplate("postConfirmation",{displayName,shareCommentary,photoURL})
                 const mailOptions = {
-                    from: 'feedmyflow@gmail.com', // Something like: Jane Doe <janedoe@gmail.com>
+                    from: emailAddress, // Something like: Jane Doe <janedoe@gmail.com>
                     to: email,
                     subject: `FeedMyFlow post confirmation`, // email subject
                     html,
@@ -67,7 +69,7 @@ class MailProvider {
 
             const html = this.getEmailTemplate("welcome",{displayName})
             const mailOptions = {
-                from: 'feedmyflow@gmail.com', // Something like: Jane Doe <janedoe@gmail.com>
+                from: emailAddress, // Something like: Jane Doe <janedoe@gmail.com>
                 to: email,
                 subject: 'Weclome on FeedMyFlow !', // email subject
                 html,

@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "functions":"firebase emulators:start",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

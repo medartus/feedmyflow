@@ -73,7 +73,7 @@ typings/
 */.env
 */.env.test
 */.env.local
-*/.env.development
+# */.env.development
 */.env.production
 */.env.development.local
 */.env.test.local
@@ -131,9 +131,6 @@ yarn-error.log*
 # configuration
 */firebaseConfig.js
 
-# firebase API keys
-*/firebase.js
-
 */!node_modules/node-linkedin/index.js
 */service-account-dev.json
 */service-account-prod.json
@@ -144,3 +141,6 @@ yarn-error.log*
 
 # function config
 .runtimeconfig.json
+
+# public website folder
+public/*
