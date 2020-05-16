@@ -5,7 +5,7 @@ const juice = require('juice')
 
 const fs = require("fs")
 
-const emailAddress = functions.config().email.address;
+const emailAddress = `Feed My Flow <${functions.config().email.address}>`;
 
 class MailProvider {
     constructor() {
