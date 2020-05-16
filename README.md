@@ -23,7 +23,7 @@ We use the React framework for the front end part and firebase for all the back 
 
 ### Firebase
 
-Firebase is a great tool for develloper to create very cheap, fast and scalable application. Here we use some of their products such as:
+Firebase is a great tool for developers to create a very cheap, fast and scalable application. Here we use some of their products such as:
 - Cloud Functions
 - Cloud Firestore
 - Authentification
@@ -31,35 +31,34 @@ Firebase is a great tool for develloper to create very cheap, fast and scalable 
 
 #### Cloud Functions
 
-Cloud Functions are the serverless backend module from firebase. We don't need anymore to have our own backend that run all the time waiting for request. Cloud functions allows us to ony execute our code when we need.
+Cloud Functions are the serverless backend module from Firebase. We don't need anymore to have our backend that runs all the time waiting for requests. Cloud functions allow us to only execute our code when we need it.
 
-On cloud functions we handle some functionnality:
+On cloud functions we handle some functionality:
 
 **I. Login**
 
-We connect to LinkedIn API to allow users to give us the credentials we need to create their account and post their content.
+We connect to LinkedIn API to allow users to give us the credentials we need to create their accounts and post their content.
 
 **II. Welcoming new user**
 
-Whe send welcome email to every new user. The function is run by a trigger on the Firebase Authentification part.
+We send a welcome email to every new user. The function is run by a trigger on the Firebase Authentification part.
 
 **III. Posting content**
 
-Every 15 minutes, we check if the user wants to posts somthing. If there is some, we post their content on LinkedIn and send them an email to tell them so.
+Every 15 minutes, we check if the user wants to posts something. If there are some, we post their content on LinkedIn and send them an email to tell them so.
 
 #### Cloud Firestore
 
-Cloud Firestore is one of the two NOSQL database on Firebase. We use the databse to store the content of their post and the crendential to connect to the Linkedin API.
+Cloud Firestore is one of the two NoSQL databases on Firebase. We use the database to store the content of their post and the credentials to connect to the Linkedin API.
 
 #### Authentification
 
-Firebase Authentification is a very easy way to enable login with email or third party provider such as Google or Facebook. LinkedIn is not handle natively by Firebase, this is why we have our own credentials function on Cloud Functons. You can still use the Authentification from firebase if you have some specific token and this what we have with LinkedIn API.
+Firebase Authentification is a very easy way to enable login with email or third party providers such as Google or Facebook. LinkedIn doesn't handle natively by Firebase, this is why we have our own credentials function on Cloud Functions. You can still use the Authentification from firebase if you have some specific token and this what we have with LinkedIn API.
 
-All in all, we store all the essential user's data on Authentification. Authentification provides us a really easy and convinient way to login without asking the user their credential everytime, Firebase Authentification do that for us !
-
+All in all, we store all the essential user's data on Authentification. Authentification provides us a really easy and convenient way to log in without asking the user their credential every time, Firebase Authentification do that for us!
 #### Hosting
 
-Hosting is a very fast and simple way to deploy our website. It provides us SSL security and a cool domain name. We simply build our React project and deploy the new version in a matter of second.
+Hosting is a very fast and simple way to deploy our website. It provides us SSL security and a cool domain name. We simply build our React project and deploy the new version in a matter of seconds.
 
 ## Getting Started
 
