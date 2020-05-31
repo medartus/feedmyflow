@@ -29,8 +29,8 @@ const postOnLinkedin = (newPost) => new Promise(async(resolve,reject) => {
         await mailProvider.sendPostConfirmation(newPost.data())
             .then(()=> resolve('Sended'))
             .catch((error)=> reject(error));
-        return null;
     }
+    return reject(new Error(`Can't post the data for this user: ${userUid}`));
 });
  
 module.exports = { postOnLinkedin };
