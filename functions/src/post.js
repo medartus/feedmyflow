@@ -5,38 +5,32 @@ const { admin } = require('../provider/firebase');
 
 const db = admin.firestore();
 
-const postOnLinkedin = async (res, newPost) => {
+const postOnLinkedin = (newPost) => new Promise(async(resolve,reject) => {
     const body = format.generateBodyContent(newPost.data());
-    if(body === null){
-    throw new Error('Cannot build body');
-    }
+    if(body === null) return reject(new Error('Cannot build body'));
 
     const userUid = newPost.data().userUID
 
-    if(userUid === "linkedin:hV1NxWo7fQ" || process.env.GCLOUD_PROJECT === "feedmyflow"){
+    if(userUid === "linkedin:3A8ySOLYhe" || process.env.GCLOUD_PROJECT === "feedmyflow"){
 
         const accessTokenDoc = await db.collection("user").doc(userUid).collection("adminData").doc("linkedin").get();
-        if (!accessTokenDoc.exists) {
-            throw new Error('Token does not exist.');
-        }
-        let result,error;
+        if (!accessTokenDoc.exists) return reject(new Error('Token does not exist.'));
 
+        let error;
         const linkedinApi = new LinkedinApi(accessTokenDoc.data().accessToken);
-        await linkedinApi.postData(body)
-            .then((res)=> result = res)
-            .catch((err)=>error = err)
+        await linkedinApi.postData(body).catch((err)=> error=err)
+        if (error) return reject(error);
         
-        if(error !== undefined) {
-            res.json({ error: error });
-        } else {
-            // db.collection('user').doc(userUid).collection('post').doc(newPost.id).delete()
-            
-            const mailProvider = new MailProvider()
-            mailProvider.sendPostConfirmation(userUid)
-                .then(()=> {return res.send('Sended')})
-                .catch((error)=> {return res.send(error.toString())});
+        if(process.env.GCLOUD_PROJECT === "feedmyflow") {
+            db.collection('user').doc(userUid).collection('post').doc(newPost.id).delete()
         }
+        
+        const mailProvider = new MailProvider()
+        await mailProvider.sendPostConfirmation(newPost.data())
+            .then(()=> resolve('Sended'))
+            .catch((error)=> reject(error));
+        return null;
     }
-}
+});
  
 module.exports = { postOnLinkedin };
