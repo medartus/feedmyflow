@@ -87,13 +87,17 @@ exports.LinkedinPost = functions.https.onRequest( async (req, res) => {
   try {
 
     const postCollection = await db.collectionGroup('post').where('publicationTime', '<', new Date()).get()
-    if (postCollection.empty) res.status(200).send('No matching documents.');
-
+    if (postCollection.empty) {
+      console.log('No matching documents.')
+      return res.status(200).send('No matching documents.');
+    }
+    
     const promises = postCollection.docs.map(async(newPost) => {
       return await postOnLinkedin(newPost)
     });
 
     await Promise.all(promises)
+    console.log('All new content has been posted on LinkedIn')
     return res.status(200).send('All new content has been posted on LinkedIn')
 
   } catch (error) {

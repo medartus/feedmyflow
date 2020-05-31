@@ -25,7 +25,7 @@ export default memo(
     useEffect(() => {
       if (isLinkValid && url !== "") {
         const encoded = encodeURIComponent(url);
-        fetch(`https://url-preview.herokuapp.com/api/v1/preview?url=${encoded}`)
+        fetch(`https://feedmyflow.herokuapp.com/api/v1/preview?url=${encoded}`)
           .then((res) => {
             if (res.ok) return res.json();
             throw new Error(`${res.status}: ${res.statusText}`);
