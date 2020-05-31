@@ -39,9 +39,9 @@ class MailProvider {
     }
 
     sendPostConfirmation(data){
-        const {userUID,shareCommentary} = data;
+        const { userUID,shareCommentary } = data;
         return new Promise(async (resolve,reject) => {
-            const {email,displayName,photoURL} = await admin.auth().getUser(userUID)
+            const { email,displayName,photoURL } = await admin.auth().getUser(userUID)
                 .then((userRecord) => {return userRecord})
                 .catch((err)=>reject(err));
             if (email !== undefined){

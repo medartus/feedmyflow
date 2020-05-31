@@ -137,14 +137,15 @@ const CreationModal = memo(({ isOpen, data, handleClose }) => {
     }, [isOpen, isEvent]);
 
     useEffect(() => {
-      if (shareCommentary !== "") {
-        if (shareMediaCategory === "NONE") setCanSave(true);
+      if (shareCommentary === "") setCanSave(false);
+      else{
+        if (shareMediaCategory === "NONE" && mediaUrl === "") setCanSave(true);
         else {
-          if (mediaTitle !== "" && mediaDescription !== "" && mediaUrl !== "")
+          if (mediaUrl !== "" && mediaTitle !== "")
             setCanSave(true);
           else setCanSave(false);
         }
-      } else setCanSave(false);
+      }
       return () => {
         setHaveModification(true);
       };
@@ -184,7 +185,7 @@ const CreationModal = memo(({ isOpen, data, handleClose }) => {
         publicationTime.getMinutes() === 0 ? "00" : publicationTime.getMinutes();
       let rawTime = `${hours}:${minutes}`;
       let time = moment(rawDate + " " + rawTime + ":00", "DD/MM/YYYY hh:mm");
-      console.log(time.toDate());
+      
       let linekdinPost = {
         author: "urn:li:person:" + userUid.split(":")[1],
         userUID: userUid,
@@ -200,7 +201,7 @@ const CreationModal = memo(({ isOpen, data, handleClose }) => {
           title: mediaTitle,
           originalUrl: mediaUrl,
         };
-        if (!hideDescription) {
+        if (!hideDescription && mediaDescription !== "") {
           linekdinPost["media"]["description"] = mediaDescription;
         }
       }
@@ -251,7 +252,7 @@ const CreationModal = memo(({ isOpen, data, handleClose }) => {
 
     // Firebase functions
     const onSendData = () => {
-      if (validDate()) {
+      if (validDate() && canSave) {
         const linekdinPost = formatData();
         db.collection("user").doc(userUid).collection("post").add(linekdinPost);
         handleClose();
@@ -259,7 +260,7 @@ const CreationModal = memo(({ isOpen, data, handleClose }) => {
     };
 
     const onUpdateData = () => {
-      if (validDate()) {
+      if (validDate() && canSave && haveModification) {
         const linekdinPost = formatData();
         let postId = data.id;
         db.collection("user")
@@ -304,7 +305,7 @@ const CreationModal = memo(({ isOpen, data, handleClose }) => {
           <DeleteButton onClick={onDeleteData}>
             {t("creationModal.button.delete")}
           </DeleteButton>
-          <ConfirmButton onClick={onUpdateData} disabled={!haveModification}>
+          <ConfirmButton onClick={onUpdateData} disabled={!haveModification || !canSave}>
             {t("creationModal.button.update")}
           </ConfirmButton>
         </div>
@@ -399,7 +400,10 @@ const CreationModal = memo(({ isOpen, data, handleClose }) => {
           label={t("creationModal.input.mediaUrl")}
           value={mediaUrl}
           onChange={({ target: { value } }) =>
-            dispatch({ type: "SET_URL", payload: value })
+            {
+              dispatch({ type: "SET_CATEGORY", payload: value === "" ? "NONE" : "ARTICLE" })
+              dispatch({ type: "SET_URL", payload: value })
+            }
           }
         />
       </div>
@@ -475,7 +479,6 @@ const CreationModal = memo(({ isOpen, data, handleClose }) => {
               {mediaTitleRow()}
               {mediaDescriptionRow()}
               {buttonSection()}
-              {console.log(hideDescription, isLinkValid)}
             </div>
             <PostPreview
               inPreviewMode={inPreviewMode}
