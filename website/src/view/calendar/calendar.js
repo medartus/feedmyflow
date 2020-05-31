@@ -52,8 +52,6 @@ const Mycalendar = (props) => {
     setModalState,
   } = useModalWithData();
   const { t, i18n } = useTranslation();
-  if (eventsList.length > 0)
-    console.log(new Date(eventsList[0].publicationTime.toDate()));
 
   const scrollbarStyle = window.innerWidth > 1000
   ?{width: "44vw", height: "30vw", marginTop: "50px"}
