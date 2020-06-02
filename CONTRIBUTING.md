@@ -114,6 +114,7 @@ While the prerequisites above must be satisfied prior to having your pull reques
 * Reference issues and pull requests liberally after the first line
 * Consider starting the commit message with an applicable emoji:
     * :art: `:art:` when improving the format/structure of the code
+    * :sparkles: `:sparkles:` when implemeting a new feature
     * :racehorse: `:racehorse:` when improving performance
     * :non-potable_water: `:non-potable_water:` when plugging memory leaks
     * :memo: `:memo:` when writing docs
