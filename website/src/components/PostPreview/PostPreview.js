@@ -1,7 +1,7 @@
 import React, { useState, useEffect, memo } from "react";
 import "./PostPreview.css";
 
-import { extractDomain } from "../../Constants";
+import { extractDomain, isValidUrl, Colors } from "../../Constants";
 
 const WIDTH_BONE_1 = { width: "20vw" };
 const WIDTH_BONE_2 = { width: "10vw" };
@@ -49,6 +49,17 @@ export default memo(
       } else if (embedImage !== null) setEmbedImg(null);
     }, [isLinkValid, url, embedImage, setTitle, setHideDescription]);
 
+    const getLine = line => {
+      const tokens = line.split(' ');
+      return tokens.map(t => {
+        let textStyle = { color: Colors.shade1 };
+        // has hashtag with more than just the shebang or is a url (# is a valid url so we remove that case)
+        if ((t[0] === '#' && t.length > 1) || (isValidUrl(t) && t !== '#'))
+          textStyle = { color: Colors.light };
+        return <span style={textStyle}>{`${t} `}</span>
+      })
+    }
+
     const HeaderPost = () => (
       <div className="row" style={{ marginTop: "20px" }}>
         <img src={photoUrl} alt="user-img" className="user-img" />
@@ -68,7 +79,7 @@ export default memo(
         {content.split("\n").map((line, i) => {
           return (
             <p key={i} className="next-post-item">
-              {line}
+              {getLine(line)}
             </p>
           );
         })}
@@ -84,21 +95,21 @@ export default memo(
         )}
 
         {(url || title || description) &&
-        <div className="url-info-container">
-          <p className="description-text clipped clip-1">{title}</p>
-          <p
-            className="second-text"
-            style={{ fontSize: "14px", margin: "6px 0 6px 0" }}
-          >
-            {isLinkValid ? extractDomain(url) : url}
-          </p>
-          {!hideDescription && <p className="description-text clipped clip-2">{description}</p>}
-        </div>}
+          <div className="url-info-container">
+            <p className="description-text clipped clip-1">{title}</p>
+            <p
+              className="second-text"
+              style={{ fontSize: "14px", margin: "6px 0 6px 0" }}
+            >
+              {isLinkValid ? extractDomain(url) : url}
+            </p>
+            {!hideDescription && <p className="description-text clipped clip-2">{description}</p>}
+          </div>}
       </div>
     );
 
     return (
-      <div className = {inPreviewMode ? "card overflowable visible" : "card overflowable"} id="preview-card">
+      <div className={inPreviewMode ? "card overflowable visible" : "card overflowable"} id="preview-card">
         <HeaderPost />
         <ContentPost />
         {renderBottom()}
