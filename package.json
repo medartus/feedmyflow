@@ -9,6 +9,22 @@
   },
   "repository": {
     "type": "git",
+    "url": "https://github.com/medartus/kahaki"
+  },
+  "keywords": [
+    "open graph",
+    "twitter cards",
+    "metadata",
+    "json-ld",
+    "jsonld",
+    "link preview",
+    "url preview",
+    "link",
+    "url"
+  ],
+  },
+  "repository": {
+    "type": "git",
     "url": "https://github.com/MarcEtienneDartus/feedmyflow-functions.git"
   },
   "author": "Marc-Etienne Dartus",

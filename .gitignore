@@ -144,3 +144,6 @@ yarn-error.log*
 
 # public website folder
 public/*
+
+# coveralls file
+.coveralls.yml
