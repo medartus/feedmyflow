@@ -9,7 +9,7 @@ node_js:
     - node
 script:
     - cd functions
-    - npm run test
+    - npm run test:coverage
     - cd ..
     - cd website
     - npm run test
