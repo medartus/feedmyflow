@@ -45,7 +45,7 @@ jobs:
     if: branch = dev
     before_deploy:
       - npm install -g firebase-tools
-      - firebase use dev-feedmyflow
+      - firebase use dev
     deploy:
       on:
         branch: dev
@@ -57,7 +57,7 @@ jobs:
     if: branch = master
     before_deploy: 
       - npm install -g firebase-tools
-      - firebase use feedmyflow
+      - firebase use prod
     deploy:
       on:
         branch: master
