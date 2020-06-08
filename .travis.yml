@@ -8,7 +8,7 @@ node_js:
 - node
 cache:
   directories:
-   - $HOME/website/build/
+   - $HOME/website/build/ #/home/travis/build/medartus/feedmyflow/website/build
 jobs:
   include:
   - stage: Unit tests
@@ -29,18 +29,22 @@ jobs:
     before_script:
     - cd website
     - npm i
-    script: npm run build-dev
+    script: 
+      - npm run build-dev
+      - cp -R build/. $HOME/website/build/
   - stage: Build
     if: branch = master
     name: Build Prod Website
     before_script:
     - cd website
     - npm i
-    script: npm run build-prod
+    script: 
+      - npm run build-Prod
+      - cp -R build/. $HOME/website/build/
   - stage: Deploy
     name: Deploy
     before_script:
-      - sh copy_website.sh
+      - cp -R $HOME/website/build/. public/
       - npm install firebase-tools -g
       - cd functions
       - npm i 
