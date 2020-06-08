@@ -27,6 +27,9 @@ jobs:
     - cd website
     - npm i
     script: npm run build-dev
+    after_success:
+      - cd ..
+      - sh copy_website.sh
   - stage: Build
     if: branch = master
     name: Build Prod Website
