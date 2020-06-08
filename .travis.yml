@@ -8,7 +8,7 @@ node_js:
 - node
 cache:
   directories:
-   - /website/build/
+   - $HOME/website/build/
 jobs:
   include:
   - stage: Unit tests
