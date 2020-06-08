@@ -48,6 +48,7 @@ jobs:
         branch: dev
       project: "dev-feedmyflow"
       provider: firebase
+      edge: true
       token:
         secure: coLs1TFVHKRVPhAr9FXwmZzsBe+XnWdVv+vRyGKq4j0TMCUDuNmhi+m4UI2MGCd41m2rKtJQXiMpWb+Xn/Z0UqPlkj4Tc8ttaLCXj3DomOx2V67CTEDIPtat+M5XLW3+PIt/K9bzL7D7trdMBOqlAUszP54y991gD01SupfQnfz/p7ravasNq/KVOBEEFd5Q/YIfozURnpfcpECMOcydLhM81OKv/DWF+5avxRMPpMp+gCDPeXDt1/IT7D0K1aiig/+yCAeTX6FAWVXPvlmTxRmil0MtqMWgb1Pwzb3O46kMHjHeJ5jSbf+Iks4h3AsGJraVHkL5H6f3bCBTpTFw0N7L/UVsVlMmw+GURAKbcONHzu/1TWskpXRCaEijMRCWdYvC8HPn9KseFWiBayHPwhk5EYZjD7BymnR5jjeNPAA2rqqqL0Xo7ayVp0oF2hasXrG8TH1EzVZo0Rk1hapwMbDkiMzpHDBhsqfvq2YcXyJLK4P2D+m0OrNTAN+zuQ//dPL98UxV/WOrEuX7ImL0FydQIUd7R4MC2fAPsQG4EWR2hTmG3Op1eENfB01UU2izGJAzM4536DtKrlaBbv8YH9ibf8M58qLDMDZ4TcQPKDfdrdwEogwLHZ4F1utC6ADp77hbC0YHE3yqomBIOXjaCWMjMzeRgHx3776uSGnKqkY=
   - stage: Deploy
@@ -58,5 +59,6 @@ jobs:
         branch: master
       project: "feedmyflow"
       provider: firebase
+      edge: true
       token:
         secure: DjKhUt3etCF4cTp4jFuODcDLepg785drC2FwDqjcwn+pJATanfgDupvAVG6OQxDja4AiGPscwjuZ6W/wDVcyw65ARyPi9pqAvseXA8wB5s/V0rNmRvkByjCyqP9/GUawfVdTk/qPqThIHI4ZQCeN67vtGpIvDzemu4RtYD9BYqS060JgqntyXtkRTRx9G2dAQsQ7us4DxLfP0G76s1OiVA7tI8yLtc8RlVCmjaRqVV+3HC5mGt3EUimrdtaFgmltuP/WUUKtqy1SjtSIDKa+VapXChL0wnW65mPGqaRk0Wb3pOo4/QlrAf2+t4MhTj2pvYzHLvMX+R/LAQYHgP+QsW/V2Js0JaSfg5QaRfdWlNxZAzirox7Wc8kSOmI5m9M8Prx/5ofa1nExmzGQP9wGWB4E8LNtMSzUJ38heQPf448iqsfnYvKvavar4zyu+hUu8Dnt7UK0fQZXBfrL3H1JNV+zc7YxQiEbhGRdHSygcYcMRDsOoXTQjIQLa41ohk6A3sGXzC7b3Q3fD/aTRO0Tu4ikeYWtP7JxxxblP4YmVg/eWcjyEqDXT/UzEO9XI2IFT3a8JRiguNtpQZqhtgT5jFWSUMYNKRvxZkxyCVTgrSY9e613MxdGAYkL8gyBF/iDUgxf5rEjgfs1ve7xBOmyGou87SK/oHAAdfFq6XuuFAI=
