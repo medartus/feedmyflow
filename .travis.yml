@@ -1,4 +1,4 @@
-sudo: false
+sudo: true
 branches:
   only:
   - master
@@ -51,28 +51,15 @@ jobs:
     script:
       - firebase use --token $FIREBASE_TOKEN $FIREBASE_PROJECT_ID
       - firebase deploy --token $FIREBASE_TOKEN
-  # - stage: Deploy
-  #   name: Deploy Dev
-  #   if: branch = dev
-  #   deploy:
-  #     on:
-  #       branch: dev
-  #     project: "dev-feedmyflow"
-  #     provider: firebase
-  #     edge: true
-  #     token:
-  #       secure: QkrWRnkFYnbtu3dA2QTMVp215sOv5lSfzyFHgpQQ3u3BJCwIptgMtuXUFSh24L97m5Ihnu8Elwji44N08RkK2cAxJTpN/YwMid6eSnfN2W83zECL2B2apqg83G3RSObL+peVn5U1ESucRMLbCx0aMRDMxtfqezzwWEKl3SsURqV52BZp/qbkHjyEoZ2N/HWZv1OuDUR/+0VJgNpV0rXgEim+rRX8qr1r59Qe0EZHZ0TODFoOM9aK+q0UI0QT2W/RcAeOoKdPoBi7I0DDOOrocT920Dm1u8886o1+zeXrG7LVOY79N1Jes3Y9Vh91xkqd5onYVor8NuFxu6gTITB+wOLQgfxOdomCedgnDkxAex+hZTjHA5UMX+5cUM7ZEWaxrV2oEU+GclDT8VUEUFz2sUJKZULa6r01Mpr9fa6hOrNGtft4K08nuITGdQWH8XRXaBRSnpbnOa64WRjWvmv3B33EoYXKg5ZBT2rsLzkLi/b3uA1/Y3PfckTFSwaLHMMy/mMwHPFqiRv7kuVx20HUCTUgKS/AaVj0U5uQX/2ptNqocReATg90tMFqbW4JPjVEQ/1ZU2DZcyZBxKXi0iGlvkSZ0dO3Hmt2ya9TkNPrfouCp/mTJmiCxE/fLZ1aD8GUCiCckZzxqCHmE3BayenFszOrxnZdmUwelClIa9jqpDk=
-  # - stage: Deploy
-  #   name: Deploy Prod
-  #   if: branch = master
-  #   deploy:
-  #     on:
-  #       branch: master
-  #     project: "feedmyflow"
-  #     provider: firebase
-  #     edge: true
-  #     token:
-  #       secure: DjKhUt3etCF4cTp4jFuODcDLepg785drC2FwDqjcwn+pJATanfgDupvAVG6OQxDja4AiGPscwjuZ6W/wDVcyw65ARyPi9pqAvseXA8wB5s/V0rNmRvkByjCyqP9/GUawfVdTk/qPqThIHI4ZQCeN67vtGpIvDzemu4RtYD9BYqS060JgqntyXtkRTRx9G2dAQsQ7us4DxLfP0G76s1OiVA7tI8yLtc8RlVCmjaRqVV+3HC5mGt3EUimrdtaFgmltuP/WUUKtqy1SjtSIDKa+VapXChL0wnW65mPGqaRk0Wb3pOo4/QlrAf2+t4MhTj2pvYzHLvMX+R/LAQYHgP+QsW/V2Js0JaSfg5QaRfdWlNxZAzirox7Wc8kSOmI5m9M8Prx/5ofa1nExmzGQP9wGWB4E8LNtMSzUJ38heQPf448iqsfnYvKvavar4zyu+hUu8Dnt7UK0fQZXBfrL3H1JNV+zc7YxQiEbhGRdHSygcYcMRDsOoXTQjIQLa41ohk6A3sGXzC7b3Q3fD/aTRO0Tu4ikeYWtP7JxxxblP4YmVg/eWcjyEqDXT/UzEO9XI2IFT3a8JRiguNtpQZqhtgT5jFWSUMYNKRvxZkxyCVTgrSY9e613MxdGAYkL8gyBF/iDUgxf5rEjgfs1ve7xBOmyGou87SK/oHAAdfFq6XuuFAI=
-  env:
-    global:
-      firebaseDevToken : QkrWRnkFYnbtu3dA2QTMVp215sOv5lSfzyFHgpQQ3u3BJCwIptgMtuXUFSh24L97m5Ihnu8Elwji44N08RkK2cAxJTpN/YwMid6eSnfN2W83zECL2B2apqg83G3RSObL+peVn5U1ESucRMLbCx0aMRDMxtfqezzwWEKl3SsURqV52BZp/qbkHjyEoZ2N/HWZv1OuDUR/+0VJgNpV0rXgEim+rRX8qr1r59Qe0EZHZ0TODFoOM9aK+q0UI0QT2W/RcAeOoKdPoBi7I0DDOOrocT920Dm1u8886o1+zeXrG7LVOY79N1Jes3Y9Vh91xkqd5onYVor8NuFxu6gTITB+wOLQgfxOdomCedgnDkxAex+hZTjHA5UMX+5cUM7ZEWaxrV2oEU+GclDT8VUEUFz2sUJKZULa6r01Mpr9fa6hOrNGtft4K08nuITGdQWH8XRXaBRSnpbnOa64WRjWvmv3B33EoYXKg5ZBT2rsLzkLi/b3uA1/Y3PfckTFSwaLHMMy/mMwHPFqiRv7kuVx20HUCTUgKS/AaVj0U5uQX/2ptNqocReATg90tMFqbW4JPjVEQ/1ZU2DZcyZBxKXi0iGlvkSZ0dO3Hmt2ya9TkNPrfouCp/mTJmiCxE/fLZ1aD8GUCiCckZzxqCHmE3BayenFszOrxnZdmUwelClIa9jqpDk=
+  - stage: Deploy
+      name: Deploy Prod
+      if: branch = master
+      before_script:
+        - npm install firebase-tools -g
+        - cd functions
+        - npm i
+        - cd ..
+      script:
+        - firebase use --token $FIREBASE_TOKEN $FIREBASE_PROJECT_ID
+        - firebase deploy --token $FIREBASE_TOKEN
+  
