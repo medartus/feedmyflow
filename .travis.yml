@@ -46,8 +46,8 @@ jobs:
     before_script:
       - npm install firebase-tools -g
     script:
-      - firebase use --token $firebaseDevToken dev-feedmyflow
-      - firebase --non-interactive --token $firebaseDevToken
+      - firebase deploy --token $firebaseDevToken dev-feedmyflow
+      # - firebase --non-interactive --token $firebaseDevToken
   # - stage: Deploy
   #   name: Deploy Dev
   #   if: branch = dev
