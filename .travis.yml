@@ -8,7 +8,7 @@ node_js:
 - node
 cache:
   directories:
-   - /website/build
+   - /website/build/
 jobs:
   include:
   - stage: Unit tests
@@ -30,9 +30,6 @@ jobs:
     - cd website
     - npm i
     script: npm run build-dev
-    after_success:
-      - cd ..
-      - sh copy_website.sh
   - stage: Build
     if: branch = master
     name: Build Prod Website
