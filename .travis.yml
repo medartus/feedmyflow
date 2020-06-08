@@ -6,11 +6,11 @@ branches:
 language: node_js
 node_js:
 - node
-cache:
-  directories:
-   - /public/
-   - /functions/node_modules/
-   - /website/node_modules/
+# cache:
+#   directories:
+#    - /public/
+#    - /functions/node_modules/
+#    - /website/node_modules/
 jobs:
   include:
   - stage: Unit tests
@@ -28,9 +28,9 @@ jobs:
   - stage: Build
     if: branch = dev
     name: Build Dev Website
-    before_script:
-    - cd website
-    - npm i
+    # before_script:
+    # - cd website
+    # - npm i
     script: npm run build-dev
     after_success:
       - cd ..
