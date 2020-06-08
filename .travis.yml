@@ -7,7 +7,6 @@ language: node_js
 node_js:
 - node
 cache:
-  npm: true
   directories:
    - /public
 jobs:
@@ -29,7 +28,7 @@ jobs:
     name: Build Dev Website
     before_script:
     - cd website
-    # - npm i
+    - npm i
     script: npm run build-dev
     after_success:
       - cd ..
@@ -39,7 +38,7 @@ jobs:
     name: Build Prod Website
     before_script:
     - cd website
-    # - npm i
+    - npm i
     script: npm run build-prod
     after_success:
       - cd ..
@@ -48,6 +47,9 @@ jobs:
     name: Deploy
     before_script:
       - npm install firebase-tools -g
+      - cd functions
+      - npm i 
+      - cd ..
     script:
       - firebase use --token $FIREBASE_TOKEN $FIREBASE_PROJECT_ID
       - firebase deploy --token $FIREBASE_TOKEN
