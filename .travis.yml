@@ -7,16 +7,21 @@ branches:
 language: node_js
 node_js:
     - node
-jobs:
-    include:
-        - stage: "Tests"
-        name: "Unit Tests Functions"
-        before_script: cd functions
-        script: npm run test:coverage
-        - name: "Unit Tests Website"
-        before_script: cd website
-        script: npm run test
-        
+# jobs:
+#     include:
+#         - stage: "Tests"
+#         name: "Unit Tests Functions"
+#         before_script: cd functions
+#         script: npm run test:coverage
+#         - name: "Unit Tests Website"
+#         before_script: cd website
+#         script: npm run test
+
+before_script: cd functions
+script: npm run test:coverage
+after_script: cd ..
+before_script: cd website
+script: npm run test        
 # script:
 #     - cd functions
 #     - npm run test:coverage
