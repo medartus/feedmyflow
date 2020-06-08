@@ -1,5 +1,5 @@
 {
-  "name": "feedmyflow-functions",
+  "name": "feedmyflow",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,10 +9,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/MarcEtienneDartus/feedmyflow-functions.git"
+    "url": "https://github.com/medartus/feedmyflow.git"
   },
   "author": "Marc-Etienne Dartus",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "cookie-parser": "^1.4.4"
   },
