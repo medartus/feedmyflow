@@ -7,21 +7,31 @@ branches:
 language: node_js
 node_js:
     - node
-# jobs:
-#     include:
-#         - stage: "Tests"
-#         name: "Unit Tests Functions"
-#         before_script: cd functions
-#         script: npm run test:coverage
-#         - name: "Unit Tests Website"
-#         before_script: cd website
-#         script: npm run test
+jobs:
+    include:
+        - stage: "Tests"
+            name: "Unit Tests Functions"
+            before_script: 
+                - cd functions
+                - npm i
+            script: npm run test:coverage
+        - name: "Unit Tests Website"
+            before_script:
+                - cd website
+                - npm i
+            script: npm run test
 
-before_script: cd functions
-script: npm run test:coverage
-after_script: cd ..
-before_script: cd website
-script: npm run test        
+
+# script: npm run test:coverage
+# before_script: 
+#     - cd functions
+#     - npm i
+# after_script: cd ..
+# before_script:
+#     - cd website
+#     - npm i
+# script: npm run test        
+
 # script:
 #     - cd functions
 #     - npm run test:coverage
@@ -32,5 +42,5 @@ script: npm run test
 #     provider: npm
 #     email: "$NPM_EMAIL"
 #     api_key: "$NPM_TOKEN"
-# notifications:
-#     email: true
+notifications:
+    email: false
