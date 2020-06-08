@@ -1,4 +1,3 @@
-sudo: true
 branches:
   only:
   - master
@@ -6,11 +5,11 @@ branches:
 language: node_js
 node_js:
 - node
-# cache:
-#   directories:
-#    - /public/
-#    - /functions/node_modules/
-#    - /website/node_modules/
+cache:
+  directories:
+   - /public/
+   - /functions/node_modules/
+   - /website/node_modules/
 jobs:
   include:
   - stage: Unit tests
