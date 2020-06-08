@@ -15,7 +15,8 @@ jobs:
                 - cd functions
                 - npm i
             script: npm run test:coverage
-        - name: "Unit Tests Website"
+        - stage: "Tests"
+            name: "Unit Tests Website"
             before_script:
                 - cd website
                 - npm i
