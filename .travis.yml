@@ -8,7 +8,7 @@ node_js:
 - node
 cache:
   directories:
-   - /public
+   - /website/build
 jobs:
   include:
   - stage: Unit tests
@@ -40,12 +40,10 @@ jobs:
     - cd website
     - npm i
     script: npm run build-prod
-    after_success:
-      - cd ..
-      - sh copy_website.sh
   - stage: Deploy
     name: Deploy
     before_script:
+      - sh copy_website.sh
       - npm install firebase-tools -g
       - cd functions
       - npm i 
