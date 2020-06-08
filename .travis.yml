@@ -6,6 +6,9 @@ branches:
 language: node_js
 node_js:
 - node
+cache:
+  directories:
+   - /public/
 jobs:
   include:
   - stage: Unit tests
@@ -47,7 +50,7 @@ jobs:
       - npm install firebase-tools -g
     script:
       - firebase use --token $FIREBASE_TOKEN $FIREBASE_PROJECT_ID
-      - firebase --non-interactive --token $FIREBASE_TOKEN
+      - firebase deploy --token $FIREBASE_TOKEN
   # - stage: Deploy
   #   name: Deploy Dev
   #   if: branch = dev
