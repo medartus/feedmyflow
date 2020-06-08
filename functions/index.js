@@ -19,8 +19,8 @@ const linkedInClient = () => {
   return require('node-linkedin')(
     functions.config().linkedin.client_id,
     functions.config().linkedin.client_secret,
-    `http://localhost:3000/login`);
-    // `https://${process.env.GCLOUD_PROJECT}.web.app/login`);
+    // `http://localhost:3000/login`);
+    `https://${process.env.GCLOUD_PROJECT}.web.app/login`);
 }
 
 /**
