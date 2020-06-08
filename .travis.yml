@@ -46,7 +46,7 @@ jobs:
     before_script:
       - npm install firebase-tools -g
     script:
-      - firebase use --token $FIREBASE_TOKEN FIREBASE_PROJECT_ID
+      - firebase use --token $FIREBASE_TOKEN $FIREBASE_PROJECT_ID
       - firebase --non-interactive --token $FIREBASE_TOKEN
   # - stage: Deploy
   #   name: Deploy Dev
