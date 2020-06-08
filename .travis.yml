@@ -21,7 +21,6 @@ jobs:
                 - npm i
             script: npm run test
 
-
 # script: npm run test:coverage
 # before_script: 
 #     - cd functions
@@ -42,5 +41,5 @@ jobs:
 #     provider: npm
 #     email: "$NPM_EMAIL"
 #     api_key: "$NPM_TOKEN"
-notifications:
-    email: false
+# notifications:
+#     email: false
