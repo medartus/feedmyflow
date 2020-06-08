@@ -1,6 +1,0 @@
-{
-  "projects": {
-    "prod": "feedmyflow",
-    "dev": "dev-feedmyflow"
-  }
-}
