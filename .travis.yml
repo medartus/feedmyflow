@@ -46,7 +46,8 @@ jobs:
     before_script:
       - npm install firebase-tools -g
     script:
-      - firebase deploy --project dev-feedmyflow --token QkrWRnkFYnbtu3dA2QTMVp215sOv5lSfzyFHgpQQ3u3BJCwIptgMtuXUFSh24L97m5Ihnu8Elwji44N08RkK2cAxJTpN/YwMid6eSnfN2W83zECL2B2apqg83G3RSObL+peVn5U1ESucRMLbCx0aMRDMxtfqezzwWEKl3SsURqV52BZp/qbkHjyEoZ2N/HWZv1OuDUR/+0VJgNpV0rXgEim+rRX8qr1r59Qe0EZHZ0TODFoOM9aK+q0UI0QT2W/RcAeOoKdPoBi7I0DDOOrocT920Dm1u8886o1+zeXrG7LVOY79N1Jes3Y9Vh91xkqd5onYVor8NuFxu6gTITB+wOLQgfxOdomCedgnDkxAex+hZTjHA5UMX+5cUM7ZEWaxrV2oEU+GclDT8VUEUFz2sUJKZULa6r01Mpr9fa6hOrNGtft4K08nuITGdQWH8XRXaBRSnpbnOa64WRjWvmv3B33EoYXKg5ZBT2rsLzkLi/b3uA1/Y3PfckTFSwaLHMMy/mMwHPFqiRv7kuVx20HUCTUgKS/AaVj0U5uQX/2ptNqocReATg90tMFqbW4JPjVEQ/1ZU2DZcyZBxKXi0iGlvkSZ0dO3Hmt2ya9TkNPrfouCp/mTJmiCxE/fLZ1aD8GUCiCckZzxqCHmE3BayenFszOrxnZdmUwelClIa9jqpDk=
+      - firebase use --token $FIREBASE_TOKEN FIREBASE_PROJECT_ID
+      - firebase --non-interactive --token $FIREBASE_TOKEN
   # - stage: Deploy
   #   name: Deploy Dev
   #   if: branch = dev
