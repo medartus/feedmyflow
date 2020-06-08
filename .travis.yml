@@ -43,6 +43,7 @@ jobs:
   - stage: Deploy
     name: Deploy Dev
     if: branch = dev
+    before_deploy: firebase use dev-feedmyflow
     deploy:
       on:
         branch: dev
@@ -52,6 +53,7 @@ jobs:
   - stage: Deploy
     name: Deploy Prod
     if: branch = master
+    before_deploy: firebase use feedmyflow
     deploy:
       on:
         branch: master
