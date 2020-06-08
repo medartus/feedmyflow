@@ -9,7 +9,10 @@ node_js:
     - node
 script:
     - cd functions
-    - npm run test:coverage
+    - npm run test
+    - cd ..
+    - cd website
+    - npm run test
 # deploy:
 #     provider: npm
 #     email: "$NPM_EMAIL"
