@@ -59,14 +59,14 @@ exports.token = functions.https.onRequest((req, res) => {
       if (error) {
         throw error;
       }
-
       // Create a Firebase account and get the Custom Auth Token.
       firebaseToken = await createFirebaseAccount(results.access_token);
+      
+      res.status(200).jsonp({ token: firebaseToken });
     });
   } catch (error) {
-    return res.status(500).jsonp({ error: error.toString() });
+    res.status(500).jsonp({ error: error.toString() });
   }
-  return res.status(200).jsonp({ token: firebaseToken });
 });
 
 

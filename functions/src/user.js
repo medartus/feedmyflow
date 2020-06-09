@@ -29,15 +29,14 @@ const extractUserInfo = async (accessToken) => {
  * @returns {Promise<string>} The Firebase custom auth token in a promise.
  */
 const createFirebaseAccount = async (accessToken) => {
-    const { linkedInUserID, firstName, lastName, profilePic, email } = await extractUserInfo(accessToken)
-
+  try {
+    const { linkedInUserID, firstName, lastName, profilePic, email } = await extractUserInfo(accessToken);
+    
     // The UID we'll assign to the user.
     const uid = `linkedin:${linkedInUserID}`;
   
-    //TODO add expiration date
     // Save the access token to the Firebase Realtime Database.
     const databaseTask = db.collection('user').doc(uid).collection('adminData').doc('linkedin').set({'accessToken':accessToken});
-
     // Create or update the user account.
     const userCreationTask = admin.auth().updateUser(uid, {
       displayName: firstName+" "+lastName,
@@ -57,7 +56,7 @@ const createFirebaseAccount = async (accessToken) => {
       }
       throw error;
     });
-  
+
     // Wait for all async task to complete then generate and return a custom auth token.
     await Promise.all([userCreationTask, databaseTask]);
 
@@ -65,6 +64,9 @@ const createFirebaseAccount = async (accessToken) => {
     const token = await admin.auth().createCustomToken(uid);
     
     return token;
+  } catch (error) {
+    return error;
+  }
 }
   
 module.exports = { createFirebaseAccount };
