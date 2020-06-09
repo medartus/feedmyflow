@@ -1,23 +1,19 @@
 sudo: true
-
 branches:
   only:
   - master
   - dev
-
 language: node_js
-
 node_js:
 - node
-
 cache:
   directories:
-   - $HOME/website/build/
-
+  - "$HOME/website/build/"
 before_install:
-  - cd functions
-  - openssl aes-256-cbc -K $encrypted_af5d05784668_key -iv $encrypted_af5d05784668_iv -in service-account.tar.enc -out service-account.tar -d
-  - tar xvf service-account.tar
+- cd functions
+- ls
+- openssl aes-256-cbc -K $encrypted_af5d05784668_key -iv $encrypted_af5d05784668_iv -in service-account.tar.enc -out service-account.tar -d
+- tar xvf service-account.tar
 
 jobs:
   include:
@@ -27,42 +23,38 @@ jobs:
     - cd functions
     - npm i
     script: npm run test:coverage
-
   - stage: Unit tests
     name: Unit Tests Website
     before_script:
     - cd website
     - npm i
     script: npm run test
-
   - stage: Build
     if: branch = dev
     name: Build Dev Website
     before_script:
     - cd website
     - npm i
-    script: 
-      - npm run build-dev
-      - cp -R build/. $HOME/website/build/
-
+    script:
+    - npm run build-dev
+    - cp -R build/. $HOME/website/build/
   - stage: Build
     if: branch = master
     name: Build Prod Website
     before_script:
     - cd website
     - npm i
-    script: 
-      - npm run build-Prod
-      - cp -R build/. $HOME/website/build/
-
+    script:
+    - npm run build-Prod
+    - cp -R build/. $HOME/website/build/
   - stage: Deploy
     name: Deploy
     before_script:
-      - cp -R $HOME/website/build/. public/
-      - npm install firebase-tools -g
-      - cd functions
-      - npm i 
-      - cd ..
+    - cp -R $HOME/website/build/. public/
+    - npm install firebase-tools -g
+    - cd functions
+    - npm i
+    - cd ..
     script:
-      - firebase use --token $FIREBASE_TOKEN $FIREBASE_PROJECT_ID
-      - firebase deploy --token $FIREBASE_TOKEN
+    - firebase use --token $FIREBASE_TOKEN $FIREBASE_PROJECT_ID
+    - firebase deploy --token $FIREBASE_TOKEN
