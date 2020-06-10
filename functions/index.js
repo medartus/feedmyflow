@@ -52,40 +52,26 @@ exports.redirect = functions.https.onRequest( (req, res) => {
 exports.token = functions.https.onRequest((req, res) => {
   res.set('Access-Control-Allow-Origin', '*');
   const Linkedin = linkedInClient();
+  let firebaseToken;
   try {
-    return cookieParser()(req, res, () => {
-      // if (!req.cookies.state && !req.body.state) {
-      //   throw new Error('State cookie not set or expired. Maybe you took too long to authorize. Please try again.');
-      // }
-      // console.log('Received verification state:', req.cookies.state);
-
-      Linkedin.auth.authorize(OAUTH_SCOPES, req.query.state); // Makes sure the state parameter is set
-      Linkedin.auth.getAccessToken(res, req.query.code, req.query.state, async (error, results) => {
-        if (error) {
-          throw error;
-        }
-
-        // Create a Firebase account and get the Custom Auth Token.
-        const firebaseToken = await createFirebaseAccount(results.access_token);
-
-        res.jsonp({
-          token: firebaseToken,
-        });
-
-      });
+    Linkedin.auth.authorize(OAUTH_SCOPES, req.query.state); // Makes sure the state parameter is set
+    Linkedin.auth.getAccessToken(res, req.query.code, req.query.state, async (error, results) => {
+      if (error) {
+        throw error;
+      }
+      // Create a Firebase account and get the Custom Auth Token.
+      firebaseToken = await createFirebaseAccount(results.access_token);
+      
+      res.status(200).jsonp({ token: firebaseToken });
     });
   } catch (error) {
-    console.log(error.toString())
-    return res.jsonp({ 
-      error: error.toString() 
-    });
+    res.status(500).jsonp({ error: error.toString() });
   }
 });
 
 
 exports.LinkedinPost = functions.https.onRequest( async (req, res) => {
   try {
-
     const postCollection = await db.collectionGroup('post').where('publicationTime', '<', new Date()).get()
     if (postCollection.empty) {
       console.log('No matching documents.')
@@ -108,6 +94,7 @@ exports.LinkedinPost = functions.https.onRequest( async (req, res) => {
 
 
 exports.sendWelcomeEmail = functions.auth.user().onCreate((user) => {
+  console.log(user)
   const mailProvider = new MailProvider()
   return mailProvider.sendWelcomeEmail(user.email,user.displayName)
     .then(()=> console.log('Welcome email sended to '+ user.uid))

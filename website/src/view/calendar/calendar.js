@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "moment/locale/fr";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 
 import CreationModal from "../../components/creationModal/creationModal";
-import { Scrollbars } from "react-custom-scrollbars";
+// import { Scrollbars } from "react-custom-scrollbars";
 import Header from "../../components/header/header";
 import { useTranslation } from "react-i18next";
 import fire from "../../provider/firebase";
@@ -53,9 +53,9 @@ const Mycalendar = (props) => {
   } = useModalWithData();
   const { t, i18n } = useTranslation();
 
-  const scrollbarStyle = window.innerWidth > 1000
-  ?{width: "44vw", height: "30vw", marginTop: "50px"}
-  :{width: "90vw", height: "40vh",maxHeight: "40vh", marginTop: "50px" };
+  // const scrollbarStyle = window.innerWidth > 1000
+  // ?{width: "44vw", height: "30vw", marginTop: "50px"}
+  // :{width: "90vw", height: "40vh",maxHeight: "40vh", marginTop: "50px" };
 
   useEffect(() => {
     const currentUser = fire.auth().currentUser;

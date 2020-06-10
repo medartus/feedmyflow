@@ -143,4 +143,7 @@ yarn-error.log*
 .runtimeconfig.json
 
 # public website folder
-public/*
+public/
+
+# coveralls file
+.coveralls.yml

@@ -1,4 +1,7 @@
-<h1>Feed My Flow </h1>
+[![Build Status](https://travis-ci.org/medartus/feedmyflow.svg?branch=master)](https://travis-ci.org/medartus/feedmyflow)
+[![Coverage Status](https://coveralls.io/repos/github/medartus/feedmyflow/badge.svg?branch=master)](https://coveralls.io/github/medartus/feedmyflow?branch=master)
+
+<h1>Feed My Flow </h1> 
 
 > Feed My Flow is open source web application that provides easy scheduling LinkedIn posts.
 

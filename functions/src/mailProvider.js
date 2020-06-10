@@ -19,7 +19,7 @@ class MailProvider {
     }
 
     sendEmail(mailOptions){
-        return new Promise((resolve,reject) => {
+        return new Promise((resolve, reject) => {
             this.transporter.sendMail(mailOptions, (error, info) => {
                 if(error) reject(error);
                 else resolve(info);
@@ -27,60 +27,58 @@ class MailProvider {
         });
     }
 
-    getEmailTemplate(templateName,context){
+    getEmailTemplate(templateName, context = undefined){
         let html = fs.readFileSync(`./emailTemplates/${templateName}.html`,'utf8')
 
-        Object.keys(context).forEach(key => {
-            const regex = new RegExp(`{{${key}}}`,"g")
-            html = html.replace(regex,context[key]);
-        });  
+        if(context){
+            Object.keys(context).forEach(key => {
+                const regex = new RegExp(`{{${key}}}`,"g")
+                html = html.replace(regex,context[key]);
+            });  
+        }
 
-        return juice(html)
+        return juice(html);
+    }
+
+    createMailOptions(template, params, email, subject){
+        const html = this.getEmailTemplate(template, params)
+        return {
+            from: emailAddress,
+            to: email,
+            subject,
+            html,
+            attachments: [{
+                path: './emailTemplates/fmf.PNG',
+                cid: 'fmfLogo'
+            }]
+        };
     }
 
     sendPostConfirmation(data){
-        const { userUID,shareCommentary } = data;
+        const { userUID, shareCommentary } = data;
         return new Promise(async (resolve,reject) => {
-            const { email,displayName,photoURL } = await admin.auth().getUser(userUID)
-                .then((userRecord) => {return userRecord})
-                .catch((err)=>reject(err));
+            const { email, displayName, photoURL } = await admin.auth().getUser(userUID)
+                .then((userRecord) => { return userRecord })
+                .catch((err) => reject(err));
             if (email !== undefined){
-
-                const html = this.getEmailTemplate("postConfirmation",{displayName,shareCommentary,photoURL})
-                const mailOptions = {
-                    from: emailAddress, // Something like: Jane Doe <janedoe@gmail.com>
-                    to: email,
-                    subject: `FeedMyFlow post confirmation`, // email subject
-                    html,
-                    attachments: [{
-                        path: './emailTemplates/fmf.PNG',
-                        cid: 'fmfLogo'
-                    }]
-                };
+                const params = { displayName, shareCommentary, photoURL };
+                const mailOptions = createMailOptions("postConfirmation", params, email, 'FeedMyFlow post confirmation')
                 this.sendEmail(mailOptions)
-                    .then((res)=>resolve(res))
-                    .catch((err)=>reject(err))
+                    .then((res) => resolve(res))
+                    .catch((err) => reject(err))
+            }
+            else{
+                console.log(`No email for user ${userUID}`)
             }
         });
     }
 
-    sendWelcomeEmail(email,displayName){
-        return new Promise(async (resolve,reject) => {
-
-            const html = this.getEmailTemplate("welcome",{displayName})
-            const mailOptions = {
-                from: emailAddress, // Something like: Jane Doe <janedoe@gmail.com>
-                to: email,
-                subject: 'Weclome on FeedMyFlow !', // email subject
-                html,
-                attachments: [{
-                    path: './emailTemplates/fmf.PNG',
-                    cid: 'fmfLogo'
-                }]
-            };
+    sendWelcomeEmail(email, displayName){
+        return new Promise(async (resolve, reject) => {
+            const mailOptions = createMailOptions("welcome", { displayName }, email, 'Weclome on FeedMyFlow !')
             this.sendEmail(mailOptions)
-                .then((res)=>resolve(res))
-                .catch((err)=>reject(err))
+                .then((res) => resolve(res))
+                .catch((err) => reject(err))
         });
     }
 

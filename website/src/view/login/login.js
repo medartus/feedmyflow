@@ -9,7 +9,7 @@ const Login = ({ component: Component, ...rest }) => {
 
   useEffect(()=>{
     if(!auth.authStatus.haveTriedLogin && !userCanceled) auth.signIn(false,null)
-  },[])
+  }, [auth, userCanceled])
 
   return (
     <Route
