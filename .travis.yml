@@ -11,7 +11,7 @@ cache:
   - "$HOME/website/build/"
 before_install:
 - cd functions
-- openssl aes-256-cbc -k "U5QstUaquPzOU3fHn80fkTMG2Gffvtjo4j0yTpOSANDhtAozUndQzohU" -in service-account.tar.enc -out service-account.tar -d
+- openssl aes-256-cbc -k $service_account_key -in service-account.tar.enc -out service-account.tar -d
 - tar xvf service-account.tar
 jobs:
   include:
@@ -56,6 +56,3 @@ jobs:
     script:
     - firebase use --token $FIREBASE_TOKEN $FIREBASE_PROJECT_ID
     - firebase deploy --token $FIREBASE_TOKEN
-env:
-  global:
-    secure: H4tt3geuYu/jKdb6im5qh2LTMkbEG1u4pc34b3iKkqMYKsWDHzbXI5GzWJi3XSzSECRKoJuRHQaqywmqau3+K2CpTS1KL+Rrgk5mUNjB41Hxs4WMdTHeT0DsVbTzMDh/TYlg3accEkNGThHRHB7R0qiE3DURlm/jtvkUR58arEpdmetGZkPdXfnvP1FvlTTxKqKA6uHpRLyWmmhF2fPzv9OpiXskDxkkRQHzrYHMfWbDElWh6amqKYiWux1H0acGjawtJgL5vAzNz/N98eIDAjuradh606HDLEoEvnBNDNcOa/WgSess25kSyb5B6hir9LWQby5N5zhPhF26Na9VsToAEucK/N2ve6HJbe6ni7TIC0xwWJ4ZsKo2ICh1WpALE9t9FtuSNPauJOm3KPCYiDA/7AvowdBv9jaC6jpC5pnuuDPerZtWz3uEXCpXmweJFsCv0Gy62b1W+20LKZ3ymedumPAzPfNVsiEFQDUpR94VfyUnSM9EgTaSnjvzt7CNqyV/AjSkvQUo1yUwHPWlHY+GxjYsQYMC7yq9wFuwfwd3TPtBBfBdguDx4xJoFfloecu7Ma43+/jL0fwZU/KGCdUYHC017mePzJUDmqGdkIguGHHhvdZrSN2mD7Rc0ISdl0TG4ZZHxaPe3GqL1pJOx9S+2EXd4YmOUN3MBGQ5Qso=
