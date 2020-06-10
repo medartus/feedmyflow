@@ -1,23 +1,33 @@
 {
-  "name": "feedmyflow-functions",
+  "name": "feedmyflow",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "functions":"firebase emulators:start",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "functions": "firebase emulators:start",
+    "test": "echo \"Error: no test specified\" && exit 0"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/MarcEtienneDartus/feedmyflow-functions.git"
+    "url": "https://github.com/medartus/feedmyflow.git"
   },
   "author": "Marc-Etienne Dartus",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "cookie-parser": "^1.4.4"
   },
   "devDependencies": {
     "firebase-functions-test": "^0.1.7",
-    "mocha": "^7.0.0"
+    "chai": "^4.2.0",
+    "mocha": "^7.2.0",
+    "babel-jest": "^24.9.0",
+    "dotenv-cli": "^3.1.0",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.2",
+    "enzyme-to-json": "^3.4.3",
+    "jest": "^24.9.0",
+    "coveralls": "^3.0.11",
+    "mocha-lcov-reporter": "^1.3.0",
+    "nyc": "^15.0.1"
   }
 }

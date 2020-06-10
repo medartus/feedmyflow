@@ -80,7 +80,7 @@ const getInitialState = (props, isMedia, isEvent, date) => ({
   mediaDescription: isEvent && isMedia ? props.media.description : "",
   mediaUrl: isEvent && isMedia ? props.media.originalUrl : "",
   hideDescription:
-    isEvent && isMedia && props.media.description === undefined || !isEvent ? true : false,
+    (isEvent && isMedia && props.media.description === undefined) || !isEvent ? true : false,
   isLinkValid:
     isEvent && isMedia && props.media.originalUrl !== undefined ? true : false,
 });

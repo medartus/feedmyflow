@@ -1,32 +1,18 @@
-require('dotenv').config()
+// const wrapped = test.wrap(functions.sendWelcomeEmail);
 
-const test = require('firebase-functions-test')({
-    databaseURL: `https://${process.env.GCLOUD_PROJECT}.firebaseio.com`,
-    storageBucket: `${process.env.GCLOUD_PROJECT}.appspot.com`,
-    projectId: `${process.env.GCLOUD_PROJECT}`,
-  }, process.env.GCLOUD_PROJECT === "dev-feedmyflow" ? './service-account-dev.json' : './service-account-prod.json');
+// const data = test.auth.makeUserRecord({ 
+//     email: 'marcetienne.dartus@gmail.com',
+//     emailVerified: true,
+//     displayName: "test user",
+//     metadata:{
+//             creationTime: '2018-03-13T01:24:48Z',
+//             lastSignInTime: '2018-04-03T03:52:48Z'
+//     },
+//     uid: 'SQol8dFfyMapsQtRD4JgZdC5r1G2' 
+// })
+// Invoke the wrapped function without specifying the event context.
 
+// const wrapped = test.wrap(mailProvider.getEmailTemplate("welcome",{displayName:"Test user"}));
+// wrapped(data);
 
-  
-test.mockConfig({
-    "email": {
-      "password": process.env.EMAIL_PASSWORD
-    },
-    "linkedin": {
-      "client_secret": process.env.LINKEDIN_CLIENT_SECRET,
-      "client_id": process.env.LINKEDIN_CLIENT_ID
-    }
-});
-
-// // "Wrap" the makeUpperCase function from index.js
-// const MailProvider = require('../mailProvider.js');
-// const mailProvider = new MailProvider();
-// const wrapped = test.wrap(mailProvider.sendPostConfirmation);
-
-// wrapped('wrongUserUid');
-
-const LinkedinApi = require('../linkedinApi.js');
-const linkedinApi = new LinkedinApi();
-const wrapped = test.wrap(linkedinApi.generateBodyContent);
-
-wrapped('wrongUserUid');
+// test.cleanup();

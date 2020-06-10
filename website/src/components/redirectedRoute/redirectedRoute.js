@@ -10,7 +10,7 @@ const RedirectedRoute = ({ path, comp: Component, redirect, needToBeConnected, .
 
   useEffect(() => {
     if (needToBeConnected && !auth.authStatus.haveTriedLogin) auth.signIn(false, null)
-  }, [])
+  }, [auth, needToBeConnected])
 
   return (
     <Route

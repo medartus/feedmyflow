@@ -55,7 +55,7 @@ const getSuccessProps = (title, onConfirm) => ({
 
 const isValidUrl = url => {
   try {
-    const _ = new URL(url);
+    new URL(url);
     return true
   }
   catch (e) { return false; }
