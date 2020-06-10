@@ -9,10 +9,6 @@ node_js:
 cache:
   directories:
   - "$HOME/website/build/"
-before_install:
-- cd functions
-- echo $service_account_key | gpg --passphrase-fd 0 service-account.tar.gpg
-- tar xvf service-account.tar
 jobs:
   include:
   - stage: Unit tests
@@ -51,6 +47,8 @@ jobs:
     - cp -R $HOME/website/build/. public/
     - npm install firebase-tools -g
     - cd functions
+    - echo $SERVICE_ACCOUNT_KEY | gpg --passphrase-fd 0 service-account.tar.gpg
+    - tar xvf service-account.tar
     - npm i
     - cd ..
     script:
