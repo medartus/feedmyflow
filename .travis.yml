@@ -11,7 +11,7 @@ cache:
   - "$HOME/website/build/"
 before_install:
 - cd functions
-- openssl aes-256-cbc -k "U5QstUaquPzOU3fHn80fkTMG2Gffvtjo4j0yTpOSANDhtAozUndQzohU" -in service-account.tar.enc -out service-account.tar -d
+- echo $service_account_key | gpg --passphrase-fd 0 service-account.tar.gpg
 - tar xvf service-account.tar
 jobs:
   include:
