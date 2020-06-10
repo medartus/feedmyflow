@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/medartus/feedmyflow.svg?branch=master)](https://travis-ci.org/medartus/feedmyflow)
+[![Build Status](https://travis-ci.com/medartus/feedmyflow.svg?branch=master)](https://travis-ci.com/medartus/feedmyflow)
 [![Coverage Status](https://coveralls.io/repos/github/medartus/feedmyflow/badge.svg?branch=master)](https://coveralls.io/github/medartus/feedmyflow?branch=master)
 
 <h1>Feed My Flow </h1> 
