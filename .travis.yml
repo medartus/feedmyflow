@@ -11,7 +11,10 @@ cache:
   - "$HOME/website/build/"
 before_install:
 - cd functions
-- openssl aes-256-cbc -K $encrypted_af5d05784668_key -iv $encrypted_af5d05784668_iv -in service-account.tar.enc -out service-account.tar -d
+- openssl aes-256-cbc -K $encrypted_b74bea61d1b1_key -iv $encrypted_b74bea61d1b1_iv
+  -in service-account-dev.json.enc -out service-account-dev.json -d
+# - openssl aes-256-cbc -K $encrypted_af5d05784668_key -iv $encrypted_af5d05784668_iv
+#   -in service-account.tar.enc -out service-account.tar -d
 - tar xvf service-account.tar
 jobs:
   include:
