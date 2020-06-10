@@ -44,7 +44,7 @@ jobs:
     - cd website
     - npm i
     script:
-    - npm run build-Prod
+    - npm run build-prod
     - cp -R build/. $HOME/website/build/
   - stage: Deploy
     name: Deploy
