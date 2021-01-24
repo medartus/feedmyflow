@@ -25,7 +25,7 @@ export default memo(
     useEffect(() => {
       if (isLinkValid && url !== "") {
         const encoded = encodeURIComponent(url);
-        fetch(`https://feedmyflow.herokuapp.com/api/v1/preview?url=${encoded}`)
+        fetch(`https://urlpreview.vercel.app/api/v1/preview?url=${encoded}`)
           .then((res) => {
             if (res.ok) return res.json();
             throw new Error(`${res.status}: ${res.statusText}`);
@@ -49,16 +49,16 @@ export default memo(
       } else if (embedImage !== null) setEmbedImg(null);
     }, [isLinkValid, url, embedImage, setTitle, setHideDescription]);
 
-    const getLine = line => {
-      const tokens = line.split(' ');
-      return tokens.map(t => {
+    const getLine = (line) => {
+      const tokens = line.split(" ");
+      return tokens.map((t) => {
         let textStyle = { color: Colors.shade1 };
         // has hashtag with more than just the shebang or is a url (# is a valid url so we remove that case)
-        if ((t[0] === '#' && t.length > 1) || (isValidUrl(t) && t !== '#'))
+        if ((t[0] === "#" && t.length > 1) || (isValidUrl(t) && t !== "#"))
           textStyle = { color: Colors.light };
-        return <span style={textStyle}>{`${t} `}</span>
-      })
-    }
+        return <span style={textStyle}>{`${t} `}</span>;
+      });
+    };
 
     const HeaderPost = () => (
       <div className="row" style={{ marginTop: "20px" }}>
@@ -94,7 +94,7 @@ export default memo(
           </div>
         )}
 
-        {(url || title || description) &&
+        {(url || title || description) && (
           <div className="url-info-container">
             <p className="description-text clipped clip-1">{title}</p>
             <p
@@ -103,13 +103,21 @@ export default memo(
             >
               {isLinkValid ? extractDomain(url) : url}
             </p>
-            {!hideDescription && <p className="description-text clipped clip-2">{description}</p>}
-          </div>}
+            {!hideDescription && (
+              <p className="description-text clipped clip-2">{description}</p>
+            )}
+          </div>
+        )}
       </div>
     );
 
     return (
-      <div className={inPreviewMode ? "card overflowable visible" : "card overflowable"} id="preview-card">
+      <div
+        className={
+          inPreviewMode ? "card overflowable visible" : "card overflowable"
+        }
+        id="preview-card"
+      >
         <HeaderPost />
         <ContentPost />
         {renderBottom()}
