@@ -4,7 +4,7 @@
   "dependencies": {
     "cookie-parser": "^1.4.3",
     "cors": "^2.8.5",
-    "firebase-admin": "^8.10.0",
+    "firebase-admin": "^9.4.2",
     "firebase-functions": "^3.3.0",
     "juice": "^6.0.0",
     "node-linkedin": "^0.5.4",
@@ -32,7 +32,7 @@
     "test:coverage": "npm test && nyc report --reporter=text-lcov | coveralls"
   },
   "engines": {
-    "node": "8"
+    "node": "10"
   },
   "private": true
 }

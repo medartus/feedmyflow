@@ -62,7 +62,7 @@ class MailProvider {
                 .catch((err) => reject(err));
             if (email !== undefined){
                 const params = { displayName, shareCommentary, photoURL };
-                const mailOptions = createMailOptions("postConfirmation", params, email, 'FeedMyFlow post confirmation')
+                const mailOptions = this.createMailOptions("postConfirmation", params, email, 'FeedMyFlow post confirmation')
                 this.sendEmail(mailOptions)
                     .then((res) => resolve(res))
                     .catch((err) => reject(err))
@@ -75,7 +75,7 @@ class MailProvider {
 
     sendWelcomeEmail(email, displayName){
         return new Promise(async (resolve, reject) => {
-            const mailOptions = createMailOptions("welcome", { displayName }, email, 'Weclome on FeedMyFlow !')
+            const mailOptions = this.createMailOptions("welcome", { displayName }, email, 'Weclome on FeedMyFlow !')
             this.sendEmail(mailOptions)
                 .then((res) => resolve(res))
                 .catch((err) => reject(err))
