@@ -8,6 +8,8 @@ const { createFirebaseAccount } = require('./src/user');
 const { admin } = require('./provider/firebase');
 
 const db = admin.firestore();
+const bucket = admin.storage().bucket();
+
 
 const OAUTH_SCOPES = ['r_liteprofile', 'r_emailaddress', 'w_member_social'];
 
@@ -19,8 +21,8 @@ const linkedInClient = () => {
   return require('node-linkedin')(
     functions.config().linkedin.client_id,
     functions.config().linkedin.client_secret,
-    // `http://localhost:3000/login`);
-    `https://${process.env.GCLOUD_PROJECT}.web.app/login`);
+    `http://localhost:3000/login`);
+    // `https://${process.env.GCLOUD_PROJECT}.web.app/login`);
 }
 
 /**
@@ -100,3 +102,47 @@ exports.sendWelcomeEmail = functions.auth.user().onCreate((user) => {
     .then(()=> console.log('Welcome email sended to '+ user.uid))
     .catch((error)=> {console.log(error.toString())});
 });
+
+exports.moveImage = functions.https.onCall((data) => {
+  const { srcFilePath, userUid, postId } = data;
+  const file = bucket.file(srcFilePath);
+  const fileName = srcFilePath.split('/').slice(-1)[0];
+  const newLocation = `post/${userUid}/${fileName}`;
+  file.move(newLocation).then(()=>{
+    return db.collection('user').doc(userUid).collection('post').doc(postId).update({
+      media : {
+        filePath: newLocation,
+      }
+    })
+  }).catch(()=>{});
+});
+
+
+// exports.uploadToLinkedin = functions.storage.object().onFinalize(async (object) => {
+//   const filePath = object.name; // File path in the bucket.
+//   const contentType = object.contentType; // File content type.
+
+//   if (!contentType.startsWith('image/')) {
+//     return console.log('Stop function, this is not an image.');
+//   }
+
+//   console.log("filePath",filePath)
+//   console.log("contentType",contentType)
+
+//   const filePathArr = filePath.split("/");
+//   const userUid = filePathArr[0];
+//   const fileName = filePathArr[1];
+
+//   const fileInfos = fileName.split(".");
+//   const postId = fileInfos[0];
+//   const fileExtension = fileInfos[1];
+
+//   return uploadImageLinkedin(filePath,userUid,postId);
+// });
+
+// exports.testing = functions.https.onRequest( async (req, res) => {
+//   const filePath = "linkedin:3A8ySOLYhe/nI3g5bGcFifSXt2F4tVi.jpg";
+//   const userUid = "linkedin:3A8ySOLYhe";
+//   const postId = "nI3g5bGcFifSXt2F4tVi";
+//   return uploadImageLinkedin(filePath,userUid,postId);
+// })

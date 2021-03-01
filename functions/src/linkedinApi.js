@@ -18,6 +18,9 @@ class LinkedinApi {
     return request.post(this.accessToken,this.apiUrl+"ugcPosts",body)
   }
 
+  registerImage(body,headers={}){
+    return request.post(this.accessToken,this.apiUrl+"assets?action=registerUpload",body,headers)
+  }
 
 }
 

@@ -93,11 +93,16 @@
         "button":{
             "delete":"Delete",
             "update":"Update",
-            "create":"Create"
+            "create":"Create",
+            "uploadImg":"Upload Image",
+            "deleteImg":"Delete Image"
         },
         "text":{
             "create":"Post creation",
             "schedule":"Post scheduled for the {{rawDate}} at {{rawTime}}"
+        },
+        "upload":{
+            "fail":"Image Upload impossible!"
         }
     }
 }

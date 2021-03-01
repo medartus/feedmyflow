@@ -1,6 +1,8 @@
 import React, { useState, useEffect, memo } from "react";
 import "./PostPreview.css";
 
+import fire from "../../provider/firebase";
+
 import { extractDomain, isValidUrl, Colors } from "../../Constants";
 
 const WIDTH_BONE_1 = { width: "20vw" };
@@ -16,11 +18,22 @@ export default memo(
     title,
     description,
     url,
+    filePath,
     setTitle,
     hideDescription,
     setHideDescription,
   }) => {
     const [embedImage, setEmbedImg] = useState(null);
+
+    useEffect(() => {
+      if (filePath !== "") {
+        const ref = fire.storage().ref(filePath);
+        ref.getDownloadURL().then((imgUrl)=>{
+          setEmbedImg(imgUrl);
+        });
+      }
+      else setEmbedImg(null);
+    }, [filePath]);
 
     useEffect(() => {
       if (isLinkValid && url !== "") {
@@ -46,7 +59,7 @@ export default memo(
             setEmbedImg(null);
             setTitle("");
           });
-      } else if (embedImage !== null) setEmbedImg(null);
+      }
     }, [isLinkValid, url, embedImage, setTitle, setHideDescription]);
 
     const getLine = (line) => {
@@ -86,7 +99,7 @@ export default memo(
       </div>
     );
 
-    const renderBottom = () => (
+    const RenderBottom = () => (
       <div className="column" style={{ width: "100%" }}>
         {embedImage && (
           <div className="img-container">
@@ -120,7 +133,7 @@ export default memo(
       >
         <HeaderPost />
         <ContentPost />
-        {renderBottom()}
+        <RenderBottom />
       </div>
     );
   }

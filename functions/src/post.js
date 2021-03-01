@@ -4,12 +4,13 @@ const LinkedinApi = require('./linkedinApi');
 const { admin } = require('../provider/firebase');
 
 const db = admin.firestore();
+const bucket = admin.storage().bucket();
 
 const postOnLinkedin = (newPost) => new Promise(async(resolve,reject) => {
-    const body = format.generateBodyContent(newPost.data());
-    if(body === null) return reject(new Error('Cannot build body'));
+    const userUid = newPost.data().userUID;
 
-    const userUid = newPost.data().userUID
+    const body = await format.postBody(userUid,newPost.data());
+    if(body === null) return reject(new Error('Cannot build body'));
 
     if(userUid === "linkedin:3A8ySOLYhe" || process.env.GCLOUD_PROJECT === "feedmyflow"){
 
@@ -21,8 +22,10 @@ const postOnLinkedin = (newPost) => new Promise(async(resolve,reject) => {
         await linkedinApi.postData(body).catch((err)=> error=err)
         if (error) return reject(error);
         
-        if(process.env.GCLOUD_PROJECT === "feedmyflow") {
+        if(process.env.GCLOUD_PROJECT === "feedmyflow" || true) {
             db.collection('user').doc(userUid).collection('post').doc(newPost.id).delete()
+            const { media } = newPost.data();
+            if(media && media.filePath ) bucket.file(media.filePath).delete();
         }
         
         const mailProvider = new MailProvider()

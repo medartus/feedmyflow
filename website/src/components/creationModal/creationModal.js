@@ -15,9 +15,10 @@ import {
 import { ThemeProvider } from "@material-ui/core/styles";
 import DateFnsUtils from "@date-io/date-fns";
 
+import { useTranslation } from "react-i18next";
 import fire from "../../provider/firebase";
 import moment from "moment";
-import { useTranslation } from "react-i18next";
+import { v4 as uuidv4 } from 'uuid';
 
 import "./creationModal.css";
 import {
@@ -65,6 +66,8 @@ const reducer = (state, action) => {
       return { ...state, isLinkValid: action.payload };
     case "SET_URL":
       return { ...state, mediaUrl: action.payload };
+    case "SET_FILE_PATH":
+      return { ...state, filePath: action.payload };
     default:
       return state;
   }
@@ -79,6 +82,7 @@ const getInitialState = (props, isMedia, isEvent, date) => ({
   mediaTitle: isEvent && isMedia ? props.media.title : "",
   mediaDescription: isEvent && isMedia ? props.media.description : "",
   mediaUrl: isEvent && isMedia ? props.media.originalUrl : "",
+  filePath: isEvent && isMedia ? props.media.filePath : "",
   hideDescription:
     (isEvent && isMedia && props.media.description === undefined) || !isEvent ? true : false,
   isLinkValid:
@@ -86,12 +90,13 @@ const getInitialState = (props, isMedia, isEvent, date) => ({
 });
 
 const CreationModal = memo(({ isOpen, data, handleClose }) => {
-  // function variables
-  let isEvent = data !== null;
-  let isMedia = isEvent ? data.media !== undefined : false;
+    // function variables
+    let isEvent = data !== null && data !== undefined;
+    let isMedia = isEvent ? data.media !== undefined && data.media !== null  : false;
     const { t } = useTranslation();
     const db = fire.firestore();
     const userUid = fire.auth().currentUser.uid;
+    const storageRef = fire.storage().ref();
     const classes = useStyles();
     let date = new Date();
     date.setMinutes(60);
@@ -102,6 +107,8 @@ const CreationModal = memo(({ isOpen, data, handleClose }) => {
     const [alertProps, setAlertProps] = useState(defaultAlertProps);
     const [isLinkValid, setIsLinkValid] = useState(false);
     const [inPreviewMode, setPreviewMode] = useState(false);
+    const [postFilePath, setPostFilePath] = useState(null);
+    const hiddenFileInput = React.useRef(null);
     const [
       {
         publicationDate,
@@ -112,10 +119,12 @@ const CreationModal = memo(({ isOpen, data, handleClose }) => {
         mediaTitle,
         mediaDescription,
         mediaUrl,
-        hideDescription
+        hideDescription,
+        filePath
       },
       dispatch,
     ] = useReducer(reducer, getInitialState(data, isMedia, isEvent, date));
+
 
     // side-effects
     useEffect(() => {
@@ -133,13 +142,14 @@ const CreationModal = memo(({ isOpen, data, handleClose }) => {
         dispatch({ type: "SET_TITLE", payload: "" });
         dispatch({ type: "SET_DESCRIPTION", payload: "" });
         dispatch({ type: "SET_URL", payload: "" });
+        dispatch({ type: "SET_FILE_PATH", payload: null });
       }
     }, [isOpen, isEvent]);
 
     useEffect(() => {
       if (shareCommentary === "") setCanSave(false);
       else{
-        if (shareMediaCategory === "NONE" && mediaUrl === "") setCanSave(true);
+        if (shareMediaCategory !== "ARTICLE" && mediaUrl === "") setCanSave(true);
         else {
           if (mediaUrl !== "" && mediaTitle !== "")
             setCanSave(true);
@@ -149,16 +159,7 @@ const CreationModal = memo(({ isOpen, data, handleClose }) => {
       return () => {
         setHaveModification(true);
       };
-    }, [
-      publicationDate,
-      publicationTime,
-      shareCommentary,
-      shareMediaCategory,
-      visibility,
-      mediaTitle,
-      mediaDescription,
-      mediaUrl,
-    ]);
+    }, [publicationDate, publicationTime, shareCommentary, shareMediaCategory, visibility, mediaTitle, mediaDescription, mediaUrl, filePath]);
 
     // memoized functions
     const onCloseAlert = useCallback(
@@ -173,7 +174,49 @@ const CreationModal = memo(({ isOpen, data, handleClose }) => {
       (payload) => dispatch({ type: "SET_HIDE_DESCRIPTION", payload }),
       []
     );
-    
+
+    const handleUploadClick = event => {
+      hiddenFileInput.current.click();
+    };
+
+    const handleChangeFileUpload = event => {
+      const fileUploaded = event.target.files[0];
+      const fileExtension = fileUploaded.name.split(".")[1];
+      const uuid = uuidv4();
+      const path = `temp/${userUid}_${uuid}.${fileExtension}`
+      const imageRef = storageRef.child(path);
+
+      imageRef.put(fileUploaded).then(() => {
+        dispatch({ type: "SET_FILE_PATH", payload: path })
+        dispatch({ type: "SET_CATEGORY", payload: "IMAGE" })
+      }).catch(() => {
+        alert(t("creationModal.upload.fail"));
+      });
+    };
+
+    const deleteInStorage = (childPath) => {
+      storageRef.child(childPath).delete()
+    }
+
+    const handleRemoveImage = (removingState) => {
+      try {
+        const fileName = filePath.split('/').slice(-1)[0];
+        if(removingState === "temp" && filePath.split('/')[0]) setPostFilePath(filePath);
+        if(removingState === 'post' || removingState === 'both') deleteInStorage(`post/${userUid}/${fileName}`);
+        if(removingState === 'temp' || removingState === 'both') {
+          deleteInStorage(`temp/${fileName}`);      
+          dispatch({ type: "SET_FILE_PATH", payload: "" })
+          dispatch({ type: "SET_CATEGORY", payload: "NONE" })
+        }
+      } catch (error) {}
+    }
+
+    const moveStorageImage = (postId) => {
+      if(filePath.split('/')[0] === 'temp'){
+        const moveImage = fire.functions().httpsCallable('moveImage');
+        moveImage({ srcFilePath: filePath, userUid, postId })
+      }
+    }
 
     const formatData = () => {
       let rawDate = `${publicationDate.getDate()}/${
@@ -195,15 +238,23 @@ const CreationModal = memo(({ isOpen, data, handleClose }) => {
         shareMediaCategory,
         rawDate,
         rawTime,
+        'media': null,
       };
-      if (isLinkValid) {
-        linekdinPost["media"] = {
-          title: mediaTitle,
-          originalUrl: mediaUrl,
-        };
-        if (!hideDescription && mediaDescription !== "") {
-          linekdinPost["media"]["description"] = mediaDescription;
+      if (shareMediaCategory === "ARTICLE"){
+        if (isLinkValid) {
+          linekdinPost["media"] = {
+            title: mediaTitle,
+            originalUrl: mediaUrl,
+          };
+          if (!hideDescription && mediaDescription !== "") {
+            linekdinPost["media"]["description"] = mediaDescription;
+          }
         }
+      }
+      if (shareMediaCategory === "IMAGE"){
+        linekdinPost["media"] = {
+          filePath: filePath,
+        };
       }
       return linekdinPost;
     };
@@ -254,7 +305,10 @@ const CreationModal = memo(({ isOpen, data, handleClose }) => {
     const onSendData = () => {
       if (validDate() && canSave) {
         const linekdinPost = formatData();
-        db.collection("user").doc(userUid).collection("post").add(linekdinPost);
+        db.collection("user").doc(userUid).collection("post").add(linekdinPost).then((snapshot)=>{
+          const postId = snapshot.id;
+          moveStorageImage(postId);
+        });
         handleClose();
       }
     };
@@ -267,7 +321,11 @@ const CreationModal = memo(({ isOpen, data, handleClose }) => {
           .doc(userUid)
           .collection("post")
           .doc(postId)
-          .update(linekdinPost);
+          .update(linekdinPost)
+          .then(()=>{
+            deleteInStorage(postFilePath);
+            moveStorageImage(postId);
+          });
         handleClose();
         setHaveModification(false);
       }
@@ -280,7 +338,10 @@ const CreationModal = memo(({ isOpen, data, handleClose }) => {
           .doc(userUid)
           .collection("post")
           .doc(postId)
-          .delete();
+          .delete()
+          .then(()=>{
+            handleRemoveImage('both');
+          });
         handleClose();
       };
       setAlertProps(
@@ -392,21 +453,46 @@ const CreationModal = memo(({ isOpen, data, handleClose }) => {
       </div>
     );
 
-    const linkRow = () => (
-      <div className="row">
-        <TextField
-          fullWidth
-          id="mediaUrl"
-          label={t("creationModal.input.mediaUrl")}
-          value={mediaUrl}
-          onChange={({ target: { value } }) =>
-            {
-              dispatch({ type: "SET_CATEGORY", payload: value === "" ? "NONE" : "ARTICLE" })
-              dispatch({ type: "SET_URL", payload: value })
+    const mediaRow = () => (
+      <>
+        {!filePath && <div className="row">
+          <input
+            accept='image/png, image/gif, image/jpeg'
+            type='file'
+            ref={hiddenFileInput}
+            onChange={handleChangeFileUpload}
+            style={{display: 'none'}}
+          />
+          <TextField
+            fullWidth
+            id="mediaUrl"
+            label={t("creationModal.input.mediaUrl")}
+            value={mediaUrl}
+            onChange={({ target: { value } }) =>
+              {
+                dispatch({ type: "SET_CATEGORY", payload: value === "" ? "NONE" : "ARTICLE" })
+                dispatch({ type: "SET_URL", payload: value })
+              }
             }
+          />
+        </div>}
+        <div className="row">
+          {filePath ?
+            <DeleteButton 
+              onClick={()=>handleRemoveImage('temp')}
+            >
+              {t("creationModal.button.deleteImg")}
+            </DeleteButton> 
+          :
+            <ConfirmButton 
+              onClick={handleUploadClick}
+              style={{ marginRight: "20px" }}
+            >
+              {t("creationModal.button.uploadImg")}
+            </ConfirmButton>
           }
-        />
-      </div>
+        </div>
+      </>
     );
 
     const mediaTitleRow = () => (
@@ -446,9 +532,9 @@ const CreationModal = memo(({ isOpen, data, handleClose }) => {
     const phoneModeToggle = () => (
       <div id="phone-mode-toggle">
         <input type="radio" name="phonemode" id="edit" onClick={() => setPreviewMode(false)} checked={!inPreviewMode}/>
-        <label for="edit" id="edit-label">Edit</label>
+        <label htmlFor="edit" id="edit-label">Edit</label>
         <input type="radio" name="phonemode" id="preview" onClick={() => setPreviewMode(true)} checked={inPreviewMode}/>
-        <label for="preview" id="preview-label">Preview</label>
+        <label htmlFor="preview" id="preview-label">Preview</label>
       </div>
     )
 
@@ -470,12 +556,12 @@ const CreationModal = memo(({ isOpen, data, handleClose }) => {
             {phoneModeToggle()}
 
             <div id="creation-modal-container"
-                 className = {inPreviewMode ? "card overflowable" : "card overflowable visible"}>
+                className = {inPreviewMode ? "card overflowable" : "card overflowable visible"}>
               {closeButton()}
               {topText()}
               {timeRow()}
               {contentRow()}
-              {linkRow()}
+              {mediaRow()}
               {mediaTitleRow()}
               {mediaDescriptionRow()}
               {buttonSection()}
@@ -488,6 +574,7 @@ const CreationModal = memo(({ isOpen, data, handleClose }) => {
               title={mediaTitle}
               isLinkValid={isLinkValid}
               url={mediaUrl}
+              filePath={filePath}
               description={mediaDescription}
               setTitle={setMediaTitleMemo}
               setHideDescription={setHideDescriptionMemo}

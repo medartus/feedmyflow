@@ -93,11 +93,16 @@
         "button":{
             "delete":"Suppresion",
             "update":"Mise à jour",
-            "create":"Creation"
+            "create":"Creation",
+            "uploadImg":"Upload Image",
+            "deleteImg":"Supprimer Image"
         },
         "text":{
             "create":"Création de la publication",
             "schedule":"Publication prévue pour le {{rawDate}} à {{rawTime}}"
+        },
+        "upload":{
+            "fail":"Upload de l'image impossible !"
         }
     }
 }
