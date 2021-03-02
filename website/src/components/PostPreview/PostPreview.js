@@ -1,12 +1,12 @@
-import React, { useState, useEffect, memo } from "react";
-import "./PostPreview.css";
+import React, { useState, useEffect, memo } from 'react';
+import './PostPreview.css';
 
-import fire from "../../provider/firebase";
+import fire from '../../provider/firebase';
 
-import { extractDomain, isValidUrl, Colors } from "../../Constants";
+import { extractDomain, isValidUrl, Colors } from '../../Constants';
 
-const WIDTH_BONE_1 = { width: "20vw" };
-const WIDTH_BONE_2 = { width: "10vw" };
+const WIDTH_BONE_1 = { width: '20vw' };
+const WIDTH_BONE_2 = { width: '10vw' };
 
 export default memo(
   ({
@@ -18,25 +18,26 @@ export default memo(
     title,
     description,
     url,
-    filePath,
+    fileInfo,
     setTitle,
     hideDescription,
     setHideDescription,
   }) => {
-    const [embedImage, setEmbedImg] = useState(null);
+    const [embedSource, setEmbedSource] = useState(null);
+    const [embedType, setEmbedType] = useState('IMAGE');
 
     useEffect(() => {
-      if (filePath !== "") {
-        const ref = fire.storage().ref(filePath);
-        ref.getDownloadURL().then((imgUrl)=>{
-          setEmbedImg(imgUrl);
+      if (fileInfo !== undefined) {
+        setEmbedType(fileInfo.contentType === 'video/mp4' ? 'VIDEO' : 'IMAGE');
+        const ref = fire.storage().ref(fileInfo.filePath);
+        ref.getDownloadURL().then((mediaUrl) => {
+          setEmbedSource(mediaUrl);
         });
-      }
-      else setEmbedImg(null);
-    }, [filePath]);
+      } else setEmbedSource(null);
+    }, [fileInfo]);
 
     useEffect(() => {
-      if (isLinkValid && url !== "") {
+      if (isLinkValid && url !== '') {
         const encoded = encodeURIComponent(url);
         fetch(`https://urlpreview.vercel.app/api/v1/preview?url=${encoded}`)
           .then((res) => {
@@ -45,7 +46,7 @@ export default memo(
           })
           .then((json) => {
             const { title, image: url } = json;
-            setEmbedImg(url);
+            setEmbedSource(url);
             setTitle(title);
             if (url !== undefined && url !== null) {
               setHideDescription(true);
@@ -56,29 +57,28 @@ export default memo(
           .catch((err) => {
             // console.log(err);
             setHideDescription(false);
-            setEmbedImg(null);
-            setTitle("");
+            setEmbedSource(null);
+            setTitle('');
           });
       }
-    }, [isLinkValid, url, embedImage, setTitle, setHideDescription]);
+    }, [isLinkValid, url, embedSource, setTitle, setHideDescription]);
 
     const getLine = (line) => {
-      const tokens = line.split(" ");
+      const tokens = line.split(' ');
       return tokens.map((t) => {
         let textStyle = { color: Colors.shade1 };
         // has hashtag with more than just the shebang or is a url (# is a valid url so we remove that case)
-        if ((t[0] === "#" && t.length > 1) || (isValidUrl(t) && t !== "#"))
-          textStyle = { color: Colors.light };
+        if ((t[0] === '#' && t.length > 1) || (isValidUrl(t) && t !== '#')) { textStyle = { color: Colors.light }; }
         return <span style={textStyle}>{`${t} `}</span>;
       });
     };
 
     const HeaderPost = () => (
-      <div className="row" style={{ marginTop: "20px" }}>
+      <div className="row" style={{ marginTop: '20px' }}>
         <img src={photoUrl} alt="user-img" className="user-img" />
         <div
           className="column"
-          style={{ alignItems: "flex-start", marginLeft: "20px" }}
+          style={{ alignItems: 'flex-start', marginLeft: '20px' }}
         >
           <p style={{ margin: 0 }}>{displayName}</p>
           <div className="skeleton" style={WIDTH_BONE_1} />
@@ -89,21 +89,27 @@ export default memo(
 
     const ContentPost = () => (
       <div className="row" id="post-content">
-        {content.split("\n").map((line, i) => {
-          return (
-            <p key={i} className="next-post-item">
-              {getLine(line)}
-            </p>
-          );
-        })}
+        {content.split('\n').map((line, i) => (
+          <p key={i} className="next-post-item">
+            {getLine(line)}
+          </p>
+        ))}
       </div>
     );
 
     const RenderBottom = () => (
-      <div className="column" style={{ width: "100%" }}>
-        {embedImage && (
+      <div className="column" style={{ width: '100%' }}>
+        {embedSource && (
           <div className="img-container">
-            <img src={embedImage} alt="embed" className="embed-img" />
+            <>
+              {embedType === 'IMAGE'
+                ? <img src={embedSource} alt="embed" className="embed-img" />
+                : (
+                  <video controls>
+                    <source src={embedSource} type="video/mp4" />
+                  </video>
+                )}
+            </>
           </div>
         )}
 
@@ -112,7 +118,7 @@ export default memo(
             <p className="description-text clipped clip-1">{title}</p>
             <p
               className="second-text"
-              style={{ fontSize: "14px", margin: "6px 0 6px 0" }}
+              style={{ fontSize: '14px', margin: '6px 0 6px 0' }}
             >
               {isLinkValid ? extractDomain(url) : url}
             </p>
@@ -127,7 +133,7 @@ export default memo(
     return (
       <div
         className={
-          inPreviewMode ? "card overflowable visible" : "card overflowable"
+          inPreviewMode ? 'card overflowable visible' : 'card overflowable'
         }
         id="preview-card"
       >
@@ -136,5 +142,5 @@ export default memo(
         <RenderBottom />
       </div>
     );
-  }
+  },
 );

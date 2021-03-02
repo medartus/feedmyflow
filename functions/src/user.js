@@ -4,8 +4,8 @@ const LinkedinApi = require('./linkedinApi');
 
 const extractUserInfo = async (accessToken) => {
   const linkedinApi = new LinkedinApi(accessToken);
-  let userResults = await linkedinApi.me();
-  let emailResults = await linkedinApi.email();
+  let userResults = await linkedinApi.request("LINKEDIN_API_ME");
+  let emailResults = await linkedinApi.request("LINKEDIN_API_EMAIL");
   
   const language = userResults.firstName.preferredLocale.language+"_"+userResults.firstName.preferredLocale.country;
   // We have a LinkedIn access token and the user identity now.
