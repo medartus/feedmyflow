@@ -2,6 +2,7 @@
   "name": "linkedin-auth-functions",
   "description": "Authenticate with LinkedIn Firebase Functions sample",
   "dependencies": {
+    "babel-eslint": "^10.1.0",
     "cookie-parser": "^1.4.3",
     "cors": "^2.8.5",
     "firebase-admin": "^9.4.2",
@@ -9,6 +10,7 @@
     "juice": "^6.0.0",
     "node-linkedin": "^0.5.4",
     "nodemailer": "^6.4.2",
+    "raw-body": "^2.4.1",
     "request": "^2.88.2"
   },
   "devDependencies": {

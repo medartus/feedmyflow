@@ -94,8 +94,8 @@
             "delete":"Delete",
             "update":"Update",
             "create":"Create",
-            "uploadImg":"Upload Image",
-            "deleteImg":"Delete Image"
+            "uploadImg":"Upload content",
+            "deleteImg":"Delete content"
         },
         "text":{
             "create":"Post creation",

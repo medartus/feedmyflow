@@ -1,7 +1,7 @@
-const { uploadImageLinkedin } = require('./uploadMedia');
+const { uploadMediaLinkedin } = require('./uploadMedia');
 
-const mediaArticle = (media) => {
-  const { description, originalUrl, title } = media;
+const mediaArticle = (data) => {
+  const { description, originalUrl, title } = data.media;
   let mediaObject = {
     "status": "READY",
     "originalUrl": originalUrl,
@@ -16,16 +16,12 @@ const mediaArticle = (media) => {
   return mediaObject;
 }
 
-const mediaImage = async (userUid,media) => {
-  const { filePath } = media;
-  
-  const digitalmediaAsset = await uploadImageLinkedin(filePath,userUid);
-
-  let mediaObject = {
+const mediaContent = async (userUid,data) => {
+  const digitalmediaAsset = await uploadMediaLinkedin(userUid,data);
+  return mediaObject = {
     "status": "READY",
     "media": digitalmediaAsset,
-  }
-  return mediaObject;
+  };
 }
 
 
@@ -33,8 +29,9 @@ const postMediaArray = async (userUid,data) => {
   let mediaArray = null;
   const { shareMediaCategory, media } = data;
   if(shareMediaCategory !== null && media !== null){
-    if (shareMediaCategory === "ARTICLE") mediaArray=[mediaArticle(media)]
-    if (shareMediaCategory === "IMAGE") mediaArray=[await mediaImage(userUid,media)]
+    if (shareMediaCategory === "ARTICLE") mediaArray=[mediaArticle(data)]
+    if (shareMediaCategory === "IMAGE") mediaArray=[await mediaContent(userUid,data)]
+    if (shareMediaCategory === "VIDEO") mediaArray=[await mediaContent(userUid,data)]
   }
   return mediaArray;
 }
