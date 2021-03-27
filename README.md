@@ -109,8 +109,8 @@ firebase use your_project_name
 5. Add the development API Keys and other informations
 
 ```
-firebase functions:config:set email.password="qdrfnuglteceudva" email.address="dev.feedmyflow@gmail.com"
-firebase functions:config:set linkedin.client_id="7727h1qnnvnq0d" linkedin.client_secret="yhamVZLUW1Kg7VnY"
+firebase functions:config:set email.password="EMAIL_PASSWORD" email.address="EMAIL_ADDRESS"
+firebase functions:config:set linkedin.client_id="LINKEDIN_CLIENT_ID" linkedin.client_secret="LINKEDIN_CLIENT_SECRET"
 ```
 
 6. In the functions folder, save your API credentials locally
