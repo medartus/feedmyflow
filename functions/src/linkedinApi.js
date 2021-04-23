@@ -10,10 +10,63 @@ class LinkedinApi {
     this.accessToken = accessToken;
   }
 
+  refreshAccessToken(refreshToken){
+    return new Promise( async (resolve,reject) => {
+      const url = "https://www.linkedin.com/oauth/v2/accessToken";
+      const form = {
+        "grant_type": "refresh_token",
+        "refresh_token": refreshToken,
+        "client_id": functions.config().linkedin.client_id,
+        "client_secret": functions.config().linkedin.client_secret,
+      };
+
+      request.post({url: url, form: form}, (err, response, body) => {
+
+        if (err) return reject(err);
+
+        var res = JSON.parse(body);
+
+        if (typeof res.error !== 'undefined') {
+            err = new Error(res.error_description);
+            err.name = res.error;
+            return cb(err, null);
+        }
+
+        return resolve(res);
+      })
+    })
+  }
+
   retrieveAccessToken(userUid){
     return new Promise( async (resolve,reject) => {
       const accessTokenDoc = await db.collection("user").doc(userUid).collection("adminData").doc("linkedin").get();
       if (!accessTokenDoc.exists) return reject(new Error('Token does not exist.'));
+
+      // if (accessTokenDoc.data().accessTokenExpiration < new Date()) {
+      //   this.refreshAccessToken(accessTokenDoc.data().refreshToken)
+      //   .then(res=>{
+      //     const { access_token, expires_in, refresh_token, refresh_token_expires_in } = res;
+      //     this.accessToken = access_token;
+
+      //     const date = new Date();
+      //     const accessTokenExpiration = new Date(date.getTime()+expires_in*1000)
+      //     const refreshTokenExpiration = new Date(date.getTime()+refresh_token_expires_in*1000)
+
+      //     // Save the access token to the Firebase Realtime Database.
+      //     db.collection('user').doc(uid).collection('adminData').doc('linkedin')
+      //       .set({
+      //         'accessToken':access_token,
+      //         'accessTokenExpiration':accessTokenExpiration,
+      //         'refreshToken':refresh_token,
+      //         'refreshTokenExpiration':refreshTokenExpiration
+      //       });
+            
+      //     return resolve(this.accessToken);
+      //   })
+      //   .catch(err=>reject(err))
+
+      // }
+      // else 
       this.accessToken = accessTokenDoc.data().accessToken;
       return resolve(this.accessToken);
     })
@@ -21,6 +74,10 @@ class LinkedinApi {
 
   getAccessToken(){
     return this.accessToken;
+  }
+  
+  setAccessToken(token){
+    this.accessToken = token;
   }
 
   request(reqType,{body,headers,params}={}){
@@ -46,7 +103,7 @@ class LinkedinApi {
         const response = await fetch(requestUrl,requestContent)
         const jsondata = await response.json();
 
-        if (response.status !== 200) reject(jsondata);
+        if (response.status !== 200 && response.status !== 201) reject(jsondata);
         resolve(jsondata);
       }
       catch (error) { 

@@ -5,18 +5,25 @@
     ],
     "source": "functions"
   },
-  "hosting": {
-    "public": "public",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
-    "rewrites": [
+  "hosting": [
       {
-        "source": "**",
-        "destination": "/index.html"
-      }
-    ]
-  }
+      "target": "app",
+      "public": "public-app",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
+    },
+    {
+      "target": "landing",
+      "public": "public-landing"
+    }
+  ]
 }

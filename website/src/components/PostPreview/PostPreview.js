@@ -27,8 +27,8 @@ export default memo(
     const [embedType, setEmbedType] = useState('IMAGE');
 
     useEffect(() => {
-      if (fileInfo !== undefined) {
-        setEmbedType(fileInfo.contentType === 'video/mp4' ? 'VIDEO' : 'IMAGE');
+      if (fileInfo !== undefined && fileInfo !== null) {
+        // setEmbedType(fileInfo.contentType === 'video/mp4' ? 'VIDEO' : 'IMAGE');
         const ref = fire.storage().ref(fileInfo.filePath);
         ref.getDownloadURL().then((mediaUrl) => {
           setEmbedSource(mediaUrl);

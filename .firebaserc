@@ -1,0 +1,24 @@
+{
+  "targets": {
+    "dev-feedmyflow": {
+      "hosting": {
+        "app": [
+          "dev-fmf"
+        ],
+        "landing": [
+          "dev-feedmyflow"
+        ]
+      }
+    },
+    "feedmyflow": {
+      "hosting": {
+        "landing": [
+          "feedmyflow"
+        ],
+        "app": [
+          "feedmyflow"
+        ]
+      }
+    }
+  }
+}

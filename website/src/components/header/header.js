@@ -29,8 +29,8 @@ const BootstrapInput = withStyles((_) => ({
   },
 }))(InputBase);
 
-const handleSendMail = () => {
-  window.location.href = "mailto: feedmyflow@gmail.com";
+const handleContact = (url) => {
+  window.open(url);
 };
 
 const HeaderItem = memo(({ text, onClick }) => (
@@ -91,7 +91,7 @@ const Header = memo((props) => {
           <HeaderItem text={t("header.home")} onClick={handleHome} />
         )}
         <HeaderItem text={t("header.about")} onClick={handleAbout} />
-        <HeaderItem text={t("header.contact")} onClick={handleSendMail} />
+        <HeaderItem text={t("header.contact")} onClick={()=>handleContact(t("header.contactUrl"))} />
         {auth.authStatus.isConnected ? (
           <HeaderItem text={t("header.disconnect")} onClick={onAuthOut} />
           ) : (

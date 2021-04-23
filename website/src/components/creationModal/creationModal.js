@@ -6,7 +6,7 @@ import React, {
   useReducer,
 } from 'react';
 import {
-  Modal, Backdrop, Fade, TextField, Select, MenuItem,
+  Modal, Backdrop, Fade, TextField, Select, MenuItem, FormControl, InputLabel
 } from '@material-ui/core';
 
 import {
@@ -70,12 +70,14 @@ const reducer = (state, action) => {
       return { ...state, mediaUrl: action.payload };
     case 'SET_FILE_INFO':
       return { ...state, fileInfo: action.payload };
+    case 'SET_AUTHOR':
+      return { ...state, author: action.payload };
     default:
       return state;
   }
 };
 
-const getInitialState = (props, isMedia, isEvent, date) => ({
+const getInitialState = (props, isMedia, isEvent, date, userUid) => ({
   publicationDate: isEvent ? new Date(props.publicationTime.toDate()) : date,
   publicationTime: isEvent ? new Date(props.publicationTime.toDate()) : date,
   shareCommentary: isEvent ? props.shareCommentary : '',
@@ -89,12 +91,14 @@ const getInitialState = (props, isMedia, isEvent, date) => ({
     !!((isEvent && isMedia && props.media.description === undefined) || !isEvent),
   isLinkValid:
     !!(isEvent && isMedia && props.media.originalUrl !== undefined),
+  author: isEvent && isMedia ? props.author: `urn:li:person:`+userUid.split(':')[1],
 });
 
-const CreationModal = memo(({ isOpen, data, handleClose }) => {
+const CreationModal = memo(({ isOpen, data, handleClose, role }) => {
   // function variables
   const isEvent = data !== null && data !== undefined;
   const isMedia = isEvent ? data.media !== undefined && data.media !== null : false;
+  const roleInit = isEvent ? role.find(r => r.organization === data.author) : role[0];
   const { t } = useTranslation();
   const db = fire.firestore();
   const userUid = fire.auth().currentUser.uid;
@@ -109,6 +113,7 @@ const CreationModal = memo(({ isOpen, data, handleClose }) => {
   const [alertProps, setAlertProps] = useState(defaultAlertProps);
   const [isLinkValid, setIsLinkValid] = useState(false);
   const [inPreviewMode, setPreviewMode] = useState(false);
+  const [selectedRole, setSelectedRole] = useState(roleInit);
   const [postFilePath, setPostFilePath] = useState(null);
   const hiddenFileInput = React.useRef(null);
   const [
@@ -123,9 +128,10 @@ const CreationModal = memo(({ isOpen, data, handleClose }) => {
       mediaUrl,
       hideDescription,
       fileInfo,
+      author,
     },
     dispatch,
-  ] = useReducer(reducer, getInitialState(data, isMedia, isEvent, date));
+  ] = useReducer(reducer, getInitialState(data, isMedia, isEvent, date, userUid));
 
   // side-effects
   useEffect(() => {
@@ -144,6 +150,7 @@ const CreationModal = memo(({ isOpen, data, handleClose }) => {
       dispatch({ type: 'SET_DESCRIPTION', payload: '' });
       dispatch({ type: 'SET_URL', payload: '' });
       dispatch({ type: 'SET_FILE_INFO', payload: null });
+      dispatch({ type: 'SET_AUTHOR', payload: '' });
     }
   }, [isOpen, isEvent]);
 
@@ -176,16 +183,22 @@ const CreationModal = memo(({ isOpen, data, handleClose }) => {
 
   const handleChangeFileUpload = (event) => {
     const fileUploaded = event.target.files[0];
+
+    const allowedTpes = ['image/png', 'image/gif', 'image/jpeg'];
+    const contentType = fileUploaded.type;
+    if (!allowedTpes.includes(contentType)) return alert(t('creationModal.upload.notSupportedFormat'));
+
     const fileExtension = fileUploaded.name.split('.')[1];
     const uuid = uuidv4();
     const path = `temp/${userUid}_${uuid}.${fileExtension}`;
     const imageRef = storageRef.child(path);
-    const contentType = fileUploaded.type;
-    console.log(fileExtension === '.mp4' ? 'VIDEO' : 'IMAGE');
 
     imageRef.put(fileUploaded).then(() => {
+      dispatch({ type: 'SET_TITLE', payload: '' });
+      dispatch({ type: 'SET_DESCRIPTION', payload: '' });
+      dispatch({ type: 'SET_URL', payload: '' });
       dispatch({ type: 'SET_FILE_INFO', payload: { filePath: path, contentType } });
-      dispatch({ type: 'SET_CATEGORY', payload: fileExtension === '.mp4' ? 'VIDEO' : 'IMAGE' });
+      dispatch({ type: 'SET_CATEGORY', payload: contentType === 'video/mp4' ? 'VIDEO' : 'IMAGE' }); // Le changement de format ne marche pas
     }).catch(() => {
       alert(t('creationModal.upload.fail'));
     });
@@ -196,24 +209,28 @@ const CreationModal = memo(({ isOpen, data, handleClose }) => {
   };
 
   const handleRemoveMedia = (removingState) => {
-    const { filePath } = fileInfo;
-    try {
-      const fileName = filePath.split('/').slice(-1)[0];
-      if (removingState === 'temp' && filePath.split('/')[0]) setPostFilePath(filePath);
-      if (removingState === 'post' || removingState === 'both') deleteInStorage(`post/${userUid}/${fileName}`);
-      if (removingState === 'temp' || removingState === 'both') {
-        deleteInStorage(`temp/${fileName}`);
-        dispatch({ type: 'SET_FILE_INFO', payload: null });
-        dispatch({ type: 'SET_CATEGORY', payload: 'NONE' });
-      }
-    } catch (error) {}
+    if(fileInfo){
+      const { filePath } = fileInfo;
+      try {
+        const fileName = filePath.split('/').slice(-1)[0];
+        if (removingState === 'temp' && filePath.split('/')[0]) setPostFilePath(filePath);
+        if (removingState === 'post' || removingState === 'both') deleteInStorage(`post/${userUid}/${fileName}`);
+        if (removingState === 'temp' || removingState === 'both') {
+          deleteInStorage(`temp/${fileName}`);
+          dispatch({ type: 'SET_FILE_INFO', payload: null });
+          dispatch({ type: 'SET_CATEGORY', payload: 'NONE' });
+        }
+      } catch (error) {}
+    }
   };
 
   const moveStorageMedia = (postId, linekdinPost) => {
-    const { filePath } = linekdinPost.media.fileInfo;
-    if (filePath.split('/')[0] === 'temp') {
-      const moveMedia = fire.functions().httpsCallable('moveMedia');
-      moveMedia({ media: linekdinPost.media, userUid, postId });
+    if(linekdinPost.media.fileInfo){
+      const { filePath } = linekdinPost.media.fileInfo;
+      if (filePath.split('/')[0] === 'temp') {
+        const moveMedia = fire.functions().httpsCallable('moveMedia');
+        moveMedia({ media: linekdinPost.media, userUid, postId });
+      }
     }
   };
 
@@ -227,7 +244,7 @@ const CreationModal = memo(({ isOpen, data, handleClose }) => {
     const time = moment(`${rawDate} ${rawTime}:00`, 'DD/MM/YYYY hh:mm');
 
     const linekdinPost = {
-      author: `urn:li:person:${userUid.split(':')[1]}`,
+      author: author,
       userUID: userUid,
       publicationTime: time.toDate(),
       shareCommentary,
@@ -235,6 +252,8 @@ const CreationModal = memo(({ isOpen, data, handleClose }) => {
       shareMediaCategory,
       rawDate,
       rawTime,
+      publisherName:selectedRole.localizedName,
+      publisherPhoto:selectedRole.orgMedia.url,
       media: null,
     };
     if (shareMediaCategory === 'ARTICLE') {
@@ -447,13 +466,18 @@ const CreationModal = memo(({ isOpen, data, handleClose }) => {
     </div>
   );
 
+  const handleChangeRole = ({ target: { value } }) => {
+    setSelectedRole(value);
+    dispatch({ type: 'SET_AUTHOR', payload: value.organization });
+    setHaveModification(true);
+  }
+  
   const mediaRow = () => (
     <>
-      {console.log(!fileInfo)}
       {!fileInfo && (
         <div className="row">
           <input
-            accept="image/png, image/gif, image/jpeg, video/mp4"
+            accept="image/png, image/gif, image/jpeg"
             type="file"
             ref={hiddenFileInput}
             onChange={handleChangeFileUpload}
@@ -477,7 +501,7 @@ const CreationModal = memo(({ isOpen, data, handleClose }) => {
             <DeleteButton
               onClick={() => handleRemoveMedia('temp')}
             >
-              {t('creationModal.button.deleteImg')}
+              {t('creationModal.button.deleteContent')}
             </DeleteButton>
           )
           : (
@@ -485,9 +509,24 @@ const CreationModal = memo(({ isOpen, data, handleClose }) => {
               onClick={handleUploadClick}
               style={{ marginRight: '20px' }}
             >
-              {t('creationModal.button.uploadImg')}
+              {t('creationModal.button.uploadContent')}
             </ConfirmButton>
           )}
+          {selectedRole && role.length > 0 && <FormControl>
+          <InputLabel shrink>
+            {t('creationModal.text.publishAs')}
+          </InputLabel>
+          <Select
+            value={selectedRole}
+            onChange={handleChangeRole}
+          >
+            {role.map((r, idx) =>(
+              <MenuItem key={idx} value={r}>
+                {r.localizedName}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>}
       </div>
     </>
   );
@@ -556,15 +595,15 @@ const CreationModal = memo(({ isOpen, data, handleClose }) => {
             {topText()}
             {timeRow()}
             {contentRow()}
-            {mediaRow()}
             {mediaTitleRow()}
             {mediaDescriptionRow()}
+            {mediaRow()}
             {buttonSection()}
           </div>
-          <PostPreview
+          {selectedRole && <PostPreview
             inPreviewMode={inPreviewMode}
-            photoUrl={fire.auth().currentUser.photoURL}
-            displayName={fire.auth().currentUser.displayName}
+            photoUrl={selectedRole.orgMedia.url}
+            displayName={selectedRole.localizedName}
             content={shareCommentary}
             title={mediaTitle}
             isLinkValid={isLinkValid}
@@ -574,7 +613,7 @@ const CreationModal = memo(({ isOpen, data, handleClose }) => {
             setTitle={setMediaTitleMemo}
             setHideDescription={setHideDescriptionMemo}
             hideDescription={hideDescription}
-          />
+          />}
           <CustomAlert />
         </ThemeProvider>
       </Fade>

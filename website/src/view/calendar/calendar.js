@@ -44,6 +44,7 @@ const localizer = momentLocalizer(moment);
 
 const Mycalendar = (props) => {
   const [eventsList, setEventsList] = useState([]);
+  const [role, setRole] = useState([]);
   const {
     modalOpen,
     selected,
@@ -61,7 +62,7 @@ const Mycalendar = (props) => {
     const currentUser = fire.auth().currentUser;
     const userUid = currentUser.uid;
     const db = fire.firestore();
-    var unsubscribeSnapshot = db
+    const unsubscribeSnapshot = db
       .collection("user")
       .doc(userUid)
       .collection("post")
@@ -81,9 +82,30 @@ const Mycalendar = (props) => {
           unsubscribeSnapshot();
         };
       });
+      
+    const unsubscribeAuthor = db.collection("user").doc(userUid).onSnapshot((doc) => {
+      if (doc.exists) {
+        const userRole = [{
+          localizedName: currentUser.displayName,
+          orgMedia:{
+            mediaType: "image/jpeg",
+            url:currentUser.photoURL
+          },
+          organization:"urn:li:person:"+userUid.split(':')[1],
+        }]
+        setRole([...userRole,...doc.data().organizationList]);
+      }
+      else{
+        const organisationInfo = fire.functions().httpsCallable('organisationInfo');
+        organisationInfo(userUid)
+      }
+    return () => {unsubscribeAuthor()}
+    })
+
+
   }, []);
 
-  const PostSummary = ({ rawDate, rawTime, title, id }) => (
+  const PostSummary = ({ rawDate, rawTime, title, publisherName, id }) => (
     <div
       className="next-post"
       onClick={() => {
@@ -99,6 +121,10 @@ const Mycalendar = (props) => {
         <span className="span-item">{t("calendar.content")}</span>
         {title}
       </p>
+      {publisherName && <p className="next-post-item clipped">
+        <span className="span-item">{t("calendar.publish")}</span>
+        {publisherName}
+      </p>}
     </div>
   );
 
@@ -198,6 +224,7 @@ const Mycalendar = (props) => {
         isOpen={modalOpen}
         handleClose={handleClose}
         data={selected ? eventsList.filter((e) => e.id === selected)[0] : null}
+        role={role}
       />
     </div>
   );

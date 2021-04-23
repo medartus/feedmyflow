@@ -4,6 +4,7 @@
         "dashboard":"Dashboard",
         "about":"About",
         "contact":"Contact",
+        "contactUrl":"https://www.linkedin.com/in/emma-quetel/?locale=en_US",
         "disconnect":"Log Out",
         "connect":"Log In",
         "language":{
@@ -42,6 +43,7 @@
     "calendar":{
         "date":"Date: ",
         "content":"Content: ",
+        "publish":"Publisher: ",
         "schedule":"Schedule your next post",
         "automate":"Automating your feed is just one click away",
         "upcoming":"UPCOMING POSTS",
@@ -80,7 +82,7 @@
         "input":{
             "date":"Publication date",
             "time":"Publication time",
-            "shareCommentary":"Content",
+            "shareCommentary":"Text",
             "mediaUrl":"Link",
             "mediaTitle":"Title",
             "mediaDescription":"Description",
@@ -94,14 +96,16 @@
             "delete":"Delete",
             "update":"Update",
             "create":"Create",
-            "uploadImg":"Upload content",
-            "deleteImg":"Delete content"
+            "uploadContent":"Upload content",
+            "deleteContent":"Delete content"
         },
         "text":{
             "create":"Post creation",
-            "schedule":"Post scheduled for the {{rawDate}} at {{rawTime}}"
+            "schedule":"Post scheduled for the {{rawDate}} at {{rawTime}}",
+            "publishAs":"Publisher:"
         },
         "upload":{
+            "notSupportedFormat":"The file format is not supported",
             "fail":"Image Upload impossible!"
         }
     }
