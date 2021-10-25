@@ -19,20 +19,19 @@ const get = async (accessToken, url) =>  {
     } 
 }
 
-const post = (accessToken ,url, body) =>  {
+const post = (accessToken ,url, body, headers={}) =>  {
     return new Promise( async (resolve,reject) => {
         try {
+            const authorization = { "Authorization": "Bearer "+accessToken}
             let response = await fetch(url, {
                 method: "POST",
-                headers: {
-                "Authorization": "Bearer "+accessToken,
-                },
+                headers: Object.assign({}, authorization, headers),
                 body: JSON.stringify(body)
             })
 
             const jsondata = await response.json();
             
-            if (jsondata.status !== 200) reject(jsondata.message);
+            if (response.status !== 200) reject(jsondata.message);
             resolve(jsondata);
         }
         catch (error) { 

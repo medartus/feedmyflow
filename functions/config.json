@@ -1,0 +1,47 @@
+{
+    "LINKEDIN_API_URL" : "https://api.linkedin.com/v2/",
+    "LINKEDIN_API_ME" : {
+        "url" : "me?projection=(id,firstName,lastName,profilePicture(displayImage~:playableStreams))",
+        "requestMethod" : "GET",
+        "headers" : {},
+        "params": []
+    },
+    "LINKEDIN_API_EMAIL" : {
+        "url" : "emailAddress?q=members&projection=(elements*(handle~))",
+        "requestMethod" : "GET",
+        "headers" : {},
+        "params": []
+    },
+    "LINKEDIN_API_ROLE_ASSIGNEE": {
+        "url" : "organizationAcls?q=roleAssignee",
+        "requestMethod" : "GET",
+        "headers" : {},
+        "params": []
+    },
+    "LINKEDIN_API_ROLE_COMPANY_INFO": {
+        "url" : "organizations/organizationID",
+        "requestMethod" : "GET",
+        "headers" : {},
+        "params": ["organizationID"]
+    },
+    "LINKEDIN_API_COMPANY_PHOTO": {
+        "url" : "organizations/organizationID?projection=(logoV2(cropped~:playableStreams))",
+        "requestMethod" : "GET",
+        "headers" : {},
+        "params": ["organizationID"]
+    },
+    "LINKEDIN_API_ROLE_UGC_POST": {
+        "url" : "ugcPosts",
+        "requestMethod" : "POST",
+        "headers" : {},
+        "params": []
+    },
+    "LINKEDIN_API_REGISTER_UPLOAD": {
+        "url" : "assets?action=registerUpload",
+        "requestMethod" : "POST",
+        "headers" : {
+            "Content-Type": "application/json"
+        },
+        "params": []
+    }
+}

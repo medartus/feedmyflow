@@ -3,13 +3,16 @@ const cookieParser = require('cookie-parser');
 const crypto = require('crypto');
 
 const MailProvider = require('./src/mailProvider');
-const { postOnLinkedin } = require('./src/post');
+const { trackData, postOnLinkedin } = require('./src/post');
 const { createFirebaseAccount } = require('./src/user');
 const { admin } = require('./provider/firebase');
+const { RetrieveOrganisationFromUser } = require('./src/companyData');
 
 const db = admin.firestore();
+const bucket = admin.storage().bucket();
 
-const OAUTH_SCOPES = ['r_liteprofile', 'r_emailaddress', 'w_member_social'];
+
+const OAUTH_SCOPES = ['r_liteprofile', 'r_basicprofile', 'r_emailaddress', 'w_member_social', 'w_organization_social', 'rw_organization_admin'];
 
 /**
  * Creates a configured LinkedIn API Client instance.
@@ -60,7 +63,7 @@ exports.token = functions.https.onRequest((req, res) => {
         throw error;
       }
       // Create a Firebase account and get the Custom Auth Token.
-      firebaseToken = await createFirebaseAccount(results.access_token);
+      firebaseToken = await createFirebaseAccount(results);
       
       res.status(200).jsonp({ token: firebaseToken });
     });
@@ -78,8 +81,24 @@ exports.LinkedinPost = functions.https.onRequest( async (req, res) => {
       return res.status(200).send('No matching documents.');
     }
     
+    const now = new Date();
+    const past15min = new Date((now.getTime()-15*60*1000))
+
     const promises = postCollection.docs.map(async(newPost) => {
-      return await postOnLinkedin(newPost)
+      const {publicationTime,userUID} = newPost.data()
+      if(past15min < new Date(publicationTime.seconds*1000)){
+        return await postOnLinkedin(newPost)
+      }
+      else{
+        trackData(userUID, newPost.data())
+
+        db.collection('user').doc(userUID).collection('posted').doc(newPost.id).set({...newPost.data()});
+        db.collection('user').doc(userUID).collection('post').doc(newPost.id).delete();
+
+        const { media } = newPost.data();
+        if(media && media.fileInfo && media.fileInfo.filePath) bucket.file(media.fileInfo.filePath).delete();
+        return true;
+      }
     });
 
     await Promise.all(promises)
@@ -100,3 +119,58 @@ exports.sendWelcomeEmail = functions.auth.user().onCreate((user) => {
     .then(()=> console.log('Welcome email sended to '+ user.uid))
     .catch((error)=> {console.log(error.toString())});
 });
+
+exports.moveMedia = functions.https.onCall((data) => {
+  const { media, userUid, postId } = data;
+  const { filePath } = media.fileInfo;
+  const file = bucket.file(filePath);
+  const fileName = filePath.split('/').slice(-1)[0];
+  const newLocation = `post/${userUid}/${fileName}`;
+  media.fileInfo.filePath = newLocation;
+  file.copy(newLocation).then(()=>{
+    file.delete()
+    return db.collection('user').doc(userUid).collection('post').doc(postId).update({media})
+  }).catch(()=>{})
+});
+
+exports.cleanTempFolder = functions.https.onRequest( async (req, res) => {
+  const [files] = await bucket.getFiles({ prefix: 'temp/'});
+
+  files.forEach(async file => {
+    const metadata = await file.getMetadata();
+    const objectDeletionDate = new Date(metadata[0].timeCreated);
+    objectDeletionDate.setDate(objectDeletionDate.getDate() + 1);
+    const now = new Date();
+    if(objectDeletionDate<now) file.delete();
+  })
+  res.send();
+})
+
+exports.organisationInfo = functions.https.onCall((userUid) => {
+  RetrieveOrganisationFromUser(userUid);
+})
+
+// exports.testing = functions.https.onRequest( async (req, res) => {
+//   RetrieveOrganisationFromUser("linkedin:yY-CTTcFzw");
+// })
+
+
+// exports.searchUser = functions.https.onRequest( async (req, res) => {
+//   return admin
+//     .auth()
+//     .listUsers(1000)
+//     .then((listUsersResult) => {
+//       return listUsersResult.users.forEach((userRecord) => {
+//         if(userRecord.displayName.includes(req.query.name)) console.log(userRecord.uid, userRecord.displayName);
+//       });
+//     })
+//     .catch((error) => {
+//       console.log('Error listing users:', error);
+//     });
+// })
+
+// const LinkedinApi = require('./src/linkedinApi');
+// exports.refreshAccessTokens = functions.https.onRequest( async (req, res) => {
+//   const linkedinApi = new LinkedinApi();
+//   await linkedinApi.retrieveAccessToken('linkedin:3A8ySOLYhe');
+// })

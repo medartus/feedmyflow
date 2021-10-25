@@ -55,13 +55,15 @@ class MailProvider {
     }
 
     sendPostConfirmation(data){
-        const { userUID, shareCommentary } = data;
+        const { userUID, shareCommentary, publisherName, publisherPhoto } = data;
         return new Promise(async (resolve,reject) => {
             const { email, displayName, photoURL } = await admin.auth().getUser(userUID)
                 .then((userRecord) => { return userRecord })
                 .catch((err) => reject(err));
             if (email !== undefined){
-                const params = { displayName, shareCommentary, photoURL };
+                const name = publisherName ? publisherName : displayName;
+                const photo = publisherPhoto ? publisherPhoto : photoURL;
+                const params = { displayName: name, shareCommentary, photoURL: photo};
                 const mailOptions = this.createMailOptions("postConfirmation", params, email, 'FeedMyFlow post confirmation')
                 this.sendEmail(mailOptions)
                     .then((res) => resolve(res))

@@ -6,6 +6,7 @@ const serviceAccount = require(pathServiceAccount);
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
     databaseURL: `https://${process.env.GCLOUD_PROJECT}.firebaseio.com`,
+    storageBucket: `${process.env.GCLOUD_PROJECT}.appspot.com`
 });
 
 module.exports = { admin };
