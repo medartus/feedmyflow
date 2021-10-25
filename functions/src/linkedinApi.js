@@ -1,6 +1,8 @@
 const fetch = require('node-fetch');
+const request = require("request");
 const env = require('../config.json');
 const { admin } = require('../provider/firebase');
+const functions = require('firebase-functions');
 
 const db = admin.firestore();
 
@@ -42,32 +44,32 @@ class LinkedinApi {
       const accessTokenDoc = await db.collection("user").doc(userUid).collection("adminData").doc("linkedin").get();
       if (!accessTokenDoc.exists) return reject(new Error('Token does not exist.'));
 
-      // if (accessTokenDoc.data().accessTokenExpiration < new Date()) {
-      //   this.refreshAccessToken(accessTokenDoc.data().refreshToken)
-      //   .then(res=>{
-      //     const { access_token, expires_in, refresh_token, refresh_token_expires_in } = res;
-      //     this.accessToken = access_token;
+      if (accessTokenDoc.data().accessTokenExpiration.toDate() < new Date()) {
+        this.refreshAccessToken(accessTokenDoc.data().refreshToken)
+        .then(res=>{
+          const { access_token, expires_in, refresh_token, refresh_token_expires_in } = res;
+          this.accessToken = access_token;
 
-      //     const date = new Date();
-      //     const accessTokenExpiration = new Date(date.getTime()+expires_in*1000)
-      //     const refreshTokenExpiration = new Date(date.getTime()+refresh_token_expires_in*1000)
+          const date = new Date();
+          const accessTokenExpiration = new Date(date.getTime()+expires_in*1000)
+          const refreshTokenExpiration = new Date(date.getTime()+refresh_token_expires_in*1000)
 
-      //     // Save the access token to the Firebase Realtime Database.
-      //     db.collection('user').doc(uid).collection('adminData').doc('linkedin')
-      //       .set({
-      //         'accessToken':access_token,
-      //         'accessTokenExpiration':accessTokenExpiration,
-      //         'refreshToken':refresh_token,
-      //         'refreshTokenExpiration':refreshTokenExpiration
-      //       });
+          // Save the access token to the Firebase Realtime Database.
+          db.collection('user').doc(userUid).collection('adminData').doc('linkedin')
+            .set({
+              'accessToken':access_token,
+              'accessTokenExpiration':accessTokenExpiration,
+              'refreshToken':refresh_token,
+              'refreshTokenExpiration':refreshTokenExpiration
+            });
             
-      //     return resolve(this.accessToken);
-      //   })
-      //   .catch(err=>reject(err))
+          return resolve(this.accessToken);
+        })
+        .catch(err=>reject(err))
 
-      // }
-      // else 
-      this.accessToken = accessTokenDoc.data().accessToken;
+      } else {
+        this.accessToken = accessTokenDoc.data().accessToken;
+      }
       return resolve(this.accessToken);
     })
   }

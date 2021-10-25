@@ -23,7 +23,18 @@
     },
     {
       "target": "landing",
-      "public": "public-landing"
+      "public": "public-landing",
+       "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
     }
   ]
 }

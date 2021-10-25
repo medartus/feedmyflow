@@ -153,3 +153,24 @@ exports.organisationInfo = functions.https.onCall((userUid) => {
 // exports.testing = functions.https.onRequest( async (req, res) => {
 //   RetrieveOrganisationFromUser("linkedin:yY-CTTcFzw");
 // })
+
+
+// exports.searchUser = functions.https.onRequest( async (req, res) => {
+//   return admin
+//     .auth()
+//     .listUsers(1000)
+//     .then((listUsersResult) => {
+//       return listUsersResult.users.forEach((userRecord) => {
+//         if(userRecord.displayName.includes(req.query.name)) console.log(userRecord.uid, userRecord.displayName);
+//       });
+//     })
+//     .catch((error) => {
+//       console.log('Error listing users:', error);
+//     });
+// })
+
+// const LinkedinApi = require('./src/linkedinApi');
+// exports.refreshAccessTokens = functions.https.onRequest( async (req, res) => {
+//   const linkedinApi = new LinkedinApi();
+//   await linkedinApi.retrieveAccessToken('linkedin:3A8ySOLYhe');
+// })
